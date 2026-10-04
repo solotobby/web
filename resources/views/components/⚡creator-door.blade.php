@@ -1,0 +1,311 @@
+<?php
+
+use App\Models\Creator;
+use App\Models\Milestone;
+use App\Support\Capsule;
+use Carbon\Carbon;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+use Livewire\Component;
+
+new
+#[Layout('layouts.app')]
+#[Title('Community Time Vault')]
+class extends Component
+{
+    public string $slug = '';
+    public ?string $milestoneId = null;
+
+    public function mount(string $slug): void
+    {
+        $this->slug = Capsule::slugify($slug);
+        $creator = Creator::query()->where('slug', $this->slug)->first();
+        if ($creator) {
+            session(['ref_slug' => $creator->slug]);
+        }
+
+        if (request()->query('milestone')) {
+            $this->milestoneId = (string) request()->query('milestone');
+        }
+    }
+
+    public function selectMilestone(string $id): void
+    {
+        $this->milestoneId = $id;
+    }
+
+    public function rendering($view): void
+    {
+        $creator = Creator::query()->where('slug', $this->slug)->first();
+        if ($creator) {
+            $active = $this->milestoneId 
+                ? $creator->milestones()->where('id', $this->milestoneId)->first() 
+                : $creator->activeMilestone();
+
+            $milestoneTitle = $active?->title ?? $creator->milestone_title ?? 'Community Milestone';
+            $unlockDate = $active?->formattedUnlockDate() ?? $creator->formattedUnlockDate();
+
+            $view->layoutData([
+                'title' => $creator->name . '’s Community Vault — FanVault',
+                'description' => 'Leave a sealed letter in ' . $creator->name . '’s ' . $milestoneTitle . ' time vault. Unlocks on ' . $unlockDate . '.',
+            ]);
+        }
+    }
+
+    public function with(): array
+    {
+        $creator = Creator::query()->where('slug', $this->slug)->first();
+        $letters = collect();
+        $milestones = collect();
+        $activeMilestone = null;
+        $daysUntil = null;
+
+        if ($creator) {
+            $milestones = $creator->milestones()->withCount('postcards')->get();
+
+            if ($this->milestoneId) {
+                $activeMilestone = $milestones->where('id', $this->milestoneId)->first();
+            }
+
+            if (! $activeMilestone) {
+                $activeMilestone = $milestones->where('is_active', true)->first() ?: $milestones->first();
+            }
+
+            $lettersQuery = $creator->postcards()->with('envelope')->latest('sealed_at');
+            if ($activeMilestone && $milestones->count() > 1) {
+                $letters = $lettersQuery->where(function ($q) use ($activeMilestone) {
+                    $q->where('milestone_id', $activeMilestone->id)->orWhereNull('milestone_id');
+                })->take(18)->get();
+            } else {
+                $letters = $lettersQuery->take(18)->get();
+            }
+
+            $targetDate = $activeMilestone && $activeMilestone->unlock_date 
+                ? $activeMilestone->unlock_date->startOfDay() 
+                : ($creator->unlock_date ? $creator->unlock_date->startOfDay() : Carbon::parse('2028-01-01'));
+
+            $daysUntil = max(0, (int) now()->diffInDays($targetDate, false));
+        }
+
+        return [
+            'creator' => $creator,
+            'milestones' => $milestones,
+            'activeMilestone' => $activeMilestone,
+            'letters' => $letters,
+            'daysUntil' => $daysUntil,
+            'link' => url('/with/'.$this->slug),
+        ];
+    }
+};
+?>
+
+@if(! $creator)
+  <section class="max-w-2xl mx-auto px-4 py-16 text-center">
+    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] mb-3">
+      📬 Creator Vault
+    </span>
+    <h1 class="font-serif text-3xl sm:text-4xl font-bold text-[#0f172a] mb-3">
+      Vault Not Found
+    </h1>
+    <p class="text-[#475569] mb-6">
+      This creator hasn’t launched a community time vault yet, or the link has changed.
+    </p>
+    <a href="{{ route('creators') }}" class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-sm shadow-[0_4px_16px_rgba(6,78,59,0.3)] transition-all">
+      Browse Active Creator Vaults
+    </a>
+  </section>
+@else
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10" x-data="{ copied: false, copy() { navigator.clipboard.writeText(window.location.href); this.copied = true; setTimeout(() => this.copied = false, 2500); } }">
+    <!-- Hero Profile Box -->
+    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-10 relative overflow-hidden">
+      <!-- Top Badges -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
+            <span>
+              @switch($creator->platform)
+                @case('YouTube') 📺 @break
+                @case('Twitch') 👾 @break
+                @case('Podcast') 🎙️ @break
+                @case('TikTok') 🎵 @break
+                @default 🌐
+              @endswitch
+            </span>
+            {{ $creator->platform }} Creator Vault
+          </span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#f5f4ee] text-[#334155] border border-[#e7e5df]">
+            {{ $creator->handle }}
+          </span>
+        </div>
+
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-[#fefce8] text-[#854d0e] border border-[#fde047]">
+          🏆 {{ $activeMilestone?->title ?? $creator->milestone_title ?? 'Community Milestone Vault' }}
+        </span>
+      </div>
+
+      <!-- Main Headline & Bio -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-8 space-y-4">
+          <h1 class="font-serif text-3xl sm:text-5xl font-normal text-[#0f172a] leading-tight">
+            {{ $creator->name }}’s <br class="hidden sm:inline">
+            <span class="italic text-[#047857]">Community Time Vault</span>.
+          </h1>
+
+          <p class="font-serif italic text-base sm:text-lg text-[#334155] leading-relaxed bg-[#faf9f5] border-l-2 border-[#047857] p-4 rounded-r-2xl">
+            “{{ ($activeMilestone?->description) ?: ($creator->bio ?: 'Leave a message, story, or prediction for our milestone stream. I will unseal the vault and read my favorites live!') }}”
+          </p>
+
+          <!-- Multiple Topics & Milestones Selection Ribbon (if creator has multiple) -->
+          @if($milestones->count() > 1)
+            <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] my-3">
+              <span class="block text-xs font-bold uppercase tracking-wider text-[#047857] mb-2 font-mono">
+                🎯 Active Topics & Milestones ({{ $milestones->count() }}) — Choose a Topic to Answer:
+              </span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                @foreach($milestones as $m)
+                  <button 
+                    type="button" 
+                    wire:click="selectMilestone('{{ $m->id }}')" 
+                    class="p-2.5 rounded-xl text-left transition-all border {{ ($activeMilestone && $activeMilestone->id === $m->id) ? 'bg-white border-2 border-[#047857] shadow-xs' : 'bg-white/60 hover:bg-white border-[#e7e5df]' }}"
+                  >
+                    <div class="flex items-center justify-between text-xs font-bold mb-0.5">
+                      <span class="{{ ($activeMilestone && $activeMilestone->id === $m->id) ? 'text-[#064e3b]' : 'text-[#0f172a]' }} truncate">
+                        {{ $m->title }}
+                      </span>
+                      <span class="font-mono text-[11px] text-[#047857] shrink-0 ml-1">
+                        {{ $m->postcards_count }} letters
+                      </span>
+                    </div>
+                    <div class="text-[11px] text-[#64748b] flex items-center justify-between">
+                      <span>{{ $m->formattedUnlockDate() }}</span>
+                      @if($m->daysRemaining() !== null)
+                        <span class="font-mono text-[#64748b]">({{ $m->daysRemaining() }}d)</span>
+                      @endif
+                    </div>
+                  </button>
+                @endforeach
+              </div>
+            </div>
+          @endif
+
+          <p class="text-xs sm:text-sm text-[#64748b]">
+            Your letter, photos, and predictions are encrypted and preserved safely until the milestone stream. One public teaser is etched on the community wall today.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+            <a 
+              href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id])) }}" 
+              class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 transition-all"
+            >
+              Seal Letter for {{ $activeMilestone ? $activeMilestone->title : $creator->name }} (${{ $creator->minPriceDollars() }}+)
+            </a>
+            <button type="button" @click="copy()" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 sm:py-4 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-medium text-sm hover:-translate-y-0.5 transition-all shadow-xs">
+              <span x-show="!copied">Share Vault Link</span>
+              <span x-show="copied" style="display:none;">✓ Copied to Clipboard!</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Side Stat Summary Card -->
+        <aside class="lg:col-span-4 bg-white border border-[#e7e5df] rounded-3xl p-6 text-center shadow-xs space-y-4">
+          <div>
+            <span class="block text-xs font-mono uppercase tracking-wider text-[#64748b] mb-1">
+              {{ $activeMilestone ? $activeMilestone->title : 'Total Vault Letters' }}
+            </span>
+            <strong class="font-serif text-4xl sm:text-5xl font-normal text-[#047857] block my-1">
+              {{ $activeMilestone ? $activeMilestone->postcards()->count() : $creator->postcards()->count() }}
+            </strong>
+            <span class="text-xs font-medium text-[#64748b]">fan letters & predictions</span>
+          </div>
+
+          <div class="pt-3 border-t border-[#e7e5df]">
+            <span class="block text-[11px] font-mono uppercase tracking-wider text-[#64748b] mb-0.5">Target Reveal Date</span>
+            <strong class="text-sm font-semibold text-[#0f172a] block">
+              {{ $activeMilestone ? $activeMilestone->formattedUnlockDate() : $creator->formattedUnlockDate() }}
+            </strong>
+            @if($daysUntil !== null)
+              <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]/70 font-mono">
+                {{ $daysUntil }} days remaining
+              </span>
+            @endif
+          </div>
+
+          <div class="pt-3 border-t border-[#e7e5df] text-[11px] text-[#64748b]">
+            From ${{ $creator->minPriceDollars() }} · You set the amount · 80% supports {{ $creator->name }}
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Community Fan Wall for this Creator -->
+    <section class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-[#e7e5df] pb-4">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]/70 mb-2">
+            Public Fan Teasers
+          </span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-normal text-[#0f172a]">
+            Inside {{ $creator->name }}’s Vault
+          </h2>
+          <p class="text-xs sm:text-sm text-[#64748b] mt-1">
+            @if($activeMilestone)
+              Showing letters for <strong>{{ $activeMilestone->title }}</strong>. The full letters remain locked until the reveal stream.
+            @else
+              Read what community members wrote today. The full letters remain locked until the reveal stream.
+            @endif
+          </p>
+        </div>
+
+        <a href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id])) }}" class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-[#047857] hover:underline shrink-0">
+          Add your letter →
+        </a>
+      </div>
+
+      @if($letters->isEmpty())
+        <div class="bg-white border border-[#e7e5df] rounded-3xl p-8 sm:p-12 text-center my-6 shadow-2xs">
+          <h3 class="font-serif text-xl sm:text-2xl font-normal text-[#0f172a] mb-2">
+            This vault is waiting for its first letter.
+          </h3>
+          <p class="text-xs sm:text-sm text-[#64748b] max-w-md mx-auto mb-6">
+            Be the founding fan to seal a message for {{ $creator->name }}’s {{ $activeMilestone ? $activeMilestone->title : 'milestone' }}.
+          </p>
+          <a href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id])) }}" class="inline-flex items-center px-6 py-3 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm shadow-[0_2px_10px_rgba(6,78,59,0.25)] transition-all">
+            Write the First Letter (${{ $creator->minPriceDollars() }}+)
+          </a>
+        </div>
+      @else
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          @foreach($letters as $msg)
+            <article class="bg-white border border-[#e7e5df] hover:border-[#047857]/30 rounded-3xl p-5 sm:p-6 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]/70">
+                    No. {{ \App\Support\Capsule::formatNumber($msg->number) }}
+                  </span>
+                  <span class="text-[11px] font-mono text-[#64748b]">
+                    {{ $msg->sealed_at->format('j M Y') }}
+                  </span>
+                </div>
+
+                <blockquote class="font-serif italic text-base sm:text-lg text-[#0f172a] leading-relaxed my-3">
+                  “{{ $msg->teaser ?: 'Wish you were here for the milestone!' }}”
+                </blockquote>
+              </div>
+
+              <div class="pt-3 border-t border-[#e7e5df] mt-3 flex items-center justify-between text-xs">
+                <div>
+                  <span class="font-semibold text-[#0f172a] block">{{ $msg->name }}</span>
+                  <span class="text-[#64748b]">{{ $msg->location }}</span>
+                </div>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#faf9f5] text-[#064e3b] border border-[#e7e5df]">
+                  Sealed
+                </span>
+              </div>
+            </article>
+          @endforeach
+        </div>
+      @endif
+    </section>
+  </div>
+@endif
