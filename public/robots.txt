@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /creators/studio
+Disallow: /creators/login/
+Disallow: /creators/onboard
+Disallow: /creators/access
+Disallow: /checkout/
+Disallow: /stripe/
+
+Sitemap: https://getfanvault.com/sitemap.xml

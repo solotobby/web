@@ -10,9 +10,18 @@ use Livewire\Component;
 
 new
 #[Layout('layouts.app')]
-#[Title('Create Your Creator Vault — FanVault')]
+#[Title('Launch Your Creator Milestone Vault — Free in 60s — FanVault')]
 class extends Component
 {
+    public function rendering($view): void
+    {
+        $view->layoutData([
+            'title' => 'Launch Your Creator Milestone Vault — Free in 60s — FanVault',
+            'description' => 'Create a digital fan mail milestone vault for your channel. Zero inventory, custom pricing, and direct Stripe payouts.',
+            'canonicalUrl' => route('creators.join'),
+            'ogUrl' => route('creators.join'),
+        ]);
+    }
     public string $name = '';
 
     public string $handle = '';

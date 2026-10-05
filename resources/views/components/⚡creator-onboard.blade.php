@@ -12,6 +12,13 @@ new
 #[Title('Complete Your Community Vault Setup — FanVault')]
 class extends Component
 {
+    public function rendering($view): void
+    {
+        $view->layoutData([
+            'title' => 'Complete Your Vault Setup — FanVault',
+            'robots' => 'noindex, nofollow',
+        ]);
+    }
     public string $email = '';
 
     public string $name = '';

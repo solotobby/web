@@ -3,8 +3,11 @@
 use App\Http\Controllers\CheckoutReturnController;
 use App\Http\Controllers\CreatorLoginController;
 use App\Http\Controllers\OpenGraphController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 
 Route::livewire('/', 'home-page')->name('home');
 Route::livewire('/explore', 'explore-page')->name('explore');
@@ -31,5 +34,6 @@ Route::get('/checkout/return', CheckoutReturnController::class)->name('checkout.
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
 Route::get('/og/postcard/{postcard}.png', [OpenGraphController::class, 'postcard'])->name('og.postcard');
+Route::get('/og/creator/{slug}.png', [OpenGraphController::class, 'creator'])->name('og.creator');
 Route::get('/og/cover.png', [OpenGraphController::class, 'cover'])->name('og.cover');
 

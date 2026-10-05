@@ -8,9 +8,18 @@ use Livewire\Component;
 
 new
 #[Layout('layouts.app')]
-#[Title('The Fan Wall — Public Community Letters')]
+#[Title('The Fan Wall — Public Community Letters & Predictions — FanVault')]
 class extends Component
 {
+    public function rendering($view): void
+    {
+        $view->layoutData([
+            'title' => 'The Fan Wall — Public Community Letters & Predictions — FanVault',
+            'description' => 'Browse public teasers and milestone predictions sealed by fans across creator community vaults around the world.',
+            'canonicalUrl' => route('explore'),
+            'ogUrl' => route('explore'),
+        ]);
+    }
     public function with(): array
     {
         $messages = Postcard::query()->with('creator')->orderByDesc('number')->limit(240)->get();
@@ -37,7 +46,7 @@ class extends Component
         Explore Creator Vaults
       </a>
       <a href="{{ route('seal') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-medium text-sm sm:text-base hover:-translate-y-0.5 transition-all shadow-xs">
-        Seal a Letter ($5)
+        Seal a Letter
       </a>
     </div>
   </div>

@@ -8,9 +8,27 @@ use Livewire\Component;
 
 new
 #[Layout('layouts.app')]
-#[Title('Creator Vault Directory — FanVault')]
+#[Title('Featured Community Vaults — Creator Milestone Directory — FanVault')]
 class extends Component
 {
+    public function rendering($view): void
+    {
+        $creators = Creator::query()
+            ->withCount('postcards')
+            ->orderByDesc('postcards_count')
+            ->limit(30)
+            ->get();
+
+        $schema = \App\Support\Seo::creatorsDirectorySchema($creators);
+
+        $view->layoutData([
+            'title' => 'Featured Community Vaults — Creator Milestone Directory — FanVault',
+            'description' => 'Browse community milestone time vaults from top creators on YouTube, Twitch, TikTok, and podcasts. Seal your private letter for the next live stream reveal.',
+            'canonicalUrl' => route('creators'),
+            'ogUrl' => route('creators'),
+            'schemaJson' => \App\Support\Seo::toJson($schema),
+        ]);
+    }
     public function with(): array
     {
         $creators = Creator::query()

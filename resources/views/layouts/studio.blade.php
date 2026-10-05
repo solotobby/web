@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{{ $title ?? 'Creator Studio — FanVault' }}</title>
     <meta name="description" content="Manage your community time vault, celebrate milestones, and view fan letters in FanVault Studio.">
+    <meta name="robots" content="noindex, nofollow">
     
     <link rel="icon" href="{{ asset('assets/favicon.svg') }}" type="image/svg+xml">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">

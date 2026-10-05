@@ -46,8 +46,14 @@ class extends Component
             $unlockDate = $active?->formattedUnlockDate() ?? $creator->formattedUnlockDate();
 
             $view->layoutData([
-                'title' => $creator->name . '’s Community Vault — FanVault',
+                'title' => $creator->name . '’s Community Milestone Vault — FanVault',
                 'description' => 'Leave a sealed letter in ' . $creator->name . '’s ' . $milestoneTitle . ' time vault. Unlocks on ' . $unlockDate . '.',
+                'canonicalUrl' => route('with', $creator->slug),
+                'ogTitle' => $creator->name . '’s Milestone Vault (' . $milestoneTitle . ')',
+                'ogDescription' => 'Seal private letters & milestone predictions for ' . $creator->name . '. Unlocks live on stream: ' . $unlockDate . '.',
+                'ogUrl' => route('with', $creator->slug),
+                'ogImage' => route('og.creator', $creator->slug),
+                'schemaJson' => \App\Support\Seo::toJson(\App\Support\Seo::creatorSchema($creator)),
             ]);
         }
     }

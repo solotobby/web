@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Creator;
 use App\Models\Postcard;
 use App\Support\Capsule;
 use Illuminate\Http\Response;
@@ -121,14 +122,14 @@ class OpenGraphController extends Controller
     {
         $im = imagecreatetruecolor(1200, 630);
 
-        // Warm, light cheerful cover
+        // Crisp botanical warm card
         $bg = imagecolorallocate($im, 250, 248, 245);
         $cardBg = imagecolorallocate($im, 255, 255, 255);
-        $border = imagecolorallocate($im, 235, 227, 215);
-        $coral = imagecolorallocate($im, 255, 90, 82);
-        $honey = imagecolorallocate($im, 245, 158, 11);
-        $dark = imagecolorallocate($im, 35, 31, 29);
-        $muted = imagecolorallocate($im, 115, 105, 98);
+        $border = imagecolorallocate($im, 231, 229, 223);
+        $emerald = imagecolorallocate($im, 4, 120, 87);
+        $deepGreen = imagecolorallocate($im, 6, 78, 59);
+        $dark = imagecolorallocate($im, 15, 23, 42);
+        $muted = imagecolorallocate($im, 100, 116, 139);
 
         imagefill($im, 0, 0, $bg);
 
@@ -137,22 +138,83 @@ class OpenGraphController extends Controller
         imagerectangle($im, 40, 40, 1160, 590, $border);
 
         // Badge pill
-        imagettftext($im, 14, 0, 90, 150, $coral, $this->sansFont, "✨ THE WORLD’S SWEETEST TIME CAPSULE · OPENS 1 JANUARY 2050");
+        imagettftext($im, 14, 0, 90, 150, $emerald, $this->sansFont, "🎙️ COMMUNITY TIME CAPSULES FOR CREATORS");
 
         // Display Title
-        imagettftext($im, 46, 0, 90, 240, $dark, $this->serifFont, "Send a postcard");
-        imagettftext($im, 46, 0, 90, 310, $coral, $this->serifFont, "to the future 💌");
+        imagettftext($im, 50, 0, 90, 240, $dark, $this->serifFont, "FanVault");
+        imagettftext($im, 36, 0, 90, 310, $emerald, $this->serifFont, "Milestone Vaults & Digital Fan Mail");
 
         // Subtitle
-        $lede1 = "Address a $5 digital postcard to any calendar morning before 2050.";
-        $lede2 = "One cheeky line on the wall today — your sealed letter unlocks on Jan 1, 2050.";
+        $lede1 = "Fans seal letters & predictions today — unsealed live on stream tomorrow.";
+        $lede2 = "Zero physical mail clutter. Custom creator pricing & direct Stripe payouts.";
         imagettftext($im, 19, 0, 90, 395, $muted, $this->sansFont, $lede1);
         imagettftext($im, 19, 0, 90, 435, $muted, $this->sansFont, $lede2);
 
         // Social Proof Footer
         $count = Postcard::query()->count();
-        $counterText = "🔒 " . number_format($count) . " Postcards Sealed · 🎖️ Founding 10,000 Slots · ☕ Only $5";
-        imagettftext($im, 16, 0, 90, 530, $honey, $this->sansFont, $counterText);
+        $counterText = "🔒 " . number_format($count) . " Community Letters Sealed · getfanvault.com";
+        imagettftext($im, 16, 0, 90, 530, $deepGreen, $this->sansFont, $counterText);
+
+        ob_start();
+        imagepng($im);
+        $data = ob_get_clean();
+        imagedestroy($im);
+
+        return response($data, 200, [
+            'Content-Type' => 'image/png',
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function creator(string $slug): Response
+    {
+        $creator = Creator::query()->where('slug', Capsule::slugify($slug))->first();
+        if (! $creator) {
+            return $this->cover();
+        }
+
+        $im = imagecreatetruecolor(1200, 630);
+
+        $bg = imagecolorallocate($im, 250, 248, 245);
+        $cardBg = imagecolorallocate($im, 255, 255, 255);
+        $border = imagecolorallocate($im, 167, 243, 208);
+        $emerald = imagecolorallocate($im, 4, 120, 87);
+        $deepGreen = imagecolorallocate($im, 6, 78, 59);
+        $dark = imagecolorallocate($im, 15, 23, 42);
+        $muted = imagecolorallocate($im, 100, 116, 139);
+
+        imagefill($im, 0, 0, $bg);
+
+        // Card Container
+        imagefilledrectangle($im, 40, 40, 1160, 590, $cardBg);
+        imagerectangle($im, 40, 40, 1160, 590, $border);
+
+        // Platform Pill
+        $platform = strtoupper($creator->platform ?: 'CREATOR');
+        imagettftext($im, 14, 0, 90, 140, $emerald, $this->sansFont, "🎙️ {$platform} COMMUNITY VAULT · FANVAULT");
+
+        // Creator Title
+        $title = $creator->name . "’s Vault";
+        imagettftext($im, 48, 0, 90, 230, $dark, $this->serifFont, $title);
+
+        // Milestone event subtitle
+        $active = $creator->activeMilestone();
+        $milestoneTitle = $active?->title ?? $creator->milestone_title ?? 'Community Milestone';
+        imagettftext($im, 28, 0, 90, 300, $emerald, $this->serifFont, "Celebrating: " . $milestoneTitle);
+
+        // Description / Prompt
+        $prompt = $creator->bio ?: "Leave a private letter, milestone prediction, or memories to be unsealed live on stream!";
+        $lines = $this->wrapText($prompt, 18, $this->sansFont, 1000);
+        $y = 360;
+        foreach (array_slice($lines, 0, 2) as $line) {
+            imagettftext($im, 18, 0, 90, $y, $muted, $this->sansFont, $line);
+            $y += 35;
+        }
+
+        // Unlock Date Footer Pill
+        $unlockDate = $active?->formattedUnlockDate() ?? $creator->formattedUnlockDate();
+        $footerText = "🔓 Unlocks Live on Stream: " . $unlockDate . " · getfanvault.com/with/" . $creator->slug;
+        imagettftext($im, 16, 0, 90, 530, $deepGreen, $this->sansFont, $footerText);
 
         ob_start();
         imagepng($im);

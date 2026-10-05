@@ -8,9 +8,18 @@ use Livewire\Component;
 
 new
 #[Layout('layouts.app')]
-#[Title('Timeline — Journey to 2050')]
+#[Title('Milestone Timeline — Journey to 2050 — FanVault')]
 class extends Component
 {
+    public function rendering($view): void
+    {
+        $view->layoutData([
+            'title' => 'Milestone Timeline — Journey to 2050 — FanVault',
+            'description' => 'Chronological countdown of upcoming community milestone reveal dates and digital time capsule unlock streams.',
+            'canonicalUrl' => route('timeline'),
+            'ogUrl' => route('timeline'),
+        ]);
+    }
     public ?string $year = null;
 
     public ?string $day = null;
@@ -79,7 +88,7 @@ class extends Component
     </p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
       <a href="{{ route('seal') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 active:translate-y-0 transition-all">
-        Preserve a Morning ($5)
+        Preserve a Morning
       </a>
       @if($randomDay)
         <a href="{{ route('timeline.day', $randomDay) }}" class="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3.5 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-medium text-sm sm:text-base hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xs">
@@ -156,7 +165,7 @@ class extends Component
           </p>
         </div>
         <a href="{{ route('seal') }}?day={{ $selectedDay }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] text-white font-bold text-xs sm:text-sm shadow-[0_4px_16px_rgba(6,78,59,0.3)] hover:-translate-y-0.5 transition-all">
-          Address this morning too ($5) 🏛️
+          Address this morning too 🏛️
         </a>
       </div>
 

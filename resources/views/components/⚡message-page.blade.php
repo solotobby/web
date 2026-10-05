@@ -30,10 +30,13 @@ class extends Component
 
         $view->layoutData([
             'title' => $title,
+            'description' => $desc,
+            'canonicalUrl' => route('message', $this->postcard),
             'ogTitle' => $title,
             'ogDescription' => $desc,
             'ogImage' => route('og.postcard', $this->postcard),
             'ogUrl' => route('message', $this->postcard),
+            'schemaJson' => \App\Support\Seo::toJson(\App\Support\Seo::messageSchema($this->postcard)),
         ]);
     }
 
@@ -90,7 +93,7 @@ class extends Component
         </div>
         <div class="text-right">
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold {{ $msg->founding ? 'bg-[#fefce8] text-[#854d0e] border border-[#fde047]' : 'bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]' }}">
-            {{ $msg->founding ? '🏛️ Founding Pass' : '🌿 $5 Archival Seal' }}
+            {{ $msg->founding ? '🏛️ Founding Pass' : '🌿 Archival Seal' }}
           </span>
         </div>
       </div>
@@ -167,7 +170,7 @@ class extends Component
         @endif
 
         <a class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-bold text-sm hover:-translate-y-0.5 transition-all shadow-xs" href="{{ route('seal', $creator ? ['ref' => $creator->slug] : []) }}">
-          ✍️ Seal Another Fan Letter ($5)
+          ✍️ Seal Another Fan Letter
         </a>
       </div>
     </div>

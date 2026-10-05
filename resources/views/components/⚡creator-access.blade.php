@@ -7,9 +7,16 @@ use Livewire\Component;
 
 new
 #[Layout('layouts.app')]
-#[Title('Creator Studio Login & Registration — FanVault')]
+#[Title('Creator Studio Access — FanVault')]
 class extends Component
 {
+    public function rendering($view): void
+    {
+        $view->layoutData([
+            'title' => 'Creator Studio Access — FanVault',
+            'robots' => 'noindex, nofollow',
+        ]);
+    }
     public string $email = '';
 
     public string $mode = 'form'; // form | sent

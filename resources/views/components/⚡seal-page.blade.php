@@ -24,10 +24,18 @@ class extends Component
         $creator = session('ref_slug') ? \App\Models\Creator::query()->where('slug', session('ref_slug'))->first() : null;
         $title = $creator 
             ? 'Seal Letter for ' . $creator->name . ' — FanVault'
-            : 'Seal a Letter — FanVault';
+            : 'Seal an Archival Letter — FanVault';
+        $desc = $creator
+            ? 'Seal an encrypted fan letter, photo, or milestone prediction for ' . $creator->name . ' to be opened live on stream.'
+            : 'Preserve your letter, memory, or prediction in the permanent encrypted digital time capsule.';
 
         $view->layoutData([
             'title' => $title,
+            'description' => $desc,
+            'canonicalUrl' => route('seal'),
+            'ogTitle' => $title,
+            'ogDescription' => $desc,
+            'ogImage' => $creator ? route('og.creator', $creator->slug) : route('og.cover'),
         ]);
     }
 

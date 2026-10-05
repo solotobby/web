@@ -12,9 +12,34 @@ use Livewire\Component;
 
 new
 #[Layout('layouts.app')]
-#[Title('FanVault — Community Time Capsules & Fan Mail Vaults for Creators')]
+#[Title('FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators')]
 class extends Component
 {
+    public function rendering($view): void
+    {
+        $faqs = [
+            'What is FanVault?' => 'FanVault is a digital milestone time capsule and fan mail platform for creators. Fans write heartfelt letters, milestone predictions, and memories today, and creators unseal and read them live on milestone celebration streams.',
+            'How does pricing work for creators?' => 'Creators set their own seal amount instead of being locked into a rigid $5 fee. Fans contribute at the creator’s chosen level with optional booster tips, and creators receive direct payouts via Stripe.',
+            'When are the sealed letters unlocked?' => 'Letters stay encrypted and private until the creator reaches their milestone target date and unlocks the vault during their live broadcast stream.',
+            'How does FanVault replace a physical PO Box?' => 'FanVault gives creators all the emotion and connection of fan mail with zero physical mail sorting, zero storage clutter, and full global access for international fans.',
+        ];
+
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@graph' => array_merge(
+                \App\Support\Seo::websiteSchema()['@graph'],
+                [\App\Support\Seo::faqSchema($faqs)]
+            ),
+        ];
+
+        $view->layoutData([
+            'title' => 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators',
+            'description' => 'The modern digital time capsule and fan mail platform for creator milestones. Fans seal letters & predictions; creators unlock and read them live on stream.',
+            'canonicalUrl' => route('home'),
+            'ogUrl' => route('home'),
+            'schemaJson' => \App\Support\Seo::toJson($schema),
+        ]);
+    }
     public function with(): array
     {
         $count = (int) (Stat::query()->value('sealed_count') ?? Postcard::query()->count());

@@ -3,29 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>{{ $title ?? 'FanVault — Time Capsule & Fan Mail Vault for Creators' }}</title>
-    <meta name="description" content="{{ $description ?? 'The permanent time-capsule & fan mail vault for creators. Fans write letters, upload memories, and make predictions. Creators unlock the vault live on milestone streams.' }}">
+    <title>{{ $title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators' }}</title>
+    <meta name="description" content="{{ $description ?? 'The modern digital time capsule and fan mail platform for creator milestones. Fans seal letters & predictions; creators unlock and read them live on stream.' }}">
+    <meta name="keywords" content="{{ $keywords ?? 'creator time capsule, fan mail vault, digital time capsule, milestone stream celebration, fan letters, YouTube milestone, Twitch stream celebration, community milestone vault' }}">
+    <meta name="author" content="FanVault">
+    <meta name="robots" content="{{ $robots ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }}">
+    <link rel="canonical" href="{{ $canonicalUrl ?? url()->current() }}">
     
     <!-- OpenGraph & Social Sharing -->
     <meta property="og:site_name" content="FanVault">
     <meta property="og:type" content="{{ $ogType ?? 'website' }}">
-    <meta property="og:title" content="{{ $ogTitle ?? ($title ?? 'FanVault — Time Capsule & Fan Mail Vault for Creators') }}">
-    <meta property="og:description" content="{{ $ogDescription ?? ($description ?? 'The permanent time-capsule & fan mail vault for creators. Sealed until milestone streams.') }}">
+    <meta property="og:title" content="{{ $ogTitle ?? ($title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators') }}">
+    <meta property="og:description" content="{{ $ogDescription ?? ($description ?? 'The modern digital time capsule and fan mail platform for creator milestones. Sealed until milestone streams.') }}">
     <meta property="og:url" content="{{ $ogUrl ?? url()->current() }}">
     <meta property="og:image" content="{{ $ogImage ?? route('og.cover') }}">
+    <meta property="og:image:alt" content="{{ $ogTitle ?? ($title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_US">
 
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $ogTitle ?? ($title ?? 'FanVault — Time Capsule & Fan Mail Vault for Creators') }}">
-    <meta name="twitter:description" content="{{ $ogDescription ?? ($description ?? 'The permanent time-capsule & fan mail vault for creators. Sealed until milestone streams.') }}">
+    <meta name="twitter:site" content="@fanvault">
+    <meta name="twitter:creator" content="@fanvault">
+    <meta name="twitter:title" content="{{ $ogTitle ?? ($title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators') }}">
+    <meta name="twitter:description" content="{{ $ogDescription ?? ($description ?? 'The modern digital time capsule and fan mail platform for creator milestones. Sealed until milestone streams.') }}">
     <meta name="twitter:image" content="{{ $ogImage ?? route('og.cover') }}">
+    <meta name="twitter:image:alt" content="{{ $ogTitle ?? ($title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators') }}">
     <meta name="theme-color" content="#047857">
 
     <link rel="icon" href="{{ asset('assets/favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('assets/favicon.svg') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Structured Data (JSON-LD) -->
+    {!! $schemaJson ?? \App\Support\Seo::toJson(\App\Support\Seo::websiteSchema()) !!}
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
