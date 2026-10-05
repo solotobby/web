@@ -586,7 +586,7 @@ class extends Component
               {{ $creator ? 'Choose Your Letter Contribution' : 'Archival Sealing Fee' }}
             </h4>
             <p class="text-xs text-[#64748b]">
-              Minimum floor is ${{ $minDollars }}.00 · 80% (${{ $creatorCutDollars }}) directly supports {{ $creator ? $creator->name : 'the archive' }} · 20% platform archival ledger
+              {{ $creator ? "Set by {$creator->name} (minimum \${$minDollars}.00) · Direct creator patronage · Permanent archival ledger" : "Permanent archival ledger" }}
             </p>
           </div>
           <span class="inline-flex items-center gap-1 font-mono font-bold text-lg sm:text-xl text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0]/80 px-3.5 py-1 rounded-2xl shrink-0 self-start sm:self-auto shadow-2xs">
@@ -609,26 +609,20 @@ class extends Component
           </p>
         </div>
 
-        <!-- 80/20 Micro-Patronage Split Visual -->
-        <div class="mb-5 bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-3.5 sm:p-4">
-          <div class="flex items-center justify-between text-xs font-medium text-[#475569] mb-1.5">
-            <span class="flex items-center gap-1.5">
+        @if($creator)
+          <!-- Direct Creator Patronage Indicator -->
+          <div class="mb-5 bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-3.5 sm:p-4 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
               <span class="w-2 h-2 rounded-full bg-[#047857]"></span>
-              <strong>80% Creator Cut:</strong> ${{ $creatorCutDollars }}
-            </span>
-            <span class="flex items-center gap-1.5 text-[#64748b]">
-              <span class="w-2 h-2 rounded-full bg-[#94a3b8]"></span>
-              <span>20% Vault Fee:</span> ${{ $platformFeeDollars }}
+              <span class="text-xs text-[#334155] font-medium">
+                Direct patronage for <strong>{{ $creator->name }}</strong>
+              </span>
+            </div>
+            <span class="text-xs font-mono font-bold text-[#047857] bg-[#ecfdf5] border border-[#a7f3d0] px-2.5 py-0.5 rounded-full">
+              ${{ number_format($sealAmount, 2) }}
             </span>
           </div>
-          <div class="w-full h-2 rounded-full bg-[#e2e8f0] overflow-hidden flex">
-            <div class="h-full bg-gradient-to-r from-[#064e3b] to-[#047857] transition-all duration-300" style="width: 80%"></div>
-            <div class="h-full bg-[#94a3b8] transition-all duration-300" style="width: 20%"></div>
-          </div>
-          <p class="text-[11px] text-[#64748b] mt-2 leading-relaxed">
-            Transparent micro-patronage: 80% goes directly to {{ $creator ? $creator->name : 'the creator' }}. (Traditional platforms cap creators at flat $1.50 or less, but with FanVault you keep 80% of all booster tips).
-          </p>
-        </div>
+        @endif
 
         <!-- Quick Selector Chips with Micro-Animations -->
         <div class="space-y-3">
@@ -683,7 +677,7 @@ class extends Component
           <div class="pt-2">
             <label class="block text-xs font-semibold text-[#64748b] mb-1.5 flex items-center justify-between">
               <span>Or enter custom booster amount:</span>
-              <span class="text-[11px] text-[#047857] font-mono">Keep 80% to creator</span>
+              <span class="text-[11px] text-[#047857] font-mono">Direct creator support</span>
             </label>
             <div class="relative max-w-xs">
               <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 font-bold">$</span>

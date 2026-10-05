@@ -908,7 +908,7 @@ class extends Component
                 <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
-                <span>80% creator cut on all seals & tips</span>
+                <span>Direct creator payouts on all seals & tips</span>
               </span>
             </div>
 
@@ -1404,10 +1404,10 @@ class extends Component
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-[#e7e5df]">
             <div>
               <h2 class="font-serif text-2xl font-bold text-[#0f172a]">Earnings & Payout Ledger</h2>
-              <p class="text-xs sm:text-sm text-[#64748b]">You earn 80% from every sealed fan letter and booster tip (from your ${{ number_format($creator->minPriceDollars() ?: 3, 2) }} floor up to $50+). Payouts transfer automatically via Stripe when you unseal your vault on stream.</p>
+              <p class="text-xs sm:text-sm text-[#64748b]">Direct creator payouts on every sealed fan letter and booster tip (from your ${{ number_format($creator->minPriceDollars() ?: 3, 2) }} floor up to $50+). Payouts transfer automatically via Stripe when you unseal your vault on stream.</p>
             </div>
             <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-[#ecfdf5] border border-[#a7f3d0] text-[#064e3b]">
-              80% Creator Cut
+              Direct Creator Payouts
             </span>
           </div>
 
@@ -1566,7 +1566,7 @@ class extends Component
                   >
                 </div>
                 <span class="text-xs text-[#64748b] mt-1 block">
-                  Hard platform minimum is $3.00. Fans can pay this base amount or choose to add a booster/tip. You keep 80% of all contributions.
+                  You set the amount for your fan letters (platform minimum is $3.00). Fans contribute at your chosen level or can add a booster/tip.
                 </span>
                 @error('editMinPrice') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
               </div>

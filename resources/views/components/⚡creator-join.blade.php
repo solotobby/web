@@ -156,7 +156,7 @@ class extends Component
       <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
         🎙️ Creator Vault Setup · Step 0{{ $step }} / 03
       </span>
-      <span class="text-xs text-[#64748b] font-medium">Free forever · Keep 80% of all seals & tips</span>
+      <span class="text-xs text-[#64748b] font-medium">Free forever · Set your own seal amount</span>
     </div>
 
     @if($error)
@@ -290,7 +290,7 @@ class extends Component
           <span wire:loading wire:target="join">Launching…</span>
         </button>
       </div>
-      <p class="text-xs text-[#64748b] text-center mt-6">Every fan who seals through your door credits you 80% of their contribution (minimum $3 floor, with superfan booster tips up to $50+).</p>
+      <p class="text-xs text-[#64748b] text-center mt-6">You set your own seal amount instead of a fixed $5 fee. Fans contribute at your chosen level or add superfan booster tips.</p>
     @endif
   </div>
 </section>

@@ -60,7 +60,7 @@ class extends Component
       </div>
 
       <p class="text-base sm:text-lg text-[#475569] leading-relaxed max-w-xl mx-auto lg:mx-0">
-        Creators set an accessible floor (from $3). Fans choose what to give—with optional booster tips ($10, $25, $50) for superfans eager to back the journey. Creators keep <strong>80% of every dollar</strong>, unsealing letters live on stream.
+        Creators set their own seal amount instead of being locked to a fixed $5 fee. Fans contribute at your chosen amount, with optional booster tips ($10, $25, $50) for superfans eager to back the journey. Unseal letters live on stream with direct Stripe payouts.
       </p>
 
       <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
@@ -73,8 +73,8 @@ class extends Component
       </div>
 
       <div class="flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-1.5 text-xs text-[#64748b] pt-1">
-        <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-[#047857]"></span>80% Creator Revenue Share</span>
-        <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-[#047857]"></span>Pay-What-You-Want ($3 floor)</span>
+        <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-[#047857]"></span>Creator-Defined Pricing</span>
+        <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-[#047857]"></span>No fixed $5 fee · Flexible amounts</span>
         <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-[#047857]"></span>Unsealed live on stream</span>
         <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-[#047857]"></span>Zero PO Box clutter</span>
       </div>
@@ -97,18 +97,18 @@ class extends Component
           </div>
         </div>
 
-        <!-- Creator Payout Highlight Box (Option 4 PWYW) -->
+        <!-- Creator Payout Highlight Box (Creator Sets Amount) -->
         <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-4 my-5 text-left">
           <div class="flex items-center justify-between">
             <span class="text-xs font-semibold text-[#064e3b] flex items-center gap-1.5">
-              Creator Revenue Share
+              Creator-Set Pricing
             </span>
             <span class="text-xs font-mono font-bold text-[#047857] bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">
-              80% of all seals & tips
+              Custom Amount & Tips
             </span>
           </div>
           <div class="text-[11px] text-[#64748b] mt-1.5 leading-relaxed">
-            From an accessible $3 floor to $50+ superfan boosters. Automatic direct Stripe payouts when you unseal your vault.
+            Set your own seal amount instead of a rigid fixed $5 fee, plus optional superfan boosters. Automatic direct Stripe payouts when you unseal your vault.
           </div>
         </div>
 
@@ -245,10 +245,10 @@ class extends Component
         Interactive Vault Economics
       </div>
       <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-[#0f172a] mb-2">
-        Why “Pay What You Want” changes everything
+        Why creator-set pricing changes everything
       </h2>
       <p class="text-sm sm:text-base text-[#64748b] leading-relaxed">
-        A low $3 floor invites every fan to participate. Superfans naturally tip higher to back your milestone. See how micro-patronage scales your celebration revenue.
+        Choose your own seal amount instead of a rigid fixed $5 fee. Superfans can add booster tips to back your milestone. See how flexible contributions scale your celebration revenue.
       </p>
     </div>
 
@@ -281,7 +281,7 @@ class extends Component
         <!-- Floor Price Selector -->
         <div>
           <label class="block text-xs font-mono font-semibold text-[#475569] uppercase tracking-wider mb-2">
-            Your Minimum Floor (Accessible Entry):
+            Your Minimum Floor (Set by You):
           </label>
           <div class="grid grid-cols-3 gap-2">
             <button 
@@ -339,7 +339,7 @@ class extends Component
       <div class="lg:col-span-6 bg-white border border-[#a7f3d0] rounded-3xl p-6 sm:p-8 shadow-[0_4px_24px_rgba(4,120,87,0.06)] flex flex-col justify-between space-y-6">
         <div>
           <span class="text-xs font-mono font-semibold uppercase tracking-wider text-[#047857] block mb-1">
-            Your Creator Take-Home (80% Cut)
+            Your Estimated Creator Earnings
           </span>
           <div class="font-serif text-4xl sm:text-5xl font-normal text-[#064e3b] tracking-tight">
             $<span x-text="creatorPayout.toLocaleString()"></span>
@@ -364,7 +364,7 @@ class extends Component
         </div>
 
         <div class="text-xs text-[#475569] leading-relaxed pt-1">
-          💡 <strong>Why creators love Option 4:</strong> You never price fans out. An accessible $3 entry gives everyone a voice, while superfans happily add $10, $25, or $50 booster tips—unlocking thousands of dollars in genuine celebration support.
+          💡 <strong>Why creators love setting their own price:</strong> You're never locked into a flat $5 fee. Choose the exact amount that fits your audience, while superfans can add $10, $25, or $50 booster tips—unlocking thousands of dollars in celebration support.
         </div>
       </div>
     </div>
@@ -388,10 +388,10 @@ class extends Component
       <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-3xl p-6 shadow-2xs">
         <div class="text-xs font-mono font-semibold text-[#047857] tracking-widest uppercase mb-3">STAGE 01</div>
         <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a] mb-2">
-          Creator Sets Milestone & Floor
+          Creator Sets Milestone & Amount
         </h3>
         <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
-          Announce your goal (100k subscribers, 5th anniversary, or 500th episode) and set an accessible minimum floor (from $3). Get your branded <code class="bg-white px-1.5 py-0.5 rounded text-[#064e3b] font-mono text-xs border border-[#e7e5df]">/with/you</code> link for descriptions and bio.
+          Announce your goal (100k subscribers, 5th anniversary, or 500th episode) and choose your own seal amount instead of a fixed $5 fee. Get your branded <code class="bg-white px-1.5 py-0.5 rounded text-[#064e3b] font-mono text-xs border border-[#e7e5df]">/with/you</code> link for descriptions and bio.
         </p>
       </div>
 
@@ -401,7 +401,7 @@ class extends Component
           Community Seals with Boosters
         </h3>
         <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
-          Fans seal meaningful letters, photos, and wild predictions starting from your $3 floor. Superfans add $10, $25, or $50 booster tips. You keep 80% of every transaction.
+          Fans seal meaningful letters, photos, and wild predictions at the amount you set (instead of a fixed $5 fee). Superfans add $10, $25, or $50 booster tips, with direct payouts sent to your Stripe.
         </p>
       </div>
 
@@ -476,11 +476,11 @@ class extends Component
           </li>
           <li class="flex items-start gap-2.5">
             <span class="text-[#047857] font-bold">✓</span>
-            <span><strong>Global access</strong> — accessible $3 floor lets global fans participate.</span>
+            <span><strong>Global access</strong> — accessible pricing set by you lets global fans participate.</span>
           </li>
           <li class="flex items-start gap-2.5">
             <span class="text-[#047857] font-bold">✓</span>
-            <span><strong>Earn 80% on all letters & tips</strong> — typical 1,000-letter vault generates $4,000–$6,500+ directly to your Stripe account.</span>
+            <span><strong>Creator-set pricing & tips</strong> — choose your own amount instead of a fixed $5 fee. A typical 1,000-letter vault generates $4,000–$6,500+ directly to your Stripe account.</span>
           </li>
         </ul>
       </div>

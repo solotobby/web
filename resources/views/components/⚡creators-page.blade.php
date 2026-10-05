@@ -39,7 +39,7 @@ class extends Component
       <em class="italic text-[#047857]">milestone stream</em>.
     </h1>
     <p class="text-sm sm:text-base md:text-lg text-[#64748b] leading-relaxed mb-6">
-      Fans seal private letters, milestone predictions, and heartfelt memories starting from your $3 floor. Generous superfans add booster tips ($10, $25, $50+). You keep 80% of every dollar and unseal the vault live on stream!
+      Fans seal private letters, milestone predictions, and heartfelt memories starting at the amount you set (instead of a fixed $5 fee). Generous superfans add booster tips ($10, $25, $50+). You receive direct payouts and unseal the vault live on stream!
     </p>
 
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
@@ -122,7 +122,7 @@ class extends Component
         Why creators choose FanVault
       </h3>
       <p class="text-xs sm:text-sm text-[#64748b] mt-1">
-        Pay-What-You-Want micro-patronage removes friction for casual fans while letting superfans tip generously.
+        Creators set their own seal amount instead of being locked into a fixed $5 fee. Flexible amounts remove friction for casual fans while letting superfans tip generously.
       </p>
     </div>
 
@@ -137,10 +137,10 @@ class extends Component
 
       <div class="bg-[#faf9f5] border border-[#a7f3d0] rounded-2xl p-5 shadow-2xs hover:shadow-xs transition-all relative overflow-hidden">
         <div class="absolute -top-3 -right-3 w-12 h-12 bg-[#ecfdf5] rounded-full blur-sm"></div>
-        <div class="text-xs font-mono font-semibold text-[#047857] tracking-wider uppercase mb-2">Pillar 02 · Option 4</div>
-        <h4 class="font-bold text-base text-[#0f172a] mb-1">Pay-What-You-Want (80% Cut)</h4>
+        <div class="text-xs font-mono font-semibold text-[#047857] tracking-wider uppercase mb-2">Pillar 02 · Custom Pricing</div>
+        <h4 class="font-bold text-base text-[#0f172a] mb-1">Creator-Defined Pricing & Tips</h4>
         <p class="text-xs sm:text-sm text-[#64748b] leading-relaxed">
-          Set an accessible floor ($3 min). Fans can tip $10, $25, or $50 to champion your channel. You keep 80% net—yielding 3× to 5× higher earnings than flat-rate platforms.
+          Set your own seal amount instead of a rigid fixed $5 fee. Fans contribute at your chosen level or tip $10, $25, or $50 to champion your channel—yielding significantly higher earnings than flat-rate platforms.
         </p>
       </div>
 
@@ -158,18 +158,18 @@ class extends Component
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-[#cbd5e1]/60">
         <div>
           <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#064e3b] text-white mb-1.5">
-            ⚡ Option 4 Micro-Patronage Math
+            ⚡ Custom Pricing & Tips Math
           </span>
           <h4 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a]">
-            How Pay-What-You-Want Unlocks 3.5× Higher Earnings
+            How Creator-Set Pricing & Booster Tips Unlock Higher Earnings
           </h4>
           <p class="text-xs sm:text-sm text-[#475569]">
-            Flat pricing leaves money on the table. Micro-patronage lets your top 10% superfans subsidize accessibility for all.
+            Fixed $5 fees leave money on the table. Setting your own amount and letting superfans add booster tips allows your community to support you at every level.
           </p>
         </div>
         <div class="shrink-0 text-left md:text-right">
           <span class="text-xs font-mono text-[#64748b] block">Typical 500-Letter Community</span>
-          <span class="font-mono text-2xl font-bold text-[#047857]">~$2,650 Creator Take-Home</span>
+          <span class="font-mono text-2xl font-bold text-[#047857]">~$2,650 Estimated Earnings</span>
           <span class="text-[11px] text-[#059669] font-medium block">vs. $750 on old flat $1.50 models (+253%)</span>
         </div>
       </div>
@@ -188,7 +188,7 @@ class extends Component
           </p>
         </div>
         <div class="bg-white/80 rounded-xl p-3.5 border border-white/60 shadow-2xs">
-          <span class="text-xs font-mono font-bold text-[#047857] block mb-1">3. Direct 80% Stripe Payouts</span>
+          <span class="text-xs font-mono font-bold text-[#047857] block mb-1">3. Direct Stripe Payouts</span>
           <p class="text-xs text-[#64748b] leading-relaxed">
             Funds accrue safely in your studio ledger and transfer automatically when your milestone unseals on stream.
           </p>

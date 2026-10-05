@@ -205,7 +205,8 @@ class CreatorFanVaultTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Maya Lin');
-        $response->assertSee('80%');
+        $response->assertSee('Drafting Letter');
+        $response->assertDontSee('80%');
     }
 
     public function test_fan_wall_explore_page_renders(): void

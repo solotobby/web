@@ -232,7 +232,7 @@ class extends Component
           </div>
 
           <div class="pt-3 border-t border-[#e7e5df] text-[11px] text-[#64748b]">
-            From ${{ $creator->minPriceDollars() }} · You set the amount · 80% supports {{ $creator->name }}
+            From ${{ $creator->minPriceDollars() }} · Set by {{ $creator->name }} · Direct support for {{ $creator->name }}
           </div>
         </aside>
       </div>
