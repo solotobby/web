@@ -79,6 +79,12 @@ class extends Component
         $this->customAmount = null;
     }
 
+    public function addBooster(int $extra): void
+    {
+        $this->sealAmount = min(1000, $this->sealAmount + $extra);
+        $this->customAmount = null;
+    }
+
     public function updatedCustomAmount(): void
     {
         if (is_numeric($this->customAmount)) {
@@ -100,7 +106,15 @@ class extends Component
         $creator = session('ref_slug') ? \App\Models\Creator::query()->where('slug', session('ref_slug'))->with('milestones')->first() : null;
 
         if ($creator) {
-            $this->sealAmount = (int) ($creator->minPriceDollars() ?: 5);
+            $minPrice = (int) ($creator->minPriceDollars() ?: 5);
+            $this->sealAmount = $minPrice;
+            if ($reqAmt = request()->query('amount')) {
+                $val = (int) $reqAmt;
+                if ($val >= $minPrice) {
+                    $this->sealAmount = min(1000, $val);
+                }
+            }
+
             $requestedMilestone = request()->query('milestone');
             if ($requestedMilestone) {
                 $found = $creator->milestones->firstWhere('id', $requestedMilestone);
@@ -118,6 +132,13 @@ class extends Component
                     if (! request()->query('day') && ! session('set_day') && $active->unlock_date) {
                         $this->addressedTo = $active->unlock_date->toDateString();
                     }
+                }
+            }
+        } else {
+            if ($reqAmt = request()->query('amount')) {
+                $val = (int) $reqAmt;
+                if ($val >= 3) {
+                    $this->sealAmount = min(1000, $val);
                 }
             }
         }
@@ -413,6 +434,83 @@ class extends Component
         </p>
       </div>
 
+      <!-- Step 1 Contribution Level Selector -->
+      <div class="mb-6 p-4 sm:p-5 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] shadow-2xs">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div>
+            <span class="block text-xs font-bold uppercase tracking-wider text-[#047857] font-mono">
+              {{ $creator ? "Choose How Much You'd Like to Give " . $creator->name : "Choose Contribution Amount" }}:
+            </span>
+            <span class="text-xs text-[#64748b]">
+              {{ $creator ? "Base minimum \${$minDollars}.00 · Superfans add optional booster tips" : "Permanent archival preservation" }}
+            </span>
+          </div>
+          <span class="font-mono font-bold text-sm sm:text-base text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0] px-3 py-1 rounded-full shrink-0">
+            ${{ number_format($sealAmount, 2) }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+          <button 
+            type="button" 
+            wire:click="setAmount({{ $minDollars }})" 
+            class="p-2 sm:p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+          >
+            <span class="block text-[10px] uppercase font-mono opacity-80">Standard</span>
+            <strong class="text-xs sm:text-sm font-mono font-bold">${{ $minDollars }}</strong>
+          </button>
+
+          @if($minDollars < 10)
+            <button 
+              type="button" 
+              wire:click="setAmount(10)" 
+              class="p-2 sm:p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+            >
+              <span class="block text-[10px] uppercase font-mono opacity-80">Supporter</span>
+              <strong class="text-xs sm:text-sm font-mono font-bold">$10</strong>
+            </button>
+          @endif
+
+          <button 
+            type="button" 
+            wire:click="setAmount(25)" 
+            class="p-2 sm:p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df]' }}"
+          >
+            <span class="block text-[10px] uppercase font-mono opacity-80 text-amber-500 {{ $sealAmount === 25 && ! $customAmount ? 'text-amber-200' : '' }}">Superfan</span>
+            <strong class="text-xs sm:text-sm font-mono font-bold">$25</strong>
+          </button>
+
+          <button 
+            type="button" 
+            wire:click="setAmount(50)" 
+            class="p-2 sm:p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df]' }}"
+          >
+            <span class="block text-[10px] uppercase font-mono opacity-80 text-purple-500 {{ $sealAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">VIP Patron</span>
+            <strong class="text-xs sm:text-sm font-mono font-bold">$50</strong>
+          </button>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t border-[#e7e5df]">
+          <span class="text-xs text-[#334155]">
+            <strong class="text-[#047857]">{{ $tierName }}:</strong> {{ $tierPerk }}
+          </span>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <span class="text-xs text-[#64748b]">Custom:</span>
+            <div class="relative w-28">
+              <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-xs">$</span>
+              <input 
+                type="number" 
+                min="{{ $minDollars }}" 
+                max="1000" 
+                placeholder="{{ $minDollars }}+" 
+                wire:model.live.debounce.300ms="customAmount"
+                class="w-full pl-6 pr-2 py-1 bg-white border border-[#e7e5df] focus:border-[#047857] rounded-xl text-xs font-mono outline-none shadow-2xs"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="mb-5">
         <label for="message" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Your Secret Letter (Sealed in archive until reveal date)
@@ -437,7 +535,7 @@ class extends Component
 
       <div class="pt-4 border-t border-[#e7e5df]">
         <button class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-base shadow-[0_4px_16px_rgba(6,78,59,0.3)] hover:shadow-[0_6px_20px_rgba(6,78,59,0.4)] hover:-translate-y-0.5 active:translate-y-0 transition-all" wire:click="next" type="button">
-          Continue to Details →
+          Continue with ${{ $sealAmount }} →
         </button>
       </div>
 
@@ -539,7 +637,7 @@ class extends Component
 
       <div class="flex items-center justify-between gap-3 pt-4 border-t border-[#e7e5df]">
         <button class="px-5 py-3 rounded-full bg-white hover:bg-[#f5f4ee] border border-[#e7e5df] text-[#334155] font-bold text-sm transition-all" wire:click="back" type="button">← Back</button>
-        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-base shadow-[0_4px_16px_rgba(6,78,59,0.3)] hover:shadow-[0_6px_20px_rgba(6,78,59,0.4)] hover:-translate-y-0.5 active:translate-y-0 transition-all" wire:click="next" type="button">Review Your Keepsake →</button>
+        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-base shadow-[0_4px_16px_rgba(6,78,59,0.3)] hover:shadow-[0_6px_20px_rgba(6,78,59,0.4)] hover:-translate-y-0.5 active:translate-y-0 transition-all" wire:click="next" type="button">Review Your Keepsake (${{ $sealAmount }}) →</button>
       </div>
 
     @else
@@ -678,6 +776,20 @@ class extends Component
               <span class="block text-[10px] uppercase tracking-wider opacity-75 font-mono">Patron</span>
               <strong class="text-base sm:text-lg block font-mono font-bold">$50</strong>
               <span class="text-[10px] block opacity-80 mt-0.5 text-purple-600 font-semibold {{ $sealAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">👑 VIP Foil</span>
+            </button>
+          </div>
+
+          <!-- Quick Booster Addons -->
+          <div class="pt-2 flex items-center gap-2 flex-wrap">
+            <span class="text-xs font-semibold text-[#64748b]">Quick booster tip:</span>
+            <button type="button" wire:click="addBooster(5)" class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-[#f1f5f9] hover:bg-[#ecfdf5] text-[#0f172a] hover:text-[#064e3b] border border-[#e2e8f0] hover:border-[#a7f3d0] transition-all">
+              +$5
+            </button>
+            <button type="button" wire:click="addBooster(10)" class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-[#f1f5f9] hover:bg-[#ecfdf5] text-[#0f172a] hover:text-[#064e3b] border border-[#e2e8f0] hover:border-[#a7f3d0] transition-all">
+              +$10
+            </button>
+            <button type="button" wire:click="addBooster(25)" class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-[#f1f5f9] hover:bg-[#fefce8] text-[#0f172a] hover:text-[#854d0e] border border-[#e2e8f0] hover:border-[#fde047] transition-all">
+              +$25 ★
             </button>
           </div>
 

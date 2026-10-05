@@ -481,4 +481,37 @@ class CreatorFanVaultTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('+$20.00');
     }
+
+    public function test_creator_door_allows_fan_to_select_amount_and_boosters(): void
+    {
+        $response = $this->get('/with/' . $this->creator->slug);
+        $response->assertStatus(200);
+        $response->assertSee('Choose How Much You\'d Like to Give', false);
+        $response->assertSee('Superfan');
+        $response->assertSee('$25');
+        $response->assertSee('VIP Patron');
+        $response->assertSee('$50');
+
+        \Livewire\Livewire::test('creator-door', ['slug' => $this->creator->slug])
+            ->assertSet('selectedAmount', 5)
+            ->call('setAmount', 25)
+            ->assertSet('selectedAmount', 25)
+            ->assertSee('$25.00')
+            ->set('customAmount', '75')
+            ->assertSet('selectedAmount', 75);
+    }
+
+    public function test_seal_page_initializes_with_amount_query_parameter(): void
+    {
+        $response = $this->get('/seal?ref=' . $this->creator->slug . '&amount=50');
+        $response->assertStatus(200);
+        $response->assertSee('$50.00');
+        $response->assertSee('VIP Vault Patron');
+
+        \Livewire\Livewire::withQueryParams(['ref' => $this->creator->slug, 'amount' => 50])
+            ->test('seal-page')
+            ->assertSet('sealAmount', 50)
+            ->call('addBooster', 10)
+            ->assertSet('sealAmount', 60);
+    }
 }

@@ -15,6 +15,8 @@ class extends Component
 {
     public string $slug = '';
     public ?string $milestoneId = null;
+    public int $selectedAmount = 5;
+    public ?string $customAmount = null;
 
     public function mount(string $slug): void
     {
@@ -22,10 +24,39 @@ class extends Component
         $creator = Creator::query()->where('slug', $this->slug)->first();
         if ($creator) {
             session(['ref_slug' => $creator->slug]);
+            $this->selectedAmount = (int) ($creator->minPriceDollars() ?: 5);
         }
 
         if (request()->query('milestone')) {
             $this->milestoneId = (string) request()->query('milestone');
+        }
+
+        if (request()->query('amount')) {
+            $amt = (int) request()->query('amount');
+            $min = $creator ? (int) ($creator->minPriceDollars() ?: 3) : 3;
+            if ($amt >= $min) {
+                $this->selectedAmount = min(1000, $amt);
+            }
+        }
+    }
+
+    public function setAmount(int $amt): void
+    {
+        $creator = Creator::query()->where('slug', $this->slug)->first();
+        $min = $creator ? (int) ($creator->minPriceDollars() ?: 3) : 3;
+        $this->selectedAmount = max($min, $amt);
+        $this->customAmount = null;
+    }
+
+    public function updatedCustomAmount(): void
+    {
+        if (is_numeric($this->customAmount)) {
+            $val = (int) $this->customAmount;
+            $creator = Creator::query()->where('slug', $this->slug)->first();
+            $min = $creator ? (int) ($creator->minPriceDollars() ?: 3) : 3;
+            if ($val >= $min) {
+                $this->selectedAmount = min(1000, $val);
+            }
         }
     }
 
@@ -93,6 +124,20 @@ class extends Component
             $daysUntil = max(0, (int) now()->diffInDays($targetDate, false));
         }
 
+        $minDollars = $creator ? (int) ($creator->minPriceDollars() ?: 3) : 3;
+        $tierName = match(true) {
+            $this->selectedAmount >= 50 => '👑 VIP Vault Patron',
+            $this->selectedAmount >= 25 => '✨ Superfan Booster',
+            $this->selectedAmount >= 10 => '⭐ Channel Supporter',
+            default => '🛡️ Standard Keepsake',
+        };
+        $tierPerk = match(true) {
+            $this->selectedAmount >= 50 => 'Royal Obsidian foil certificate + Stream shoutout & pinned recognition',
+            $this->selectedAmount >= 25 => 'Gold holographic digital foil + Stream highlight callout during live reveal',
+            $this->selectedAmount >= 10 => 'Bronze metallic foil pass + Priority queue in stream reader',
+            default => 'Permanent encrypted archival storage + Numbered keepsake certificate',
+        };
+
         return [
             'creator' => $creator,
             'milestones' => $milestones,
@@ -100,6 +145,9 @@ class extends Component
             'letters' => $letters,
             'daysUntil' => $daysUntil,
             'link' => url('/with/'.$this->slug),
+            'minDollars' => $minDollars,
+            'tierName' => $tierName,
+            'tierPerk' => $tierPerk,
         ];
     }
 };
@@ -198,13 +246,96 @@ class extends Component
             Your letter, photos, and predictions are encrypted and preserved safely until the milestone stream. One public teaser is etched on the community wall today.
           </p>
 
+          <!-- Choose How Much to Give / Contribution Selector -->
+          <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-4 sm:p-5 my-3 shadow-2xs">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="block text-xs font-bold uppercase tracking-wider text-[#047857] font-mono">
+                🎁 Choose How Much You'd Like to Give {{ $creator->name }}:
+              </span>
+              <span class="text-xs font-mono font-bold text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0] px-3 py-1 rounded-full">
+                ${{ number_format($selectedAmount, 2) }}
+              </span>
+            </div>
+
+            <p class="text-xs text-[#64748b] mb-3">
+              Support {{ $creator->name }} with your milestone letter. Generous superfans add booster tips for live stream highlight perks.
+            </p>
+
+            <!-- Quick Amount Chips -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+              <button 
+                type="button" 
+                wire:click="setAmount({{ $minDollars }})" 
+                class="p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $selectedAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+              >
+                <span class="block text-[10px] uppercase font-mono opacity-80">Standard</span>
+                <strong class="text-sm sm:text-base font-mono font-bold">${{ $minDollars }}</strong>
+                <span class="text-[10px] block opacity-75 mt-0.5">Floor</span>
+              </button>
+
+              @if($minDollars < 10)
+                <button 
+                  type="button" 
+                  wire:click="setAmount(10)" 
+                  class="p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $selectedAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+                >
+                  <span class="block text-[10px] uppercase font-mono opacity-80">Supporter</span>
+                  <strong class="text-sm sm:text-base font-mono font-bold">$10</strong>
+                  <span class="text-[10px] block opacity-75 mt-0.5">Bronze Foil</span>
+                </button>
+              @endif
+
+              <button 
+                type="button" 
+                wire:click="setAmount(25)" 
+                class="p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $selectedAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df]' }}"
+              >
+                <span class="block text-[10px] uppercase font-mono opacity-80 text-amber-500 {{ $selectedAmount === 25 && ! $customAmount ? 'text-amber-200' : '' }}">Superfan</span>
+                <strong class="text-sm sm:text-base font-mono font-bold">$25</strong>
+                <span class="text-[10px] block opacity-75 mt-0.5 text-amber-600 {{ $selectedAmount === 25 && ! $customAmount ? 'text-amber-200' : '' }}">★ Gold Foil</span>
+              </button>
+
+              <button 
+                type="button" 
+                wire:click="setAmount(50)" 
+                class="p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $selectedAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df]' }}"
+              >
+                <span class="block text-[10px] uppercase font-mono opacity-80 text-purple-500 {{ $selectedAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">VIP Patron</span>
+                <strong class="text-sm sm:text-base font-mono font-bold">$50</strong>
+                <span class="text-[10px] block opacity-75 mt-0.5 text-purple-600 {{ $selectedAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">👑 VIP Crown</span>
+              </button>
+            </div>
+
+            <!-- Custom amount input & dynamic perk banner -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#e7e5df]">
+              <div class="text-xs text-[#334155]">
+                <strong class="text-[#047857]">{{ $tierName }}:</strong> {{ $tierPerk }}
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-[#64748b] whitespace-nowrap">Or custom:</span>
+                <div class="relative w-32">
+                  <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-xs">$</span>
+                  <input 
+                    type="number" 
+                    min="{{ $minDollars }}" 
+                    max="1000" 
+                    placeholder="{{ $minDollars }}+" 
+                    wire:model.live.debounce.300ms="customAmount"
+                    class="w-full pl-6 pr-2 py-1.5 bg-white border border-[#e7e5df] focus:border-[#047857] rounded-xl text-xs font-mono outline-none shadow-2xs"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
             <a 
-              href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id])) }}" 
-              class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 transition-all"
+              href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id, 'amount' => $selectedAmount])) }}" 
+              class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 active:translate-y-0 transition-all"
             >
-              Seal Letter for {{ $activeMilestone ? $activeMilestone->title : $creator->name }} (${{ $creator->minPriceDollars() }}+)
+              Seal Letter for {{ $activeMilestone ? $activeMilestone->title : $creator->name }} (${{ $selectedAmount }})
             </a>
             <button type="button" @click="copy()" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 sm:py-4 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-medium text-sm hover:-translate-y-0.5 transition-all shadow-xs">
               <span x-show="!copied">Share Vault Link</span>
@@ -276,8 +407,8 @@ class extends Component
           <p class="text-xs sm:text-sm text-[#64748b] max-w-md mx-auto mb-6">
             Be the founding fan to seal a message for {{ $creator->name }}’s {{ $activeMilestone ? $activeMilestone->title : 'milestone' }}.
           </p>
-          <a href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id])) }}" class="inline-flex items-center px-6 py-3 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm shadow-[0_2px_10px_rgba(6,78,59,0.25)] transition-all">
-            Write the First Letter (${{ $creator->minPriceDollars() }}+)
+          <a href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id, 'amount' => $selectedAmount])) }}" class="inline-flex items-center px-6 py-3 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm shadow-[0_2px_10px_rgba(6,78,59,0.25)] transition-all">
+            Write the First Letter (${{ $selectedAmount }})
           </a>
         </div>
       @else
