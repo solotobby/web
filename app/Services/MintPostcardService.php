@@ -98,13 +98,14 @@ class MintPostcardService
             if ($creatorId) {
                 $amountCents = (int) ($payload['amount_cents'] ?? Capsule::DEFAULT_SEAL_PRICE_CENTS);
                 $cutCents = Capsule::calculateCreatorCut($amountCents);
+                $refStatus = ! empty($payload['stripe_session_id']) ? 'paid' : 'pending';
 
                 Referral::query()->create([
                     'postcard_id' => $postcard->id,
                     'creator_id' => $creatorId,
                     'amount_cents' => $amountCents,
                     'cut_cents' => $cutCents,
-                    'status' => 'pending',
+                    'status' => $refStatus,
                 ]);
             }
 

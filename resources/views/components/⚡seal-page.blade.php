@@ -274,40 +274,51 @@ class extends Component
             ? 'Encrypted fan letter & keepsake pass for '.($activeMilestone?->title ?? $creator->name).'. Unsealed live on stream.'
             : 'Permanent community time capsule letter & collectible pass.';
 
-        Stripe::setApiKey($stripeKey);
-        $session = StripeSession::create([
-            'mode' => 'payment',
-            'customer_email' => $this->email,
-            'line_items' => [[
-                'quantity' => 1,
-                'price_data' => [
-                    'currency' => 'usd',
-                    'unit_amount' => $amountCents,
-                    'product_data' => [
-                        'name' => $productName,
-                        'description' => $productDesc,
+        try {
+            Stripe::setApiKey($stripeKey);
+            $session = StripeSession::create([
+                'mode' => 'payment',
+                'customer_email' => $this->email,
+                'line_items' => [[
+                    'quantity' => 1,
+                    'price_data' => [
+                        'currency' => 'usd',
+                        'unit_amount' => $amountCents,
+                        'product_data' => [
+                            'name' => $productName,
+                            'description' => $productDesc,
+                        ],
                     ],
+                ]],
+                'success_url' => route('checkout.return').'?session_id={CHECKOUT_SESSION_ID}&claim='.$claimToken,
+                'cancel_url' => route('seal', array_filter([
+                    'ref' => session('ref_slug'),
+                    'milestone' => $this->milestoneId,
+                    'amount' => $this->sealAmount,
+                ])),
+                'metadata' => [
+                    'kind' => 'fanvault_seal',
+                    'creator_slug' => (string) session('ref_slug', ''),
+                    'milestone_id' => (string) ($this->milestoneId ?? ''),
                 ],
-            ]],
-            'success_url' => route('checkout.return').'?session_id={CHECKOUT_SESSION_ID}&claim='.$claimToken,
-            'cancel_url' => route('seal'),
-            'metadata' => [
-                'kind' => 'fanvault_seal',
-                'creator_slug' => (string) session('ref_slug', ''),
-                'milestone_id' => (string) ($this->milestoneId ?? ''),
-            ],
-        ]);
+            ]);
 
-        Payment::query()->create([
-            'stripe_session_id' => $session->id,
-            'amount_cents' => $amountCents,
-            'currency' => 'usd',
-            'status' => 'created',
-            'draft' => $draft,
-            'creator_slug' => session('ref_slug'),
-        ]);
+            Payment::query()->create([
+                'stripe_session_id' => $session->id,
+                'amount_cents' => $amountCents,
+                'currency' => 'usd',
+                'status' => 'created',
+                'draft' => $draft,
+                'creator_slug' => session('ref_slug'),
+            ]);
 
-        return redirect()->away($session->url);
+            return redirect()->away($session->url);
+        } catch (\Throwable $e) {
+            $this->sealing = false;
+            $this->error = 'Unable to initialize Stripe checkout: '.$e->getMessage();
+
+            return null;
+        }
     }
 
     public function with(): array

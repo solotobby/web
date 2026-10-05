@@ -28,11 +28,15 @@ class StripeWebhookController extends Controller
             return response('invalid signature', 400);
         }
 
-        if ($event->type === 'checkout.session.completed') {
+        if (in_array($event->type, ['checkout.session.completed', 'checkout.session.async_payment_succeeded'], true)) {
             $session = $event->data->object;
             $sessionId = (string) ($session->id ?? '');
             if ($sessionId === '') {
                 return response('ok', 200);
+            }
+
+            if (($session->payment_status ?? '') !== 'paid') {
+                return response('payment not completed', 200);
             }
 
             $payment = Payment::query()->where('stripe_session_id', $sessionId)->first();
