@@ -185,6 +185,29 @@ class extends Component
         </a>
       </div>
 
+      <!-- Point 10: Anticipation Countdown Card -->
+      @if($creator)
+        @php
+          $targetDate = $msg->milestone?->unlock_date ?: $creator->unlock_date;
+          $daysLeft = $targetDate ? max(0, (int) now()->diffInDays($targetDate, false)) : null;
+          $unlockDateStr = $msg->milestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate();
+        @endphp
+        <div class="p-4 rounded-2xl bg-[#ecfdf5] border border-[#a7f3d0] space-y-2">
+          <div class="flex items-center justify-between text-xs font-mono">
+            <span class="text-[#064e3b] font-bold">⏳ Anticipation Countdown</span>
+            @if($daysLeft !== null)
+              <span class="bg-white px-2 py-0.5 rounded-full text-[#047857] font-semibold border border-[#a7f3d0]">{{ $daysLeft }} days until reveal</span>
+            @endif
+          </div>
+          <p class="text-xs text-[#064e3b]/90 leading-relaxed">
+            This keepsake will be opened during <strong>{{ $creator->name }}'s</strong> live unsealing ceremony on <strong>{{ $unlockDateStr }}</strong>.
+          </p>
+          <a href="{{ route('with', $creator->slug) }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#047857] hover:underline">
+            <span>🔔 Follow {{ $creator->name }}'s Time Capsule for opening alerts →</span>
+          </a>
+        </div>
+      @endif
+
       <!-- Nominate Another Creator Loop -->
       <div class="mt-4 p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] text-xs space-y-1.5">
         <div class="font-bold text-[#064e3b] flex items-center gap-1.5">

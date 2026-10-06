@@ -131,6 +131,9 @@ class extends Component
         $activeMilestone = null;
         $daysUntil = null;
         $followersCount = 0;
+        $contributionsCount = 0;
+        $uniquePeopleCount = 0;
+        $unlockProgress = 25;
 
         if ($creator) {
             $milestones = $creator->milestones()->withCount('postcards')->get();
@@ -158,6 +161,10 @@ class extends Component
 
             $daysUntil = max(0, (int) now()->diffInDays($targetDate, false));
             $followersCount = $creator->followers()->count();
+
+            $contributionsCount = $activeMilestone ? $activeMilestone->postcards()->count() : $creator->postcards()->count();
+            $uniquePeopleCount = $activeMilestone ? $activeMilestone->uniqueContributorsCount() : $creator->uniqueContributorsCount();
+            $unlockProgress = $activeMilestone ? $activeMilestone->unlockProgress() : $creator->unlockProgress();
         }
 
         $minDollars = $creator ? (int) ($creator->minPriceDollars() ?: 3) : 3;
@@ -180,6 +187,9 @@ class extends Component
             'activeMilestone' => $activeMilestone,
             'letters' => $letters,
             'daysUntil' => $daysUntil,
+            'unlockProgress' => $unlockProgress,
+            'contributionsCount' => $contributionsCount,
+            'uniquePeopleCount' => $uniquePeopleCount,
             'link' => url('/with/'.$this->slug),
             'minDollars' => $minDollars,
             'tierName' => $tierName,
@@ -258,15 +268,50 @@ class extends Component
             “{{ ($activeMilestone?->description) ?: ($creator->bio ?: 'Leave a message, prediction, or memory for our milestone stream. I will unseal the capsule and read my favorites live on video!') }}”
           </p>
 
-          <!-- Milestone Condition & Progress -->
-          <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] my-3">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs font-mono mb-1.5">
-              <span class="text-[#047857] font-bold">🎯 Milestone Goal: {{ $activeMilestone?->title ?? $creator->milestone_title ?? 'Milestone Stream' }}</span>
-              <span class="text-[#64748b]">Target: {{ $activeMilestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate() }}</span>
+          <!-- Milestone Anticipation & Progress Engine -->
+          <div class="p-5 rounded-3xl bg-[#faf9f5] border border-[#e7e5df] my-4 shadow-2xs space-y-3.5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <span class="text-xs font-mono uppercase tracking-wider font-bold text-[#047857] block">
+                  🎯 Milestone Destination
+                </span>
+                <strong class="font-serif text-lg text-[#0f172a] block">
+                  {{ $activeMilestone?->title ?? $creator->milestone_title ?? 'Community Milestone' }}
+                </strong>
+              </div>
+              <div class="text-left sm:text-right">
+                @if($daysUntil !== null)
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#047857] animate-pulse"></span>
+                    <span>⏳ {{ $daysUntil }} days until the vault opens</span>
+                  </span>
+                @else
+                  <span class="text-xs font-mono text-[#64748b]">Unsealing Ceremony: {{ $activeMilestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate() }}</span>
+                @endif
+              </div>
             </div>
-            <div class="text-xs text-[#334155] font-medium flex items-center justify-between">
-              <span><strong>{{ $letters->count() }}</strong> contributions sealed so far</span>
-              <span class="text-[#047857] font-mono">🔔 {{ $followersCount }} following</span>
+
+            <!-- Milestone Progress Bar -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-[11px] font-mono text-[#64748b]">
+                <span>Today</span>
+                <span class="text-[#047857] font-semibold">Unsealing Ceremony: {{ $activeMilestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate() }}</span>
+              </div>
+              <div class="h-2 w-full bg-[#e2e8f0] rounded-full overflow-hidden p-0.5">
+                <div class="h-full bg-gradient-to-r from-[#047857] to-[#10b981] rounded-full transition-all duration-500" style="width: {{ $unlockProgress }}%"></div>
+              </div>
+            </div>
+
+            <!-- Point 9: Contributions + Unique People -->
+            <div class="pt-2 border-t border-[#e7e5df] flex flex-wrap items-center justify-between text-xs text-[#334155] gap-2">
+              <span class="font-mono">
+                <strong class="text-[#064e3b]">🔒 {{ $contributionsCount }}</strong> {{ $contributionsCount === 1 ? 'contribution' : 'contributions' }} sealed
+                <span class="text-[#94a3b8]">·</span>
+                <strong class="text-[#064e3b]">👥 {{ $uniquePeopleCount }}</strong> {{ $uniquePeopleCount === 1 ? 'person has' : 'people have' }} left something behind
+              </span>
+              <span class="text-[#047857] font-mono text-[11px] font-semibold">
+                🔔 {{ $followersCount }} following opening alerts
+              </span>
             </div>
           </div>
 
@@ -332,30 +377,31 @@ class extends Component
             </div>
           </div>
 
-          <!-- Choose How Much to Give / Contribution Selector -->
+          <!-- Seal Contribution (Toned down, clean & focused) -->
           <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-4 sm:p-5 my-3 shadow-2xs">
-            <div class="flex items-center justify-between gap-2 mb-2">
-              <span class="block text-xs font-bold uppercase tracking-wider text-[#047857] font-mono">
-                🎁 Choose How Much You'd Like to Give {{ $creator->name }}:
-              </span>
-              <span class="text-xs font-mono font-bold text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0] px-3 py-1 rounded-full">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+              <div>
+                <span class="block text-xs font-bold uppercase tracking-wider text-[#047857] font-mono">
+                  🎁 Choose How Much You'd Like to Give {{ $creator->name }}:
+                </span>
+                <p class="text-[11px] text-[#64748b] mt-0.5">
+                  Spam-free contribution set by {{ $creator->name }} · 80% paid directly to creator
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0] px-3 py-1 rounded-full self-start sm:self-auto">
                 ${{ number_format($selectedAmount, 2) }}
               </span>
             </div>
 
-            <p class="text-xs text-[#64748b] mb-3">
-              Your contribution directly supports {{ $creator->name }}. Generous superfans add booster amounts for unsealing stream recognition perks.
-            </p>
-
             <!-- Quick Amount Chips -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
               <button 
                 type="button" 
                 wire:click="setAmount({{ $minDollars }})" 
-                class="p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $selectedAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+                class="p-2.5 rounded-xl border text-center transition-all duration-200 {{ $selectedAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
               >
                 <span class="block text-[10px] uppercase font-mono opacity-80">Standard</span>
-                <strong class="text-sm sm:text-base font-mono font-bold">${{ $minDollars }}</strong>
+                <strong class="text-sm font-mono font-bold">${{ $minDollars }}</strong>
                 <span class="text-[10px] block opacity-75 mt-0.5">Floor</span>
               </button>
 
@@ -363,10 +409,10 @@ class extends Component
                 <button 
                   type="button" 
                   wire:click="setAmount(10)" 
-                  class="p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $selectedAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+                  class="p-2.5 rounded-xl border text-center transition-all duration-200 {{ $selectedAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
                 >
                   <span class="block text-[10px] uppercase font-mono opacity-80">Supporter</span>
-                  <strong class="text-sm sm:text-base font-mono font-bold">$10</strong>
+                  <strong class="text-sm font-mono font-bold">$10</strong>
                   <span class="text-[10px] block opacity-75 mt-0.5">Bronze Foil</span>
                 </button>
               @endif
@@ -374,48 +420,47 @@ class extends Component
               <button 
                 type="button" 
                 wire:click="setAmount(25)" 
-                class="p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $selectedAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df]' }}"
+                class="p-2.5 rounded-xl border text-center transition-all duration-200 {{ $selectedAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df]' }}"
               >
                 <span class="block text-[10px] uppercase font-mono opacity-80 text-amber-500 {{ $selectedAmount === 25 && ! $customAmount ? 'text-amber-200' : '' }}">Superfan</span>
-                <strong class="text-sm sm:text-base font-mono font-bold">$25</strong>
+                <strong class="text-sm font-mono font-bold">$25</strong>
                 <span class="text-[10px] block opacity-75 mt-0.5 text-amber-600 {{ $selectedAmount === 25 && ! $customAmount ? 'text-amber-200' : '' }}">★ Gold Foil</span>
               </button>
 
               <button 
                 type="button" 
                 wire:click="setAmount(50)" 
-                class="p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $selectedAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df]' }}"
+                class="p-2.5 rounded-xl border text-center transition-all duration-200 {{ $selectedAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df]' }}"
               >
                 <span class="block text-[10px] uppercase font-mono opacity-80 text-purple-500 {{ $selectedAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">VIP Patron</span>
-                <strong class="text-sm sm:text-base font-mono font-bold">$50</strong>
+                <strong class="text-sm font-mono font-bold">$50</strong>
                 <span class="text-[10px] block opacity-75 mt-0.5 text-purple-600 {{ $selectedAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">👑 VIP Crown</span>
               </button>
             </div>
 
-            <!-- Custom amount input & dynamic perk banner -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#e7e5df]">
-              <div class="text-xs text-[#334155]">
+            <!-- Dynamic Perk Banner -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-[#e7e5df] text-xs">
+              <div class="text-[#334155]">
                 <strong class="text-[#047857]">{{ $tierName }}:</strong> {{ $tierPerk }}
               </div>
-
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-semibold text-[#64748b] whitespace-nowrap">Or custom:</span>
-                <div class="relative w-32">
-                  <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-xs">$</span>
+              <div class="flex items-center gap-1.5 self-end sm:self-auto">
+                <span class="text-[11px] text-[#64748b]">Custom:</span>
+                <div class="relative w-24">
+                  <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-xs">$</span>
                   <input 
                     type="number" 
                     min="{{ $minDollars }}" 
                     max="1000" 
                     placeholder="{{ $minDollars }}+" 
                     wire:model.live.debounce.300ms="customAmount"
-                    class="w-full pl-6 pr-2 py-1.5 bg-white border border-[#e7e5df] focus:border-[#047857] rounded-xl text-xs font-mono outline-none shadow-2xs"
+                    class="w-full pl-5 pr-1 py-1 bg-white border border-[#e7e5df] focus:border-[#047857] rounded-xl text-xs font-mono outline-none"
                   >
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Follow Capsule / Notify Me When It Opens Widget -->
+          <!-- Follow Capsule / Notify Me When It Opens Widget (Point 10) -->
           <div class="bg-gradient-to-br from-[#ecfdf5] to-[#f0fdf4] border border-[#a7f3d0] rounded-2xl p-4 sm:p-5 my-4">
             <div class="flex items-start gap-3">
               <div class="w-9 h-9 rounded-xl bg-white border border-[#a7f3d0] flex items-center justify-center text-base shrink-0 shadow-2xs">
@@ -426,7 +471,7 @@ class extends Component
                   Follow {{ $creator->name }}'s Time Capsule
                 </h3>
                 <p class="text-xs text-[#064e3b]/80 mt-0.5 leading-relaxed">
-                  Be the first to know when {{ $creator->name }} unseals this Time Capsule live on stream. We'll send you the livestream broadcast link the moment it opens!
+                  Be the first to know when {{ $creator->name }} opens this capsule live on stream. We'll send you the broadcast link the moment it unseals!
                 </p>
 
                 @if($followSuccess)
@@ -477,9 +522,11 @@ class extends Component
               {{ $activeMilestone ? $activeMilestone->title : 'Time Capsule Archive' }}
             </span>
             <strong class="font-serif text-4xl sm:text-5xl font-normal text-[#047857] block my-1">
-              {{ $activeMilestone ? $activeMilestone->postcards()->count() : $creator->postcards()->count() }}
+              {{ $contributionsCount }}
             </strong>
-            <span class="text-xs font-medium text-[#64748b] block">community contributions sealed</span>
+            <span class="text-xs font-medium text-[#64748b] block">
+              contributions sealed · <strong>{{ $uniquePeopleCount }}</strong> {{ $uniquePeopleCount === 1 ? 'person' : 'people' }}
+            </span>
             <div class="flex items-center justify-center gap-1.5 text-[10px] font-mono text-[#064e3b] mt-2">
               <span class="bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">💌 Messages</span>
               <span class="bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">🔮 Predictions</span>
@@ -488,22 +535,22 @@ class extends Component
           </div>
 
           <div class="pt-3 border-t border-[#e7e5df]">
-            <span class="block text-[11px] font-mono uppercase tracking-wider text-[#64748b] mb-0.5">Opening Stream</span>
+            <span class="block text-[11px] font-mono uppercase tracking-wider text-[#64748b] mb-0.5">Live Unsealing Ceremony</span>
             <strong class="text-sm font-semibold text-[#0f172a] block">
               {{ $activeMilestone ? $activeMilestone->formattedUnlockDate() : $creator->formattedUnlockDate() }}
             </strong>
             @if($daysUntil !== null)
               <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]/70 font-mono">
-                {{ $daysUntil }} days remaining
+                ⏳ {{ $daysUntil }} days remaining
               </span>
             @endif
             <div class="text-[11px] text-[#047857] font-mono mt-1">
-              🔔 {{ $followersCount }} fans awaiting reveal
+              🔔 {{ $followersCount }} fans awaiting reveal stream
             </div>
           </div>
 
           <div class="pt-3 border-t border-[#e7e5df] text-[11px] text-[#64748b]">
-            From ${{ $creator->minPriceDollars() }} · Set by {{ $creator->name }} · Direct support for {{ $creator->name }}
+            Spam-free ${{ $creator->minPriceDollars() }} floor · Direct creator payouts · AES-256 encrypted
           </div>
         </aside>
       </div>
@@ -513,18 +560,15 @@ class extends Component
     <section class="space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-[#e7e5df] pb-4">
         <div>
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]/70 mb-2">
-            Public Sealed Teasers
-          </span>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]/70 mb-2">
+            <span>🔒</span>
+            <span>Public Teasers Preview</span>
+          </div>
           <h2 class="font-serif text-2xl sm:text-3xl font-normal text-[#0f172a]">
             Inside {{ $creator->name }}’s Time Capsule
           </h2>
           <p class="text-xs sm:text-sm text-[#64748b] mt-1">
-            @if($activeMilestone)
-              Showing contributions for <strong>{{ $activeMilestone->title }}</strong>. The full contents remain sealed until the reveal stream.
-            @else
-              Read what community members wrote today. The full contents remain sealed until the reveal stream.
-            @endif
+            <strong>You can see the teaser. You can't see the message.</strong> Every full letter remains locked under encryption until {{ $creator->name }} unseals them live on stream.
           </p>
         </div>
 

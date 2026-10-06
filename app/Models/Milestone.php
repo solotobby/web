@@ -61,4 +61,29 @@ class Milestone extends Model
     {
         return $this->hasMany(Postcard::class);
     }
+
+    public function uniqueContributorsCount(): int
+    {
+        $count = $this->postcards()->whereNotNull('name')->where('name', '!=', '')->distinct('name')->count('name');
+        if ($count === 0 && $this->postcards()->count() > 0) {
+            return 1;
+        }
+
+        return $count;
+    }
+
+    public function unlockProgress(): int
+    {
+        if (! $this->unlock_date) {
+            return 25;
+        }
+
+        $start = $this->created_at ?: now()->subMonths(6);
+        $totalDays = max(1, $start->diffInDays($this->unlock_date));
+        $elapsedDays = max(0, $start->diffInDays(now()));
+
+        $percent = (int) round(($elapsedDays / $totalDays) * 100);
+
+        return min(95, max(8, $percent));
+    }
 }

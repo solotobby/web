@@ -30,15 +30,21 @@
       @endswitch
     </div>
 
-    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#faf9f5] text-[#475569] border border-[#e7e5df] text-[10px] font-mono font-medium rounded-full">
-      <span>🔒</span> Sealed
+    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] text-[10px] font-mono font-semibold rounded-full" title="You can see the teaser. You can't see the message.">
+      <span>🔒</span> Public Teaser
     </span>
   </div>
 
   <!-- Teaser Quote in Prestigious Editorial Serif -->
-  <blockquote class="my-4 text-base sm:text-lg font-serif italic text-[#0f172a] leading-relaxed group-hover:text-[#047857] transition-colors">
+  <blockquote class="my-3 text-base sm:text-lg font-serif italic text-[#0f172a] leading-relaxed group-hover:text-[#047857] transition-colors">
     <a href="{{ route('message', $msg) }}">“{{ $line }}”</a>
   </blockquote>
+
+  <!-- Encryption Assurance Note -->
+  <div class="flex items-center gap-1.5 text-[10px] font-mono text-[#64748b] mb-3">
+    <span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span>
+    <span>Teaser preview · Full message encrypted until reveal</span>
+  </div>
 
   <!-- Archive Meta Info -->
   <div class="mt-auto space-y-1.5 pt-3 border-t border-[#f1f0eb]">

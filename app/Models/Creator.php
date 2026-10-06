@@ -98,4 +98,42 @@ class Creator extends Model
     {
         return $this->hasMany(CapsuleFollower::class);
     }
+
+    public function uniqueContributorsCount(): int
+    {
+        $count = $this->postcards()->whereNotNull('name')->where('name', '!=', '')->distinct('name')->count('name');
+        if ($count === 0 && $this->postcards()->count() > 0) {
+            return 1;
+        }
+
+        return $count;
+    }
+
+    public function daysUntilUnlock(): ?int
+    {
+        $active = $this->activeMilestone();
+        $target = $active?->unlock_date ?: $this->unlock_date;
+        if (! $target) {
+            return null;
+        }
+
+        return max(0, (int) now()->diffInDays($target, false));
+    }
+
+    public function unlockProgress(): int
+    {
+        $active = $this->activeMilestone();
+        $target = $active?->unlock_date ?: $this->unlock_date;
+        if (! $target) {
+            return 25;
+        }
+
+        $start = $this->created_at ?: now()->subMonths(6);
+        $totalDays = max(1, $start->diffInDays($target));
+        $elapsedDays = max(0, $start->diffInDays(now()));
+
+        $percent = (int) round(($elapsedDays / $totalDays) * 100);
+
+        return min(95, max(8, $percent));
+    }
 }

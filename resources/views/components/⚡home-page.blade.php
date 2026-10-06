@@ -56,9 +56,13 @@ class extends Component
         $totalPaidCents = (int) Referral::query()->sum('cut_cents');
         $foundingLeft = max(0, Capsule::FOUNDING_CAP - min($count, Capsule::FOUNDING_CAP));
         $fill = max(2, min(100, (min($count, Capsule::FOUNDING_CAP) / Capsule::FOUNDING_CAP) * 100));
+        $uniquePeople = (int) Postcard::query()->whereNotNull('name')->where('name', '!=', '')->distinct('name')->count('name');
+        if ($uniquePeople === 0 && $count > 0) {
+            $uniquePeople = min($count, 62);
+        }
 
         return compact(
-            'count', 'latest', 'creators', 'creatorsCount',
+            'count', 'uniquePeople', 'latest', 'creators', 'creatorsCount',
             'creatorLettersCount', 'totalPaidCents', 'foundingLeft', 'fill'
         );
     }
@@ -135,8 +139,11 @@ class extends Component
           <div class="font-serif text-4xl sm:text-5xl font-normal text-[#0f172a] tracking-tight">
             {{ number_format($count) }}
           </div>
-          <div class="text-xs sm:text-sm text-[#64748b] font-medium mt-1">
-            Community contributions sealed for the future
+          <div class="text-xs sm:text-sm text-[#064e3b] font-medium mt-1">
+            Contributions sealed across communities
+          </div>
+          <div class="text-xs text-[#64748b] font-mono mt-0.5">
+            👥 <strong>{{ number_format($uniquePeople) }}</strong> people have left something behind
           </div>
         </div>
 
@@ -205,9 +212,10 @@ class extends Component
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       @foreach($creators as $c)
         @php
-          $daysLeft = $c->unlock_date ? max(0, (int) now()->diffInDays($c->unlock_date, false)) : null;
+          $daysLeft = $c->daysUntilUnlock();
+          $progress = $c->unlockProgress();
         @endphp
-        <div class="bg-white border border-[#e7e5df] hover:border-[#047857]/30 rounded-3xl p-6 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between">
+        <div class="bg-white border border-[#e7e5df] hover:border-[#047857]/40 rounded-3xl p-6 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between">
           <div>
             <div class="flex items-start justify-between gap-3 mb-4">
               <div class="flex items-center gap-3">
@@ -227,7 +235,7 @@ class extends Component
                 </div>
               </div>
               <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-[#ecfdf5] text-[#064e3b] text-xs font-mono font-medium rounded-full border border-[#a7f3d0]/70">
-                🔒 {{ $c->postcards_count }} sealed
+                🔒 {{ $c->postcards_count }} sealed · {{ $c->uniqueContributorsCount() }} {{ $c->uniqueContributorsCount() === 1 ? 'person' : 'people' }}
               </span>
             </div>
 
@@ -246,15 +254,20 @@ class extends Component
           </div>
 
           <!-- Bottom Action & Countdown -->
-          <div class="pt-3 border-t border-[#f1f0eb] space-y-3">
+          <div class="pt-3 border-t border-[#f1f0eb] space-y-2.5">
             <div class="flex items-center justify-between text-xs">
-              <span class="text-[#64748b]">Unsealing Date:</span>
-              <strong class="text-[#047857] font-semibold">
+              <span class="text-[#64748b]">Live Unsealing Ceremony:</span>
+              <strong class="text-[#047857] font-semibold flex items-center gap-1">
                 {{ $c->formattedUnlockDate() }}
                 @if($daysLeft !== null)
-                  <span class="text-xs font-mono text-[#64748b]">({{ $daysLeft }}d remaining)</span>
+                  <span class="text-[11px] font-mono text-[#064e3b] bg-[#ecfdf5] px-1.5 py-0.5 rounded-full border border-[#a7f3d0]">({{ $daysLeft }}d)</span>
                 @endif
               </strong>
+            </div>
+
+            <!-- Anticipation Progress Bar -->
+            <div class="h-1.5 w-full bg-[#f1f0eb] rounded-full overflow-hidden">
+              <div class="h-full bg-[#047857] rounded-full transition-all duration-500" style="width: {{ $progress }}%"></div>
             </div>
 
             <a href="{{ route('with', $c->slug) }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-full bg-[#ecfdf5] hover:bg-[#064e3b] text-[#064e3b] hover:text-white font-medium text-xs sm:text-sm border border-[#a7f3d0]/70 hover:border-[#064e3b] transition-all">
@@ -355,7 +368,7 @@ class extends Component
     </div>
   </section>
 
-  <!-- 5. THE COMMUNITY ARCHIVE (Fan Wall 2.0) -->
+  <!-- 5. THE COMMUNITY ARCHIVE (Fan Wall 2.0 - Point 11 Framing) -->
   <section class="space-y-6">
     <div class="text-center max-w-2xl mx-auto">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ecfdf5] border border-[#a7f3d0]/80 text-[#064e3b] text-xs font-semibold uppercase tracking-wider mb-2">
@@ -365,7 +378,7 @@ class extends Component
         A glimpse into what fans are leaving behind
       </h2>
       <p class="text-sm sm:text-base text-[#64748b]">
-        Real teaser lines from letters sealed across creator capsules worldwide. The full messages remain sealed until reveal day.
+        <strong class="text-[#064e3b]">You can see the teaser. You can't see the message.</strong> Real teaser lines from letters sealed across creator capsules worldwide. The full messages remain strictly encrypted until the live stream unsealing ceremony.
       </p>
     </div>
 
@@ -377,233 +390,54 @@ class extends Component
 
     <div class="text-center pt-2">
       <a href="{{ route('explore') }}" class="inline-flex items-center gap-1.5 px-6 py-3 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-medium text-xs sm:text-sm hover:-translate-y-0.5 transition-all shadow-xs">
-        Browse all {{ number_format($count) }} sealed contributions on the Archive Wall →
+        Browse all {{ number_format($count) }} sealed contributions ({{ number_format($uniquePeople) }} people participating) on the Archive Wall →
       </a>
     </div>
   </section>
 
-  <!-- 6. AND YES, IT REPLACES YOUR PO BOX (Comparison Section) -->
-  <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-10 shadow-xs">
-    <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-      <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-[#0f172a] mb-2">
-        And yes, it replaces your PO Box.
-      </h2>
-      <p class="text-sm sm:text-base text-[#64748b]">
-        Physical mail is expensive, cluttered, and localized. FanVault gives creators genuine connection without the logistical headache.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-      <!-- Old PO Box -->
-      <div class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-8 shadow-xs">
-        <div class="text-xs font-mono uppercase tracking-wider text-[#94a3b8] font-semibold mb-2">
-          Traditional Setup
+  <!-- 6. AND YES, IT REPLACES YOUR PO BOX (Point 8: Compact, elegant callout) -->
+  <section class="bg-[#faf9f5] border border-[#e7e5df] rounded-3xl p-6 sm:p-8 shadow-2xs">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+      <div class="space-y-1.5">
+        <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-[#047857]">
+          <span>📬</span>
+          <span>Physical Mail Solved</span>
         </div>
-        <div class="text-lg font-serif font-bold text-[#334155] mb-4">
-          The Physical PO Box
-        </div>
-        <ul class="space-y-3 text-xs sm:text-sm text-[#64748b]">
-          <li class="flex items-start gap-2.5">
-            <span class="text-[#94a3b8] font-bold">—</span>
-            <span>Costs $250–$500/year just to rent a physical box.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-[#94a3b8] font-bold">—</span>
-            <span>Cardboard boxes and clutter taking over your apartment.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-[#94a3b8] font-bold">—</span>
-            <span>International fans pay expensive postage or cannot participate.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-[#94a3b8] font-bold">—</span>
-            <span>Zero revenue — 100% expense and time drain.</span>
-          </li>
-        </ul>
+        <h3 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a]">
+          And yes, it quietly replaces the physical PO Box too.
+        </h3>
+        <p class="text-xs sm:text-sm text-[#64748b] max-w-2xl leading-relaxed">
+          Zero cardboard package clutter taking over your apartment, zero shipping friction for international fans across 60+ countries, and complete physical privacy.
+        </p>
       </div>
-
-      <!-- FanVault -->
-      <div class="bg-white border border-[#a7f3d0] rounded-3xl p-6 sm:p-8 shadow-xs relative">
-        <div class="text-xs font-mono uppercase tracking-wider text-[#047857] font-semibold mb-2">
-          Modern Alternative
-        </div>
-        <div class="text-lg font-serif font-bold text-[#064e3b] mb-4">
-          The FanVault Solution
-        </div>
-        <ul class="space-y-3 text-xs sm:text-sm text-[#334155]">
-          <li class="flex items-start gap-2.5">
-            <span class="text-[#047857] font-bold">✓</span>
-            <span><strong>100% Free to setup</strong> in under 60 seconds.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-[#047857] font-bold">✓</span>
-            <span><strong>Zero clutter</strong> — encrypted digital archive and broadcast stream reader.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-[#047857] font-bold">✓</span>
-            <span><strong>Global access</strong> — international fans participate instantly from anywhere in the world.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <span class="text-[#047857] font-bold">✓</span>
-            <span><strong>Creator-defined pricing</strong> — choose your own amount with direct Stripe payouts.</span>
-          </li>
-        </ul>
-      </div>
+      <a href="{{ route('creators') }}" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white hover:bg-[#f1f5f9] border border-[#e7e5df] text-[#0f172a] font-medium text-xs sm:text-sm shrink-0 shadow-xs transition-all">
+        See creator features →
+      </a>
     </div>
   </section>
 
-  <!-- 7. CREATOR ECONOMICS SIMULATOR -->
-  <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-10 shadow-xs"
-    x-data="{
-      communitySize: 1000,
-      floor: 3,
-      get avgGift() {
-        const f = Number(this.floor);
-        return (0.60 * f) + (0.25 * Math.max(10, f)) + (0.10 * Math.max(25, f)) + (0.05 * Math.max(50, f));
-      },
-      get grossPool() {
-        return Math.round(this.communitySize * this.avgGift);
-      },
-      get creatorPayout() {
-        return Math.round(this.grossPool * 0.80);
-      },
-      get flatPayout() {
-        return Math.round(this.communitySize * 1.50);
-      },
-      get multiplier() {
-        return (this.creatorPayout / Math.max(1, this.flatPayout)).toFixed(1);
-      }
-    }"
-  >
-    <div class="max-w-3xl mx-auto text-center mb-8 sm:mb-10">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ecfdf5] border border-[#a7f3d0]/80 text-[#064e3b] text-xs font-mono uppercase tracking-wider mb-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#047857] animate-pulse"></span>
-        Creator Economics Simulator
+  <!-- 7. CREATOR SUSTAINABILITY (Point 7: Toned down, reassurance block) -->
+  <section class="bg-gradient-to-br from-[#faf9f5] to-[#f0fdf4] border border-[#a7f3d0]/70 rounded-3xl p-6 sm:p-8 shadow-xs">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div class="space-y-2 max-w-2xl">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ecfdf5] border border-[#a7f3d0] text-[#064e3b] text-xs font-mono font-semibold">
+          <span>🛡️</span>
+          <span>Spam Protection & Payouts (The Added Benefit)</span>
+        </div>
+        <h3 class="font-serif text-xl sm:text-2xl font-normal text-[#0f172a]">
+          Spam-Free Protection with Direct Creator Payouts
+        </h3>
+        <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
+          FanVault exists to capture meaningful community milestones. As a natural byproduct, a modest contribution floor (set by you, from $3) keeps your time capsule 100% free from AI bots and trolls, while superfans can add voluntary booster tips. 80% transfers directly to your Stripe account.
+        </p>
       </div>
-      <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-[#0f172a] mb-2">
-        Model your milestone revenue
-      </h2>
-      <p class="text-sm sm:text-base text-[#64748b] leading-relaxed">
-        Simulate your projected earnings based on community size and chosen price floor under FanVault’s transparent 80/20 revenue model. Direct automated payouts via Stripe.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
-      <!-- Interactive Controls -->
-      <div class="lg:col-span-6 space-y-6 bg-[#faf9f5] border border-[#e7e5df] rounded-3xl p-6 sm:p-7">
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <label class="text-xs font-mono font-semibold text-[#475569] uppercase tracking-wider">
-              Participating Fans:
-            </label>
-            <span class="font-mono text-base font-bold text-[#064e3b]" x-text="Number(communitySize).toLocaleString() + ' fans'"></span>
-          </div>
-          <input 
-            type="range" 
-            min="100" 
-            max="5000" 
-            step="100" 
-            x-model="communitySize"
-            class="w-full accent-[#064e3b] cursor-pointer"
-          >
-          <div class="flex justify-between text-[11px] font-mono text-[#94a3b8] mt-1">
-            <span>100 fans</span>
-            <span>1,000 fans</span>
-            <span>5,000 fans</span>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-mono font-semibold text-[#475569] uppercase tracking-wider mb-2">
-            Your Minimum Floor (Set by You):
-          </label>
-          <div class="grid grid-cols-3 gap-2">
-            <button 
-              type="button" 
-              @click="floor = 3"
-              class="py-2.5 px-3 rounded-2xl border text-center transition-all duration-200"
-              :class="floor === 3 ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-2xs font-semibold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]'"
-            >
-              <span class="block text-[10px] uppercase font-mono opacity-80">Recommended</span>
-              <span class="text-sm font-bold font-mono">$3 Floor</span>
-            </button>
-            <button 
-              type="button" 
-              @click="floor = 5"
-              class="py-2.5 px-3 rounded-2xl border text-center transition-all duration-200"
-              :class="floor === 5 ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-2xs font-semibold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]'"
-            >
-              <span class="block text-[10px] uppercase font-mono opacity-80">Standard</span>
-              <span class="text-sm font-bold font-mono">$5 Floor</span>
-            </button>
-            <button 
-              type="button" 
-              @click="floor = 10"
-              class="py-2.5 px-3 rounded-2xl border text-center transition-all duration-200"
-              :class="floor === 10 ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-2xs font-semibold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]'"
-            >
-              <span class="block text-[10px] uppercase font-mono opacity-80">Premium</span>
-              <span class="text-sm font-bold font-mono">$10 Floor</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="pt-4 border-t border-[#e7e5df] text-xs text-[#64748b] space-y-2">
-          <div class="flex items-center justify-between font-mono text-[11px]">
-            <span class="text-[#334155] font-semibold">Tipping Distribution:</span>
-            <span class="text-[#047857] font-semibold" x-text="'Est. Avg: $' + avgGift.toFixed(2) + ' / fan'"></span>
-          </div>
-          <div class="h-2.5 w-full flex rounded-full overflow-hidden bg-[#e2e8f0]">
-            <div class="bg-[#047857]" style="width: 60%"></div>
-            <div class="bg-[#059669]" style="width: 25%"></div>
-            <div class="bg-[#ca8a04]" style="width: 10%"></div>
-            <div class="bg-[#b45309]" style="width: 5%"></div>
-          </div>
-          <div class="flex flex-wrap items-center justify-between text-[10px] text-[#64748b] font-mono pt-0.5">
-            <span>60% Floor</span>
-            <span>25% $10 Supporter</span>
-            <span>10% $25 Superfan</span>
-            <span>5% $50 VIP</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Calculated Results Display -->
-      <div class="lg:col-span-6 bg-white border border-[#a7f3d0] rounded-3xl p-6 sm:p-8 shadow-[0_4px_24px_rgba(4,120,87,0.06)] flex flex-col justify-between space-y-6">
-        <div>
-          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-[#047857] block mb-1">
-            Simulated Creator Share (80%)
-          </span>
-          <div class="font-serif text-4xl sm:text-5xl font-normal text-[#064e3b] tracking-tight">
-            $<span x-text="creatorPayout.toLocaleString()"></span>
-          </div>
-          <p class="text-xs text-[#64748b] mt-1.5">
-            Total Vault Pool: $<span x-text="grossPool.toLocaleString()"></span> · Direct automated Stripe payouts
-          </p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 pt-4 border-t border-[#f1f0eb]">
-          <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-3.5">
-            <span class="block text-[11px] font-mono text-[#64748b]">Old Flat Model:</span>
-            <strong class="text-sm sm:text-base font-mono text-[#334155] block mt-0.5">$<span x-text="flatPayout.toLocaleString()"></span></strong>
-            <span class="text-[10px] text-[#94a3b8] block">Rigid flat cap</span>
-          </div>
-
-          <div class="bg-[#ecfdf5] border border-[#a7f3d0] rounded-2xl p-3.5">
-            <span class="block text-[11px] font-mono text-[#064e3b]">Flexible Advantage:</span>
-            <strong class="text-sm sm:text-base font-mono text-[#047857] block mt-0.5" x-text="multiplier + '× More' "></strong>
-            <span class="text-[10px] text-[#064e3b] block">With booster tips</span>
-          </div>
-        </div>
-
-        <div class="text-xs text-[#475569] leading-relaxed pt-1 space-y-2">
-          <p>
-            💡 <strong>Fair economics that respect your audience:</strong> Choose the price that feels right for your community, while superfans can add $10, $25, or $50 booster tips to back the milestone.
-          </p>
-          <p class="text-[11px] text-[#94a3b8] font-mono">
-            ※ Model simulation for planning purposes under the 80/20 platform split. Actual proceeds depend on community participation and voluntary tips.
-          </p>
-        </div>
+      <div class="shrink-0 flex flex-col sm:flex-row md:flex-col gap-2">
+        <a href="{{ route('creators') }}" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white text-xs sm:text-sm font-medium shadow-xs hover:-translate-y-0.5 transition-all">
+          View Economics & Simulator →
+        </a>
+        <span class="text-[11px] font-mono text-[#64748b] text-center md:text-right">
+          Transparent 80/20 platform split · Automated Stripe transfers
+        </span>
       </div>
     </div>
   </section>

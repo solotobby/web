@@ -612,13 +612,14 @@ class extends Component
       </div>
 
       <div class="mb-6">
-        <label for="teaser" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
-          The Public Teaser Line (Shows on the public Archive Wall)
+        <label for="teaser" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5 flex items-center justify-between">
+          <span>The Public Teaser Line (Archive Preview)</span>
+          <span class="text-[11px] font-mono text-[#047857]">🔒 Teaser snippet only</span>
         </label>
         <input id="teaser" wire:model="teaser" maxlength="72" placeholder="{{ $creator ? 'e.g. Can’t wait to see where the channel is by ' . $creator->formattedUnlockDate() . '!' : 'e.g. If you can still hear the morning birds, we did something right.' }}" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
         <div class="flex flex-col sm:flex-row sm:justify-between text-xs text-[#64748b] mt-1 px-1 gap-1">
-          <span>👀 One catchy sentence for the public wall (or leave blank to auto-generate)</span>
-          <span class="sm:text-right"><strong>{{ 72 - mb_strlen($teaser) }}</strong> chars</span>
+          <span>🔒 <strong>You can see the teaser. You can't see the message.</strong> Full letter remains strictly encrypted until the reveal stream.</span>
+          <span class="sm:text-right font-mono"><strong>{{ 72 - mb_strlen($teaser) }}</strong> chars</span>
         </div>
       </div>
 
