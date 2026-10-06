@@ -37,3 +37,12 @@ Route::get('/og/postcard/{postcard}.png', [OpenGraphController::class, 'postcard
 Route::get('/og/creator/{slug}.png', [OpenGraphController::class, 'creator'])->name('og.creator');
 Route::get('/og/cover.png', [OpenGraphController::class, 'cover'])->name('og.cover');
 
+// Executive Admin Console Routes
+Route::get('/admin/login', [\App\Http\Controllers\AdminAuthController::class, 'showLogin'])->name('admin.login');
+Route::post('/admin/login', [\App\Http\Controllers\AdminAuthController::class, 'login'])->name('admin.login.submit');
+Route::post('/admin/logout', [\App\Http\Controllers\AdminAuthController::class, 'logout'])->name('admin.logout');
+
+Route::middleware('admin')->prefix('admin')->group(function () {
+    Route::livewire('/', 'admin-dashboard')->name('admin.dashboard');
+});
+

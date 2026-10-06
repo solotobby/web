@@ -6,5 +6,6 @@ Disallow: /creators/onboard
 Disallow: /creators/access
 Disallow: /checkout/
 Disallow: /stripe/
+Disallow: /admin/
 
 Sitemap: https://getfanvault.com/sitemap.xml

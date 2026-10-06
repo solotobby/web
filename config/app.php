@@ -123,4 +123,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Executive Master Admin Passcode
+    |--------------------------------------------------------------------------
+    */
+    'admin_key' => env('MASTER_ADMIN_KEY', env('ADMIN_KEY', 'fanvault-founder-2026')),
+
 ];
