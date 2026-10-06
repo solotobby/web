@@ -321,12 +321,28 @@ class extends Component
 
         $activeMilestone = $creator ? ($creator->activeMilestone() ?? $milestones->first()) : null;
 
+        $streamDeckCards = $ledger->map(function ($l) {
+            return [
+                'id' => $l->id,
+                'number' => \App\Support\Capsule::formatNumber($l->number),
+                'name' => $l->name,
+                'location' => $l->location,
+                'teaser' => $l->teaser,
+                'letter' => $l->envelope?->letter ?: $l->teaser,
+                'photo' => $l->envelope?->photo_path ? asset('storage/'.$l->envelope->photo_path) : null,
+                'type' => $l->envelope?->predictions['type'] ?? 'message',
+                'date' => $l->sealed_at->format('j M Y'),
+                'milestone' => $l->milestone?->title ?? 'Milestone Stream',
+            ];
+        })->values()->toArray();
+
         return [
             'creator' => $creator,
             'milestones' => $milestones,
             'activeMilestone' => $activeMilestone,
             'totalLetters' => $totalLetters,
             'ledger' => $ledger,
+            'streamDeckCards' => $streamDeckCards,
             'inboxLetters' => $inboxLetters,
             'paid' => $paidCents / 100,
             'pending' => $pendingCents / 100,
@@ -1368,13 +1384,189 @@ class extends Component
         </div>
 
         <!-- ========================================== -->
-        <!-- VIEW 4: STREAM MODE (STREAM READER VIEW) -->
+        <!-- VIEW 4: STREAM MODE 2.0 & OPENING CEREMONY -->
         <!-- ========================================== -->
-        <div x-show="tab === 'stream'" style="display:none;" class="space-y-6">
+        <div 
+          x-show="tab === 'stream'" 
+          style="display:none;" 
+          class="space-y-6"
+          x-data="{
+            streamActive: false,
+            currentIndex: 0,
+            starredIds: [],
+            cards: @js($streamDeckCards),
+            get currentCard() {
+              return this.cards[this.currentIndex] || null;
+            },
+            toggleStar(id) {
+              if (this.starredIds.includes(id)) {
+                this.starredIds = this.starredIds.filter(i => i !== id);
+              } else {
+                this.starredIds.push(id);
+              }
+            },
+            isStarred(id) {
+              return this.starredIds.includes(id);
+            },
+            nextCard() {
+              if (this.currentIndex < this.cards.length - 1) {
+                this.currentIndex++;
+              }
+            },
+            prevCard() {
+              if (this.currentIndex > 0) {
+                this.currentIndex--;
+              }
+            }
+          }"
+          @keydown.window.left="if (streamActive) prevCard()"
+          @keydown.window.right="if (streamActive) nextCard()"
+        >
+          <!-- Fullscreen Stream Deck Mode Overlay (OBS Ready) -->
+          <div 
+            x-show="streamActive" 
+            style="display:none;"
+            class="fixed inset-0 z-50 bg-[#090d16] text-white flex flex-col justify-between p-6 sm:p-12 transition-all duration-300"
+          >
+            <!-- Stream Deck Top Header -->
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono text-xs font-bold uppercase tracking-wider">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>LIVE STREAM MODE 2.0</span>
+                </span>
+                <span class="text-xs font-mono text-slate-400 hidden sm:inline">
+                  {{ $creator->name }} · {{ $activeMilestone?->title ?? 'Time Capsule' }}
+                </span>
+              </div>
+
+              <!-- Deck Counter & Close -->
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs sm:text-sm text-emerald-400 font-bold bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+                  CARD <span x-text="currentIndex + 1"></span> / <span x-text="cards.length"></span>
+                </span>
+                <button 
+                  type="button" 
+                  @click="streamActive = false"
+                  class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-mono transition-all border border-white/20"
+                >
+                  ✕ Exit Deck
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Presenter Cue Card (Hero Typography) -->
+            <template x-if="currentCard">
+              <div class="my-auto max-w-4xl mx-auto w-full text-center space-y-6 sm:space-y-8 py-6">
+                <!-- Contribution Type Badge -->
+                <div>
+                  <span 
+                    class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-mono text-xs font-bold uppercase tracking-wider border shadow-md"
+                    :class="{
+                      'bg-purple-500/20 text-purple-300 border-purple-500/30': currentCard.type === 'prediction',
+                      'bg-rose-500/20 text-rose-300 border-rose-500/30': currentCard.type === 'memory',
+                      'bg-emerald-500/20 text-emerald-300 border-emerald-500/30': currentCard.type !== 'prediction' && currentCard.type !== 'memory'
+                    }"
+                  >
+                    <span x-text="currentCard.type === 'prediction' ? '🔮 MILESTONE PREDICTION' : (currentCard.type === 'memory' ? '❤️ COMMUNITY MEMORY' : '💌 FAN LETTER')"></span>
+                  </span>
+                </div>
+
+                <!-- Letter Body (Broadcast-ready Large Serif Typography) -->
+                <blockquote 
+                  class="font-serif italic text-2xl sm:text-4xl md:text-5xl text-white font-normal leading-[1.25] tracking-tight selection:bg-emerald-500/30"
+                  x-text="'“' + currentCard.letter + '”'"
+                ></blockquote>
+
+                <!-- Optional Keepsake Photo Attachment -->
+                <template x-if="currentCard.photo">
+                  <div class="pt-2">
+                    <img :src="currentCard.photo" class="max-h-48 sm:max-h-64 mx-auto rounded-2xl border-2 border-white/20 shadow-2xl object-cover" alt="Keepsake Photo">
+                  </div>
+                </template>
+
+                <!-- Author & Milestone Meta -->
+                <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm font-mono text-slate-300">
+                  <span class="font-bold text-white text-base" x-text="currentCard.name"></span>
+                  <span class="text-slate-500 hidden sm:inline">·</span>
+                  <span x-text="currentCard.location"></span>
+                  <span class="text-slate-500 hidden sm:inline">·</span>
+                  <span class="text-emerald-400" x-text="'Sealed ' + currentCard.date"></span>
+                  <span class="text-slate-500 hidden sm:inline">·</span>
+                  <span class="text-slate-400 font-semibold" x-text="'No. ' + currentCard.number"></span>
+                </div>
+              </div>
+            </template>
+
+            <!-- Bottom Controller Bar (Big presenter buttons) -->
+            <div class="flex items-center justify-between border-t border-white/10 pt-4">
+              <button 
+                type="button" 
+                @click="prevCard()"
+                :disabled="currentIndex === 0"
+                class="px-5 sm:px-7 py-3 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:pointer-events-none text-white font-medium text-xs sm:text-sm transition-all flex items-center gap-2 border border-white/20"
+              >
+                <span>← Previous</span>
+                <span class="hidden sm:inline font-mono opacity-60 text-xs">[Left Arrow]</span>
+              </button>
+
+              <button 
+                type="button" 
+                @click="if (currentCard) toggleStar(currentCard.id)"
+                class="px-4 sm:px-6 py-3 rounded-full border transition-all text-xs sm:text-sm font-bold flex items-center gap-2"
+                :class="currentCard && isStarred(currentCard.id) ? 'bg-amber-400 text-slate-900 border-amber-300 shadow-lg' : 'bg-white/5 hover:bg-white/10 text-white border-white/20'"
+              >
+                <span x-text="currentCard && isStarred(currentCard.id) ? '⭐ Highlighted Favorite' : '☆ Star / Highlight'"></span>
+              </button>
+
+              <button 
+                type="button" 
+                @click="nextCard()"
+                :disabled="currentIndex >= cards.length - 1"
+                class="px-5 sm:px-7 py-3 rounded-full bg-[#047857] hover:bg-[#059669] disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs sm:text-sm transition-all flex items-center gap-2 shadow-lg shadow-emerald-900/40"
+              >
+                <span>Next Card →</span>
+                <span class="hidden sm:inline font-mono opacity-80 text-xs">[Right Arrow]</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Normal Studio Stream Tab View (Header & Unsealing Trigger) -->
+          <div class="bg-gradient-to-br from-[#064e3b] via-[#047857] to-[#022c22] rounded-3xl p-6 sm:p-10 text-white shadow-lg space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-xs font-mono font-bold uppercase tracking-wider text-emerald-200">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>The Opening Ceremony</span>
+            </div>
+            <h2 class="font-serif text-3xl sm:text-4xl font-normal leading-tight">
+              🎉 Unseal & broadcast your <em class="italic text-emerald-300">Time Capsule</em>
+            </h2>
+            <p class="text-xs sm:text-sm text-emerald-100/90 max-w-2xl leading-relaxed">
+              When you hit your milestone or go live, enter broadcast <strong>Stream Mode</strong>. Use presenter hotkeys, read predictions live on camera, star community favorites, and turn your time capsule into memorable broadcast content.
+            </p>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button 
+                type="button" 
+                @click="streamActive = true; currentIndex = 0"
+                class="px-7 py-3.5 rounded-full bg-white hover:bg-emerald-50 text-[#064e3b] font-bold text-sm shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2"
+              >
+                <span>🎬 Launch Stream Mode (OBS Presentation Deck)</span>
+                <span>→</span>
+              </button>
+              <button 
+                type="button" 
+                onclick="window.print()" 
+                class="px-5 py-3 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 text-white font-medium text-xs transition-all"
+              >
+                🖨️ Print Cue Cards
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter & Count Bar -->
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-[#e7e5df]">
             <div>
-              <h2 class="font-serif text-2xl font-bold text-[#0f172a]">Stream Reader View</h2>
-              <p class="text-xs sm:text-sm text-[#64748b]">Presenter presentation deck designed for OBS capture, second monitors, or physical cue cards.</p>
+              <h3 class="font-serif text-xl font-bold text-[#0f172a]">Cue Cards Preview</h3>
+              <p class="text-xs text-[#64748b]">Showing {{ count($streamDeckCards) }} community submissions ready for stream.</p>
             </div>
             <div class="flex items-center gap-2">
               <select wire:model.live="selectedMilestoneFilter" class="bg-white border border-[#a7f3d0] rounded-xl text-xs font-bold py-1.5 px-3 text-[#064e3b] outline-none">
@@ -1383,41 +1575,51 @@ class extends Component
                   <option value="{{ $m->id }}">{{ $m->title }} ({{ $m->postcards_count }})</option>
                 @endforeach
               </select>
-              <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-[#e7e5df] hover:bg-[#faf9f5] rounded-xl text-xs font-bold text-[#0f172a] transition-colors shrink-0 shadow-2xs">
-                <svg class="w-3.5 h-3.5 text-[#64748b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
-                </svg>
-                <span>Print Cue Cards</span>
-              </button>
             </div>
           </div>
 
-          <div class="bg-[#ecfdf5] border border-[#a7f3d0] rounded-2xl p-4 text-xs sm:text-sm text-[#064e3b] flex items-center gap-2.5">
-            <span class="w-7 h-7 rounded-lg bg-white border border-[#a7f3d0] flex items-center justify-center shrink-0">
-              <svg class="w-4 h-4 text-[#064e3b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" />
-              </svg>
-            </span>
-            <span><strong>Stream Presentation Mode:</strong> Use these cards to read fan stories, teasers, and predictions on your live broadcast!</span>
-          </div>
-
+          <!-- Cards Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @if($ledger->count() === 0)
               <div class="col-span-2 bg-white border-2 border-dashed border-[#e7e5df] rounded-3xl p-10 text-center text-[#64748b]">
-                No fan letters to display for this milestone yet.
+                No contributions to display for this milestone yet. Share your capsule link to start collecting!
               </div>
             @else
-              @foreach($ledger as $row)
-                <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+              @foreach($ledger as $index => $row)
+                @php
+                  $type = $row->envelope?->predictions['type'] ?? 'message';
+                @endphp
+                <div class="bg-white border border-[#e7e5df] hover:border-[#047857]/40 rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col justify-between transition-all">
                   <div>
                     <div class="flex items-center justify-between text-xs text-[#64748b] mb-2 font-mono">
-                      <span>Fan Letter No. {{ \App\Support\Capsule::formatNumber($row->number) }}</span>
-                      <span class="text-[#047857] font-bold">{{ $row->milestone?->title ?? 'Milestone Stream' }}</span>
+                      <span class="inline-flex items-center gap-1">
+                        @switch($type)
+                          @case('prediction')
+                            <span class="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-bold">🔮 Prediction</span>
+                            @break
+                          @case('memory')
+                            <span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold">❤️ Memory</span>
+                            @break
+                          @case('photo')
+                            <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold">📸 Photo</span>
+                            @break
+                          @default
+                            <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">💌 Letter</span>
+                        @endswitch
+                        <span>No. {{ \App\Support\Capsule::formatNumber($row->number) }}</span>
+                      </span>
+                      <span class="text-[#047857] font-semibold">{{ $row->milestone?->title ?? 'Milestone Stream' }}</span>
                     </div>
 
                     <blockquote class="font-serif italic text-base sm:text-lg text-[#0f172a] leading-relaxed my-3">
-                      “{{ $row->teaser }}”
+                      “{{ $row->envelope?->letter ?: $row->teaser }}”
                     </blockquote>
+
+                    @if($row->envelope?->photo_path)
+                      <div class="mt-2 mb-3">
+                        <img src="{{ asset('storage/'.$row->envelope->photo_path) }}" class="max-h-32 rounded-xl border border-[#e7e5df] object-cover" alt="Keepsake Photo">
+                      </div>
+                    @endif
                   </div>
 
                   <div class="pt-3 border-t border-[#e7e5df] flex items-center justify-between text-xs">
@@ -1425,7 +1627,13 @@ class extends Component
                       <strong class="text-[#0f172a]">{{ $row->name }}</strong>
                       <span class="text-[#64748b]">({{ $row->location }})</span>
                     </div>
-                    <span class="text-xs font-mono text-[#64748b]">{{ $row->sealed_at->format('M Y') }}</span>
+                    <button 
+                      type="button" 
+                      @click="streamActive = true; currentIndex = {{ $index }}"
+                      class="text-[#047857] font-semibold hover:underline"
+                    >
+                      Present this card →
+                    </button>
                   </div>
                 </div>
               @endforeach

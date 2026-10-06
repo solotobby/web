@@ -61,20 +61,20 @@ class extends Component
 
         if ($mine) {
             $heading = $creator 
-                ? 'Your letter is sealed in ' . $creator->name . '’s vault! 📬' 
-                : 'Your letter is officially sealed! 📬';
+                ? '🔒 It’s sealed in ' . $creator->name . '’s Time Capsule!' 
+                : '🔒 Your message is officially sealed!';
         } else {
             $heading = $creator 
-                ? 'Sealed for ' . $creator->name . '’s ' . ($milestone?->title ?? 'milestone') . ' 🎯'
-                : 'Sealed in the community vault 🔒';
+                ? 'Sealed for ' . $creator->name . '’s ' . ($milestone?->title ?? 'Time Capsule') . ' 🎯'
+                : 'Sealed in the Community Time Capsule 🔒';
         }
 
         if ($creator) {
             $handle = ltrim($creator->handle ?: $creator->slug, '@');
-            $milestoneName = $milestone?->title ?? $creator->milestone_title ?? 'community milestone';
-            $shareText = '“' . ($this->postcard->teaser ?: 'Locked in!') . '” — I just sealed fan letter No. ' . Capsule::formatNumber($this->postcard->number) . ' for ' . $milestoneName . ' in @' . $handle . '’s vault! 📬';
+            $milestoneName = $milestone?->title ?? $creator->milestone_title ?? 'Time Capsule';
+            $shareText = 'I just left a sealed message in @' . $handle . '’s ' . $milestoneName . ' 🔒';
         } else {
-            $shareText = '“' . ($this->postcard->teaser ?: 'Locked in!') . '” — Letter No. ' . Capsule::formatNumber($this->postcard->number) . ' sealed in FanVault 📬';
+            $shareText = '“' . ($this->postcard->teaser ?: 'Locked in!') . '” — Sealed in FanVault Time Capsule 🔒';
         }
 
         return [
@@ -96,7 +96,7 @@ class extends Component
       <div class="flex items-start justify-between gap-2 mb-4 pt-1">
         <div>
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold font-mono bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
-            <span>📬</span> {{ $mine ? 'Your Sealed Fan Letter' : 'Community Vault Pass' }}
+            <span>🔒</span> {{ $mine ? 'Your Sealed Contribution' : 'Community Capsule Pass' }}
           </span>
           <h2 class="font-mono text-2xl font-bold text-[#0f172a] mt-1.5">
             No. {{ \App\Support\Capsule::formatNumber($msg->number) }}
@@ -117,14 +117,14 @@ class extends Component
         <!-- Creator Community Vault Target Box -->
         <div class="bg-[#f0fdf4] border border-[#bbf7d0] rounded-2xl p-3.5 my-3">
           <div class="flex items-center justify-between text-[11px] uppercase tracking-wider font-bold text-[#047857] font-mono mb-1">
-            <span>Destination Vault</span>
+            <span>Destination Capsule</span>
             <span>{{ $creator->platform }}</span>
           </div>
           <div class="text-sm font-bold text-[#0f172a] flex items-center gap-1.5">
-            <span>🎯</span> {{ $msg->milestone?->title ?? ($creator->milestone_title ?: 'Community Milestone Vault') }}
+            <span>🎯</span> {{ $msg->milestone?->title ?? ($creator->milestone_title ?: 'Community Time Capsule') }}
           </div>
           <div class="text-xs text-[#334155] mt-1">
-            Creator: <strong>{{ $creator->name }}</strong> ({{ $creator->handle }}) · Unlocks: <strong class="text-[#047857]">{{ $msg->milestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate() }}</strong>
+            Creator: <strong>{{ $creator->name }}</strong> ({{ $creator->handle }}) · Unsealing Stream: <strong class="text-[#047857]">{{ $msg->milestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate() }}</strong>
           </div>
         </div>
       @else
@@ -153,9 +153,9 @@ class extends Component
         </h1>
         <p class="text-sm sm:text-base text-[#475569] leading-relaxed">
           @if($mine)
-            Your letter is safely locked in the encrypted community vault. It will be unsealed live during the milestone broadcast!
+            Your message is now safely part of the time capsule. You won’t be able to read it again until the creator unseals the vault live on stream!
           @else
-            The single teaser line is etched on the public fan wall. The full letter, photo, and predictions stay sealed in the vault until reveal day.
+            The single teaser line is etched on the public archive wall. The full letter, photo, and predictions stay sealed in the vault until reveal day.
           @endif
         </p>
       </div>
@@ -176,12 +176,25 @@ class extends Component
 
         @if($creator)
           <a class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#ecfdf5] hover:bg-[#d1fae5] border border-[#a7f3d0] text-[#064e3b] font-bold text-sm transition-all" href="{{ route('with', $creator->slug) }}">
-            📬 Visit {{ $creator->name }}'s Community Hub
+            📬 Back to {{ $creator->name }}'s Time Capsule
           </a>
         @endif
 
         <a class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-bold text-sm hover:-translate-y-0.5 transition-all shadow-xs" href="{{ route('seal', $creator ? ['ref' => $creator->slug] : []) }}">
-          ✍️ Seal Another Fan Letter
+          ✍️ Seal Another Message
+        </a>
+      </div>
+
+      <!-- Nominate Another Creator Loop -->
+      <div class="mt-4 p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] text-xs space-y-1.5">
+        <div class="font-bold text-[#064e3b] flex items-center gap-1.5">
+          <span>✨</span> Does another creator deserve a Time Capsule?
+        </div>
+        <p class="text-[#64748b]">
+          Nominate your favorite YouTuber, streamer, or podcaster approaching a milestone.
+        </p>
+        <a href="{{ route('nominate') }}" class="inline-flex items-center gap-1 text-[#047857] font-semibold hover:underline mt-1">
+          Nominate a creator →
         </a>
       </div>
     </div>

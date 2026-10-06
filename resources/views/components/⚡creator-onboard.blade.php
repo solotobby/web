@@ -35,7 +35,45 @@ class extends Component
 
     public string $bio = '';
 
+    public string $selected_template = '';
+
     public string $error = '';
+
+    public function applyTemplate(string $type): void
+    {
+        $this->selected_template = $type;
+        switch($type) {
+            case 'milestone':
+                $this->milestone_title = '100K Subscriber Milestone';
+                $this->bio = 'Leave a message, memory, or prediction for our 100K milestone stream. I will unseal the capsule and read my favorites live!';
+                $this->unlock_date = now()->addMonths(14)->format('Y-m-d');
+                break;
+            case 'birthday':
+                $this->milestone_title = 'Birthday Time Capsule';
+                $this->bio = 'Leave a birthday message, advice, or prediction for the year ahead! Unsealed live on my birthday stream.';
+                $this->unlock_date = now()->addMonths(6)->format('Y-m-d');
+                break;
+            case 'anniversary':
+                $this->milestone_title = 'Channel Anniversary Capsule';
+                $this->bio = 'Celebrating another year of creating together! Leave your favorite moments and memories from our journey.';
+                $this->unlock_date = now()->addYear()->format('Y-m-d');
+                break;
+            case 'prediction':
+                $this->milestone_title = 'Where Will We Be in 3 Years?';
+                $this->bio = 'Lock in your wildest predictions for our channel and community. Sealed until reveal day!';
+                $this->unlock_date = now()->addYears(3)->format('Y-m-d');
+                break;
+            case 'career':
+                $this->milestone_title = 'Career Milestone Celebration';
+                $this->bio = 'Celebrating our biggest project yet. Leave something for the moment we will never forget!';
+                $this->unlock_date = now()->addMonths(9)->format('Y-m-d');
+                break;
+            case 'custom':
+                $this->milestone_title = '';
+                $this->bio = '';
+                break;
+        }
+    }
 
     public function updatedPlatform($val): void
     {
@@ -268,6 +306,39 @@ class extends Component
         @endforeach
       </div>
       @error('platforms') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
+    </div>
+
+    <!-- Time Capsule Preset Templates -->
+    <div class="mb-5">
+      <label class="block text-xs font-mono uppercase tracking-wider font-semibold text-[#475569] mb-2">
+        Time Capsule Templates
+      </label>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <button type="button" wire:click="applyTemplate('milestone')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'milestone' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+          <span class="text-sm block mb-0.5">🎉 100K / 1M Subs</span>
+          <span class="text-[10px] text-[#64748b] block">Subscriber milestone</span>
+        </button>
+        <button type="button" wire:click="applyTemplate('birthday')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'birthday' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+          <span class="text-sm block mb-0.5">🎂 Birthday</span>
+          <span class="text-[10px] text-[#64748b] block">Messages for future self</span>
+        </button>
+        <button type="button" wire:click="applyTemplate('anniversary')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'anniversary' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+          <span class="text-sm block mb-0.5">❤️ Anniversary</span>
+          <span class="text-[10px] text-[#64748b] block">Community memories</span>
+        </button>
+        <button type="button" wire:click="applyTemplate('prediction')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'prediction' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+          <span class="text-sm block mb-0.5">🔮 Predictions</span>
+          <span class="text-[10px] text-[#64748b] block">Where will we be in 3y?</span>
+        </button>
+        <button type="button" wire:click="applyTemplate('career')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'career' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+          <span class="text-sm block mb-0.5">🏆 Career Milestone</span>
+          <span class="text-[10px] text-[#64748b] block">Book, album or launch</span>
+        </button>
+        <button type="button" wire:click="applyTemplate('custom')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'custom' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+          <span class="text-sm block mb-0.5">✨ Custom</span>
+          <span class="text-[10px] text-[#64748b] block">Anything memorable</span>
+        </button>
+      </div>
     </div>
 
     <!-- Milestone Title -->

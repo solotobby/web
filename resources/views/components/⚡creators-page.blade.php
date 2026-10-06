@@ -8,7 +8,7 @@ use Livewire\Component;
 
 new
 #[Layout('layouts.app')]
-#[Title('Featured Community Vaults — Creator Milestone Directory — FanVault')]
+#[Title('Featured Creator Time Capsules — Milestone Directory — FanVault')]
 class extends Component
 {
     public function rendering($view): void
@@ -22,8 +22,8 @@ class extends Component
         $schema = \App\Support\Seo::creatorsDirectorySchema($creators);
 
         $view->layoutData([
-            'title' => 'Featured Community Vaults — Creator Milestone Directory — FanVault',
-            'description' => 'Browse community milestone time vaults from top creators on YouTube, Twitch, TikTok, and podcasts. Seal your private letter for the next live stream reveal.',
+            'title' => 'Featured Creator Time Capsules — Milestone Directory — FanVault',
+            'description' => 'Browse community milestone time capsules from creators on YouTube, Twitch, TikTok, and podcasts. Seal your message, memory, or prediction for the live stream reveal.',
             'canonicalUrl' => route('creators'),
             'ogUrl' => route('creators'),
             'schemaJson' => \App\Support\Seo::toJson($schema),
@@ -50,19 +50,19 @@ class extends Component
   <!-- Hero Section -->
   <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ecfdf5] border border-[#a7f3d0]/80 text-[#064e3b] text-xs font-medium mb-3">
-      Creator Vaults · Digital Fan Mail for Milestone Streams
+      Creator Time Capsules · Sealed Memories & Predictions for Milestone Streams
     </span>
     <h1 class="font-serif text-3xl sm:text-5xl font-normal tracking-tight text-[#0f172a] mb-4 leading-tight">
-      A time vault for your next <br class="hidden sm:inline">
+      A time capsule for your next <br class="hidden sm:inline">
       <em class="italic text-[#047857]">milestone stream</em>.
     </h1>
     <p class="text-sm sm:text-base md:text-lg text-[#64748b] leading-relaxed mb-6">
-      Fans seal private letters, milestone predictions, and heartfelt memories starting at the amount you set (instead of a fixed $5 fee). Generous superfans add booster tips ($10, $25, $50+). You receive direct payouts and unseal the vault live on stream!
+      Fans seal private letters, milestone predictions, and heartfelt memories starting at the amount you set. Generous superfans add booster tips ($10, $25, $50+). You receive direct payouts and unseal the capsule live on stream!
     </p>
 
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
       <a href="{{ route('creators.join') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 transition-all">
-        Create Your Vault (60s)
+        Create Your Time Capsule (60s)
       </a>
 
       <span class="text-xs sm:text-sm font-serif italic text-[#64748b] px-1 select-none">
@@ -81,7 +81,7 @@ class extends Component
       <div>
         <span class="text-xs font-mono font-semibold uppercase tracking-wider text-[#047857]">Directory</span>
         <h2 class="font-serif text-2xl sm:text-3xl font-normal text-[#0f172a] mt-0.5">
-          Featured Community Vaults
+          Featured Time Capsules
         </h2>
       </div>
       <span class="text-xs sm:text-sm text-[#64748b]">

@@ -52,7 +52,7 @@ class CreatorFanVaultTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('FanVault');
-        $response->assertSee('The milestone vault for creators');
+        $response->assertSee('The Time Capsule for');
         $response->assertSee('Maya Lin');
         $response->assertSee('100k Community Milestone Stream');
     }
@@ -216,7 +216,7 @@ class CreatorFanVaultTest extends TestCase
         $response = $this->get('/explore');
 
         $response->assertStatus(200);
-        $response->assertSee('Public Community Fan Wall');
+        $response->assertSee('The Community Archive');
     }
 
     public function test_message_page_displays_creator_pass(): void
@@ -584,5 +584,55 @@ class CreatorFanVaultTest extends TestCase
         $response->assertSee('Twitch');
         $response->assertSee('TikTok');
         $response->assertSee('Kick');
+    }
+
+    public function test_nominate_page_renders_and_records_nomination(): void
+    {
+        $response = $this->get('/nominate');
+        $response->assertStatus(200);
+        $response->assertSee('Nominate a Creator');
+
+        \Livewire\Livewire::test('nominate-page')
+            ->set('creatorName', 'MKBHD')
+            ->set('platform', 'YouTube')
+            ->set('handleOrUrl', 'youtube.com/@mkbhd')
+            ->set('milestoneHint', '20 Million Subscribers Time Capsule')
+            ->set('reason', 'Legendary milestone incoming')
+            ->set('nominatorName', 'Tech Fan')
+            ->set('nominatorEmail', 'techfan@example.com')
+            ->call('submit')
+            ->assertSet('submitted', true)
+            ->assertSee('Nomination Received!');
+
+        $this->assertDatabaseHas('creator_nominations', [
+            'creator_name' => 'MKBHD',
+            'platform' => 'YouTube',
+            'handle_or_url' => 'youtube.com/@mkbhd',
+            'milestone_hint' => '20 Million Subscribers Time Capsule',
+            'nominator_email' => 'techfan@example.com',
+        ]);
+    }
+
+    public function test_creator_join_page_has_capsule_templates(): void
+    {
+        $response = $this->get('/creators/join');
+        $response->assertStatus(200);
+        $response->assertSee('Who is opening this vault?');
+
+        \Livewire\Livewire::test('creator-join')
+            ->set('step', 2)
+            ->assertSee('Choose Your Time Capsule Moment')
+            ->assertSee('Time Capsule Templates')
+            ->assertSee('100K / 1M Subs')
+            ->assertSee('Predictions');
+    }
+
+    public function test_seal_page_has_contribution_type_selectors(): void
+    {
+        $response = $this->get('/seal');
+        $response->assertStatus(200);
+        $response->assertSee('Contribution Type');
+        $response->assertSee('Prediction');
+        $response->assertSee('Memory');
     }
 }

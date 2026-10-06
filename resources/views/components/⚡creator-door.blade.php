@@ -206,13 +206,18 @@ class extends Component
       <!-- Main Headline & Bio -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-8 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ecfdf5] border border-[#a7f3d0] text-[#064e3b] text-xs font-mono font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#047857] animate-pulse"></span>
+            <span>🔒 SEALED · {{ $creator->name }} cannot open this until {{ $activeMilestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate() }}</span>
+          </div>
+
           <h1 class="font-serif text-3xl sm:text-5xl font-normal text-[#0f172a] leading-tight">
             {{ $creator->name }}’s <br class="hidden sm:inline">
-            <span class="italic text-[#047857]">Community Time Vault</span>.
+            <span class="italic text-[#047857]">{{ $activeMilestone?->title ?? $creator->milestone_title ?? 'Community' }} Time Capsule</span>.
           </h1>
 
           <p class="font-serif italic text-base sm:text-lg text-[#334155] leading-relaxed bg-[#faf9f5] border-l-2 border-[#047857] p-4 rounded-r-2xl">
-            “{{ ($activeMilestone?->description) ?: ($creator->bio ?: 'Leave a message, story, or prediction for our milestone stream. I will unseal the vault and read my favorites live!') }}”
+            “{{ ($activeMilestone?->description) ?: ($creator->bio ?: 'Leave a message, prediction, or memory for our milestone stream. I will unseal the vault and read my favorites live on video!') }}”
           </p>
 
           <!-- Multiple Topics & Milestones Selection Ribbon (if creator has multiple) -->
@@ -341,10 +346,10 @@ class extends Component
               href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id, 'amount' => $selectedAmount])) }}" 
               class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 active:translate-y-0 transition-all"
             >
-              Seal Letter for {{ $activeMilestone ? $activeMilestone->title : $creator->name }} (${{ $selectedAmount }})
+              Leave Something for {{ explode(' ', $creator->name)[0] }}'s Future Self (${{ $selectedAmount }})
             </a>
             <button type="button" @click="copy()" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 sm:py-4 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-medium text-sm hover:-translate-y-0.5 transition-all shadow-xs">
-              <span x-show="!copied">Share Vault Link</span>
+              <span x-show="!copied">Share Capsule Link</span>
               <span x-show="copied" style="display:none;">✓ Copied to Clipboard!</span>
             </button>
           </div>
@@ -354,12 +359,17 @@ class extends Component
         <aside class="lg:col-span-4 bg-white border border-[#e7e5df] rounded-3xl p-6 text-center shadow-xs space-y-4">
           <div>
             <span class="block text-xs font-mono uppercase tracking-wider text-[#64748b] mb-1">
-              {{ $activeMilestone ? $activeMilestone->title : 'Total Vault Letters' }}
+              {{ $activeMilestone ? $activeMilestone->title : 'Time Capsule Archive' }}
             </span>
             <strong class="font-serif text-4xl sm:text-5xl font-normal text-[#047857] block my-1">
               {{ $activeMilestone ? $activeMilestone->postcards()->count() : $creator->postcards()->count() }}
             </strong>
-            <span class="text-xs font-medium text-[#64748b]">fan letters & predictions</span>
+            <span class="text-xs font-medium text-[#64748b] block">sealed contributions</span>
+            <div class="flex items-center justify-center gap-1.5 text-[10px] font-mono text-[#064e3b] mt-2">
+              <span class="bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">💌 Letters</span>
+              <span class="bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">🔮 Predictions</span>
+              <span class="bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">❤️ Memories</span>
+            </div>
           </div>
 
           <div class="pt-3 border-t border-[#e7e5df]">

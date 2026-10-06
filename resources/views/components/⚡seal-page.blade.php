@@ -41,6 +41,8 @@ class extends Component
 
     public int $step = 1;
 
+    public string $contributionType = 'message';
+
     public string $name = '';
 
     public string $location = '';
@@ -62,6 +64,13 @@ class extends Component
     public $photo = null;
 
     public ?string $milestoneId = null;
+
+    public function setContributionType(string $type): void
+    {
+        if (in_array($type, ['message', 'prediction', 'memory', 'photo'], true)) {
+            $this->contributionType = $type;
+        }
+    }
 
     public int $sealAmount = 5;
 
@@ -241,6 +250,7 @@ class extends Component
             'addressed_to' => Capsule::clampDraftDate($this->addressedTo),
             'photo_path' => $photoPath,
             'predictions' => [
+                'type' => $this->contributionType,
                 'mars' => $this->mars,
                 'jobs' => $this->jobs,
                 'hundred' => $this->hundred,
@@ -523,11 +533,81 @@ class extends Component
         </div>
       </div>
 
+      <!-- Choose Contribution Type Tabs -->
+      <div class="mb-5">
+        <label class="block text-xs font-mono uppercase tracking-wider font-semibold text-[#475569] mb-2">
+          What are you leaving for the future?
+        </label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <button 
+            type="button" 
+            wire:click="setContributionType('message')"
+            class="py-2.5 px-3 rounded-xl border text-center transition-all {{ $contributionType === 'message' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
+          >
+            <span class="block text-base mb-0.5">💌</span>
+            <span class="text-xs">Letter</span>
+          </button>
+          <button 
+            type="button" 
+            wire:click="setContributionType('prediction')"
+            class="py-2.5 px-3 rounded-xl border text-center transition-all {{ $contributionType === 'prediction' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
+          >
+            <span class="block text-base mb-0.5">🔮</span>
+            <span class="text-xs">Prediction</span>
+          </button>
+          <button 
+            type="button" 
+            wire:click="setContributionType('memory')"
+            class="py-2.5 px-3 rounded-xl border text-center transition-all {{ $contributionType === 'memory' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
+          >
+            <span class="block text-base mb-0.5">❤️</span>
+            <span class="text-xs">Memory</span>
+          </button>
+          <button 
+            type="button" 
+            wire:click="setContributionType('photo')"
+            class="py-2.5 px-3 rounded-xl border text-center transition-all {{ $contributionType === 'photo' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
+          >
+            <span class="block text-base mb-0.5">📸</span>
+            <span class="text-xs">Photo / Note</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Thought Starter Prompt Banner -->
+      <div class="mb-4 p-3 rounded-xl bg-[#ecfdf5] border border-[#a7f3d0] text-xs text-[#064e3b]">
+        @switch($contributionType)
+          @case('prediction')
+            <strong>🔮 Prediction Prompt:</strong> Where do you predict {{ $creator ? $creator->name : 'the community' }} will be when this capsule is unsealed?
+            @break
+          @case('memory')
+            <strong>❤️ Community Memory Prompt:</strong> What was your favorite stream, video, or moment from the journey so far?
+            @break
+          @case('photo')
+            <strong>📸 Keepsake Note Prompt:</strong> What memory or moment does this keepsake capture for the future?
+            @break
+          @default
+            <strong>💌 Letter Prompt:</strong> What do you want {{ $creator ? $creator->name : 'the future' }} to remember about this exact moment?
+        @endswitch
+      </div>
+
       <div class="mb-5">
         <label for="message" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
-          Your Secret Letter (Sealed in archive until reveal date)
+          @switch($contributionType)
+            @case('prediction')
+              Your Milestone Prediction (Locked until reveal date)
+              @break
+            @case('memory')
+              Your Community Memory (Sealed in archive)
+              @break
+            @case('photo')
+              Your Keepsake Note (Sealed with your photo)
+              @break
+            @default
+              Your Secret Letter (Sealed in archive until reveal date)
+          @endswitch
         </label>
-        <textarea id="message" wire:model="message" maxlength="600" rows="5" placeholder="{{ $creator ? 'Dear ' . $creator->name . ', I’ve been watching your content since 2024 and it inspired me to...' : 'Dear future, today I am 28 years old and the world feels full of potential...' }}" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none resize-none leading-relaxed"></textarea>
+        <textarea id="message" wire:model="message" maxlength="600" rows="5" placeholder="@if($contributionType === 'prediction')I predict that when {{ $creator ? $creator->name : 'you' }} open this capsule, the channel will reach... @elseif($contributionType === 'memory')My favorite memory was when... @elseif($contributionType === 'photo')This photo captures the time we... @else{{ $creator ? 'Dear ' . $creator->name . ', I’ve been watching your content since 2024 and...' : 'Dear future, today I am 28 years old...' }}@endif" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none resize-none leading-relaxed"></textarea>
         <div class="flex justify-between items-center text-xs text-[#64748b] mt-1 px-1">
           <span>🔒 Stays strictly inside the sealed keepsake</span>
           <span><strong>{{ 600 - mb_strlen($message) }}</strong> chars left</span>

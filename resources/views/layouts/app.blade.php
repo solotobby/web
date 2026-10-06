@@ -75,14 +75,21 @@
                     'text-[#064e3b] bg-[#ecfdf5] font-semibold' => request()->routeIs('creators') && !request()->routeIs('creators.join') && !request()->routeIs('creators.studio'),
                     'text-[#475569] hover:text-[#0f172a] hover:bg-[#f7f6f0]' => !request()->routeIs('creators'),
                 ])>
-                    Creator Vaults
+                    Time Capsules
                 </a>
                 <a href="{{ route('explore') }}" @class([
                     'px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all',
                     'text-[#064e3b] bg-[#ecfdf5] font-semibold' => request()->routeIs('explore'),
                     'text-[#475569] hover:text-[#0f172a] hover:bg-[#f7f6f0]' => !request()->routeIs('explore'),
                 ])>
-                    Fan Wall
+                    Community Archive
+                </a>
+                <a href="{{ route('nominate') }}" @class([
+                    'px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all',
+                    'text-[#064e3b] bg-[#ecfdf5] font-semibold' => request()->routeIs('nominate'),
+                    'text-[#475569] hover:text-[#0f172a] hover:bg-[#f7f6f0]' => !request()->routeIs('nominate'),
+                ])>
+                    Nominate
                 </a>
             </nav>
 
@@ -94,8 +101,8 @@
                     </a>
                 @else
                     <a href="{{ route('creators.join') }}" class="inline-flex items-center gap-1.5 bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-xs sm:text-sm px-4 sm:px-4.5 py-1.5 sm:py-2 rounded-full shadow-[0_2px_10px_rgba(6,78,59,0.2)] hover:shadow-[0_4px_14px_rgba(6,78,59,0.3)] transition-all shrink-0">
-                        <span class="hidden sm:inline">Launch Your Vault</span>
-                        <span class="sm:hidden">Create Vault</span>
+                        <span class="hidden sm:inline">Create Time Capsule</span>
+                        <span class="sm:hidden">Create Capsule</span>
                     </a>
                 @endif
 
@@ -136,30 +143,36 @@
             <div class="grid grid-cols-1 gap-1">
                 <a href="{{ route('creators') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('creators') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
                     <div>
-                        <div class="font-semibold text-sm">Creator Vaults</div>
-                        <div class="text-xs text-[#64748b]">Explore active community time vaults</div>
+                        <div class="font-semibold text-sm">Time Capsules</div>
+                        <div class="text-xs text-[#64748b]">Explore active creator time capsules</div>
                     </div>
                 </a>
 
                 <a href="{{ route('explore') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('explore') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
                     <div>
-                        <div class="font-semibold text-sm">Fan Wall</div>
-                        <div class="text-xs text-[#64748b]">Read teasers sealed for creators</div>
+                        <div class="font-semibold text-sm">Community Archive</div>
+                        <div class="text-xs text-[#64748b]">Read teasers sealed for future milestones</div>
                     </div>
                 </a>
 
+                <a href="{{ route('nominate') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('nominate') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
+                    <div>
+                        <div class="font-semibold text-sm">Nominate a Creator</div>
+                        <div class="text-xs text-[#64748b]">Suggest a creator who deserves a time capsule</div>
+                    </div>
+                </a>
 
                 <a href="{{ route('creators.join') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('creators.join') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
                     <div>
-                        <div class="font-semibold text-sm">Create Your Vault</div>
-                        <div class="text-xs text-[#64748b]">Set up your creator door in 60s & choose your own seal amount</div>
+                        <div class="font-semibold text-sm">Create Your Capsule</div>
+                        <div class="text-xs text-[#64748b]">Launch your creator time capsule in 60s</div>
                     </div>
                 </a>
             </div>
 
             <div class="pt-2 border-t border-[#e7e5df]">
                 <a href="{{ route('creators.join') }}" @click="open = false" class="w-full flex items-center justify-center p-2.5 rounded-xl bg-[#064e3b] text-white font-semibold text-sm shadow-sm transition-all">
-                    Launch Creator Vault
+                    Create Time Capsule
                 </a>
             </div>
         </div>
@@ -180,14 +193,14 @@
                     </span>
                     <div>
                         <span class="tracking-tight font-serif text-xl font-bold text-[#0f172a] block leading-none">FanVault</span>
-                        <span class="text-[11px] text-[#64748b] font-medium block mt-1">Creator Milestone Capsules & Fan Mail</span>
+                        <span class="text-[11px] text-[#64748b] font-medium block mt-1">The Creator Time Capsule · Milestones, Memories & Predictions</span>
                     </div>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3 text-xs">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] font-mono text-[11px] font-medium">
                         <span class="w-1.5 h-1.5 rounded-full bg-[#047857] animate-pulse"></span>
-                        <span>Encrypted Vault Protocol</span>
+                        <span>Encrypted Time Capsule Protocol</span>
                     </span>
                     <span class="hidden sm:inline text-[#cbd5e1]">/</span>
                     <a href="https://getfanvault.com" class="font-mono text-xs text-[#64748b] hover:text-[#047857] transition-colors">
@@ -201,17 +214,17 @@
                 <!-- Column 1: Brand & Economics (2 cols on lg) -->
                 <div class="lg:col-span-2 space-y-4">
                     <p class="text-sm text-[#475569] leading-relaxed max-w-sm">
-                        The permanent digital time capsule and fan mail platform for creator milestone celebrations. Superfans seal letters and predictions today; creators unlock and read them live on stream.
+                        Where creators preserve the moments, memories, predictions and messages from their community — sealed today, opened when the moment arrives.
                     </p>
                     <div class="pt-1 flex flex-col gap-2">
                         <div class="inline-flex items-center gap-2 text-xs text-[#064e3b] font-semibold bg-[#ecfdf5] px-3 py-1.5 rounded-full border border-[#a7f3d0] w-fit shadow-2xs">
                             <svg class="w-3.5 h-3.5 text-[#047857]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                             </svg>
-                            <span>Custom Creator Pricing · Direct Stripe Payouts</span>
+                            <span>Creator-Set Pricing · Direct Stripe Payouts</span>
                         </div>
                         <p class="text-[11px] text-[#64748b] font-mono">
-                            Zero inventory · Zero physical mail sorting · Permanent digital archive
+                            Zero inventory · Zero physical mail sorting · Permanent digital community archive
                         </p>
                     </div>
                 </div>
@@ -220,10 +233,11 @@
                 <div class="space-y-3">
                     <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94a3b8]">Platform</h4>
                     <ul class="space-y-2.5 text-sm text-[#475569]">
-                        <li><a href="{{ route('creators') }}" class="hover:text-[#047857] transition-colors">Creator Directory</a></li>
-                        <li><a href="{{ route('explore') }}" class="hover:text-[#047857] transition-colors">Fan Wall</a></li>
+                        <li><a href="{{ route('creators') }}" class="hover:text-[#047857] transition-colors">Time Capsules</a></li>
+                        <li><a href="{{ route('explore') }}" class="hover:text-[#047857] transition-colors">Community Archive</a></li>
+                        <li><a href="{{ route('nominate') }}" class="hover:text-[#047857] transition-colors">Nominate a Creator</a></li>
                         <li><a href="{{ route('timeline') }}" class="hover:text-[#047857] transition-colors">Milestone Timeline</a></li>
-                        <li><a href="{{ route('seal') }}" class="hover:text-[#047857] transition-colors">Seal a Letter</a></li>
+                        <li><a href="{{ route('seal') }}" class="hover:text-[#047857] transition-colors">Leave a Message</a></li>
                     </ul>
                 </div>
 
@@ -231,10 +245,10 @@
                 <div class="space-y-3">
                     <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94a3b8]">For Creators</h4>
                     <ul class="space-y-2.5 text-sm text-[#475569]">
-                        <li><a href="{{ route('creators.join') }}" class="hover:text-[#047857] transition-colors">Launch Your Vault</a></li>
-                        <li><a href="{{ route('creators.access') }}" class="hover:text-[#047857] transition-colors">Creator Login</a></li>
-                        <li><a href="{{ route('creators') }}" class="hover:text-[#047857] transition-colors">PO Box Alternative</a></li>
-                        <li><a href="{{ route('creators.join') }}" class="hover:text-[#047857] transition-colors">Milestone Stream Deck</a></li>
+                        <li><a href="{{ route('creators.join') }}" class="hover:text-[#047857] transition-colors">Create Your Capsule</a></li>
+                        <li><a href="{{ route('creators.access') }}" class="hover:text-[#047857] transition-colors">Creator Studio & Login</a></li>
+                        <li><a href="{{ route('creators') }}" class="hover:text-[#047857] transition-colors">Replaces Your PO Box</a></li>
+                        <li><a href="{{ route('creators.studio') }}" class="hover:text-[#047857] transition-colors">OBS Stream Mode</a></li>
                     </ul>
                 </div>
 
