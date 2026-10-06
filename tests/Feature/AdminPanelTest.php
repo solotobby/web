@@ -19,6 +19,7 @@ class AdminPanelTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
         config(['app.admin_key' => 'secret-master-passcode-2026']);
     }
 
