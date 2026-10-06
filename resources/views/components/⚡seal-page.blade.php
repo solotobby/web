@@ -431,20 +431,20 @@ class extends Component
 
       <div class="mb-6">
         <span class="inline-flex items-center px-3 py-1 bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] rounded-full text-xs font-bold mb-2">
-          Step 1 of 3 · Drafting Letter
+          Step 1 of 3 · Drafting Contribution
         </span>
         <h1 class="font-serif text-2xl sm:text-3xl font-bold text-[#0f172a] leading-tight">
           @if($creator)
-            Write your letter to <em class="italic text-[#047857]">{{ $creator->name }}</em>
+            Leave something for <em class="italic text-[#047857]">{{ $creator->name }}</em>
           @else
-            Write your letter to <em class="italic text-[#047857]">the future</em>
+            Leave something for <em class="italic text-[#047857]">the future</em>
           @endif
         </h1>
         <p class="font-serif italic text-base sm:text-lg text-[#047857] mt-1 font-normal">
           @if($creator)
-            What would you say to {{ $creator->name }} on their milestone stream?
+            What message, memory, or prediction would you seal for {{ $creator->name }}?
           @else
-            What would you tell the world of the future?
+            What would you seal for the world of the future?
           @endif
         </p>
         <p class="text-xs sm:text-sm text-[#475569] mt-1">
@@ -915,8 +915,8 @@ class extends Component
       <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#e7e5df]">
         <button class="w-full sm:w-auto px-5 py-3 rounded-full bg-white hover:bg-[#f5f4ee] border border-[#e7e5df] text-[#475569] font-medium text-sm transition-all" wire:click="back" type="button" @disabled($sealing)>← Back</button>
         <button class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 active:translate-y-0 transition-all" wire:click="seal" type="button" wire:loading.attr="disabled">
-          <span wire:loading.remove wire:target="seal">{{ $stripeOn ? ($creator ? "Pay \${$sealAmount} & Seal in Vault" : "Pay \${$sealAmount} & Seal Letter") : ($creator ? "Seal in Vault (\${$sealAmount})" : "Seal My Letter (\${$sealAmount})") }}</span>
-          <span wire:loading wire:target="seal">Sealing into vault… ⏳</span>
+          <span wire:loading.remove wire:target="seal">{{ $stripeOn ? ($creator ? "Pay \${$sealAmount} & Seal in Time Capsule" : "Pay \${$sealAmount} & Seal in Time Capsule") : ($creator ? "Seal in Time Capsule (\${$sealAmount})" : "Seal in Time Capsule (\${$sealAmount})") }}</span>
+          <span wire:loading wire:target="seal">Sealing into Time Capsule… ⏳</span>
         </button>
       </div>
     @endif

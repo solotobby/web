@@ -133,8 +133,21 @@ class MintPostcardService
                     $envelope = $postcard->envelope;
                     $creator = $postcard->creator;
 
-                    // 1. Send confirmation to fan
+                    // 1. Send confirmation to fan and register for unsealing notification
                     if ($envelope && ! empty($envelope->email) && filter_var($envelope->email, FILTER_VALIDATE_EMAIL)) {
+                        if ($creatorId) {
+                            try {
+                                \App\Models\CapsuleFollower::firstOrCreate([
+                                    'creator_id' => $creatorId,
+                                    'email' => strtolower(trim($envelope->email)),
+                                ], [
+                                    'milestone_id' => $postcard->milestone_id,
+                                ]);
+                            } catch (\Throwable $e) {
+                                Log::info('CapsuleFollower auto-registration note: ' . $e->getMessage());
+                            }
+                        }
+
                         try {
                             Mail::to($envelope->email)->send(new FanCapsuleSealedMail(
                                 postcard: $postcard,

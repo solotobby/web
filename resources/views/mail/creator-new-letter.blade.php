@@ -1,22 +1,22 @@
 <x-mail.layout>
     <x-slot:preheader>
-        ✨ New fan letter sealed in your vault from {{ $postcard->name }} (+${{ number_format($creatorCutCents / 100, 2) }})
+        ✨ New contribution sealed in your Time Capsule from {{ $postcard->name }} (+${{ number_format($creatorCutCents / 100, 2) }})
     </x-slot:preheader>
 
     <!-- Top Badge -->
     <div style="margin-bottom: 16px;">
         <span style="display: inline-block; padding: 4px 10px; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 9999px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 700; color: #064e3b; text-transform: uppercase; letter-spacing: 0.5px;">
-            ✨ New Fan Mail & Earnings Credited
+            ✨ New Time Capsule Contribution Credited
         </span>
     </div>
 
     <!-- Heading -->
     <h1 style="margin: 0 0 10px 0; font-family: Georgia, Cambria, 'Times New Roman', serif; font-size: 26px; line-height: 1.25; color: #0f172a; font-weight: 700;">
-        New Letter Sealed in Your Vault!
+        New Contribution Sealed in Your Time Capsule!
     </h1>
 
     <p style="margin: 0 0 24px 0; font-size: 15px; color: #475569; line-height: 1.6;">
-        Hey {{ $creator->name }}, a superfan just sealed a permanent time capsule letter for your upcoming milestone celebration.
+        Hey {{ $creator->name }}, a community member just sealed a contribution in your Time Capsule for your upcoming milestone celebration.
     </p>
 
     <!-- Notification Summary Card -->

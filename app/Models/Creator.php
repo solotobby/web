@@ -93,4 +93,9 @@ class Creator extends Model
     {
         return $this->hasMany(CreatorLoginToken::class);
     }
+
+    public function followers(): HasMany
+    {
+        return $this->hasMany(CapsuleFollower::class);
+    }
 }

@@ -86,15 +86,58 @@ class extends Component
             <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#064e3b] mb-2">
                 Nomination Received!
             </h2>
-            <p class="text-sm sm:text-base text-[#475569] max-w-md mx-auto mb-6 leading-relaxed">
+            <p class="text-sm sm:text-base text-[#475569] max-w-md mx-auto mb-4 leading-relaxed">
                 Thank you for championing <strong>{{ $creatorName }}</strong>! We will reach out with a personal invitation so their community can begin sealing future memories.
             </p>
+
+            <!-- Viral Invite Card -->
+            <div class="my-6 p-5 sm:p-6 bg-[#faf9f5] border border-[#e7e5df] rounded-2xl text-left" x-data="{ copied: false, text: 'Hey {{ $creatorName }}, I nominated you for a FanVault Time Capsule! Your community can start sealing memories and predictions for your upcoming milestone: {{ url('/creators/join') }}' }">
+                <div class="flex items-center gap-2 mb-1.5">
+                    <span class="text-base">🚀</span>
+                    <h3 class="text-sm font-bold text-[#0f172a]">
+                        Want to invite {{ $creatorName }} directly?
+                    </h3>
+                </div>
+                <p class="text-xs text-[#64748b] mb-3">
+                    Send them this quick shoutout on social media or in a video comment:
+                </p>
+                <div class="p-3 bg-white border border-[#e7e5df] rounded-xl text-xs font-mono text-[#334155] leading-relaxed mb-3 select-all">
+                    Hey {{ $creatorName }}, I nominated you for a FanVault Time Capsule! Your community can start sealing memories and predictions for your upcoming milestone: {{ url('/creators/join') }}
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <a 
+                        href="https://twitter.com/intent/tweet?text={{ urlencode('Hey ' . $creatorName . ', I nominated you for a @FanVault Time Capsule! Your community can start sealing memories and predictions for your upcoming milestone: ' . url('/creators/join')) }}" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black hover:bg-gray-800 text-white text-xs font-semibold transition-all shadow-xs"
+                    >
+                        <span>𝕏 Share on X</span>
+                    </a>
+                    <a 
+                        href="https://wa.me/?text={{ urlencode('Hey ' . $creatorName . ', I nominated you for a FanVault Time Capsule! Your community can start sealing memories and predictions for your upcoming milestone: ' . url('/creators/join')) }}" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-semibold transition-all shadow-xs"
+                    >
+                        <span>WhatsApp</span>
+                    </a>
+                    <button 
+                        type="button" 
+                        @click="navigator.clipboard.writeText(text); copied = true; setTimeout(() => copied = false, 2500);" 
+                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] text-xs font-semibold transition-all shadow-xs"
+                    >
+                        <span x-show="!copied">📋 Copy Message</span>
+                        <span x-show="copied" style="display:none;" class="text-[#047857] font-bold">✓ Copied!</span>
+                    </button>
+                </div>
+            </div>
+
             <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button type="button" wire:click="resetForm" class="px-6 py-3 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm transition-all shadow-xs">
                     Nominate Another Creator
                 </button>
                 <a href="{{ route('creators') }}" class="px-6 py-3 rounded-full bg-white hover:bg-[#faf9f5] border border-[#e7e5df] text-[#0f172a] font-medium text-sm transition-all">
-                    Explore Active Vaults
+                    Explore Time Capsules
                 </a>
             </div>
         </div>

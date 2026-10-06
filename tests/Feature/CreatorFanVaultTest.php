@@ -207,7 +207,7 @@ class CreatorFanVaultTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Maya Lin');
-        $response->assertSee('Drafting Letter');
+        $response->assertSee('Drafting Contribution');
         $response->assertDontSee('80%');
     }
 
@@ -634,5 +634,19 @@ class CreatorFanVaultTest extends TestCase
         $response->assertSee('Contribution Type');
         $response->assertSee('Prediction');
         $response->assertSee('Memory');
+    }
+
+    public function test_fan_can_follow_time_capsule_for_unsealing_alerts(): void
+    {
+        \Livewire\Livewire::test('creator-door', ['slug' => $this->creator->slug])
+            ->set('followerEmail', 'fan@example.com')
+            ->call('followCapsule')
+            ->assertSet('followSuccess', true)
+            ->assertSee('You are following this Time Capsule');
+
+        $this->assertDatabaseHas('capsule_followers', [
+            'creator_id' => $this->creator->id,
+            'email' => 'fan@example.com',
+        ]);
     }
 }

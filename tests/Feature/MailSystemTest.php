@@ -129,7 +129,7 @@ class MailSystemTest extends TestCase
         );
         $html = $mailable->render();
 
-        $this->assertStringContainsString('New Letter Sealed in Your Vault!', $html);
+        $this->assertStringContainsString('New Contribution Sealed in Your Time Capsule!', $html);
         $this->assertStringContainsString('SuperFan Dave', $html);
         $this->assertStringContainsString('London, UK', $html);
         $this->assertStringContainsString('GG on reaching 100k!', $html);

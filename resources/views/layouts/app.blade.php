@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>{{ $title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators' }}</title>
-    <meta name="description" content="{{ $description ?? 'The modern digital time capsule and fan mail platform for creator milestones. Fans seal letters & predictions; creators unlock and read them live on stream.' }}">
-    <meta name="keywords" content="{{ $keywords ?? 'creator time capsule, fan mail vault, digital time capsule, milestone stream celebration, fan letters, YouTube milestone, Twitch stream celebration, community milestone vault' }}">
+    <title>{{ $title ?? 'FanVault — The Creator Time Capsule · Milestones, Memories & Predictions' }}</title>
+    <meta name="description" content="{{ $description ?? 'The community time capsule platform for creator milestones. Leave messages, memories, and predictions today; creators unseal and reveal them live when the moment arrives.' }}">
+    <meta name="keywords" content="{{ $keywords ?? 'creator time capsule, community time capsule, milestone capsule, youtube milestone stream, twitch milestone celebration, stream unsealing ceremony' }}">
     <meta name="author" content="FanVault">
     <meta name="robots" content="{{ $robots ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }}">
     <link rel="canonical" href="{{ $canonicalUrl ?? url()->current() }}">
@@ -13,11 +13,11 @@
     <!-- OpenGraph & Social Sharing -->
     <meta property="og:site_name" content="FanVault">
     <meta property="og:type" content="{{ $ogType ?? 'website' }}">
-    <meta property="og:title" content="{{ $ogTitle ?? ($title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators') }}">
-    <meta property="og:description" content="{{ $ogDescription ?? ($description ?? 'The modern digital time capsule and fan mail platform for creator milestones. Sealed until milestone streams.') }}">
+    <meta property="og:title" content="{{ $ogTitle ?? ($title ?? 'FanVault — The Creator Time Capsule') }}">
+    <meta property="og:description" content="{{ $ogDescription ?? ($description ?? 'The community time capsule platform for creator milestones. Sealed today, unsealed live when the moment arrives.') }}">
     <meta property="og:url" content="{{ $ogUrl ?? url()->current() }}">
     <meta property="og:image" content="{{ $ogImage ?? route('og.cover') }}">
-    <meta property="og:image:alt" content="{{ $ogTitle ?? ($title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators') }}">
+    <meta property="og:image:alt" content="{{ $ogTitle ?? ($title ?? 'FanVault — The Creator Time Capsule') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="en_US">
@@ -26,10 +26,10 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@fanvault">
     <meta name="twitter:creator" content="@fanvault">
-    <meta name="twitter:title" content="{{ $ogTitle ?? ($title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators') }}">
-    <meta name="twitter:description" content="{{ $ogDescription ?? ($description ?? 'The modern digital time capsule and fan mail platform for creator milestones. Sealed until milestone streams.') }}">
+    <meta name="twitter:title" content="{{ $ogTitle ?? ($title ?? 'FanVault — The Creator Time Capsule') }}">
+    <meta name="twitter:description" content="{{ $ogDescription ?? ($description ?? 'The community time capsule platform for creator milestones. Sealed today, unsealed live when the moment arrives.') }}">
     <meta name="twitter:image" content="{{ $ogImage ?? route('og.cover') }}">
-    <meta name="twitter:image:alt" content="{{ $ogTitle ?? ($title ?? 'FanVault — Milestone Time Capsules & Fan Mail Vaults for Creators') }}">
+    <meta name="twitter:image:alt" content="{{ $ogTitle ?? ($title ?? 'FanVault — The Creator Time Capsule') }}">
     <meta name="theme-color" content="#047857">
 
     <link rel="icon" href="{{ asset('assets/favicon.svg') }}" type="image/svg+xml">
@@ -237,7 +237,7 @@
                         <li><a href="{{ route('explore') }}" class="hover:text-[#047857] transition-colors">Community Archive</a></li>
                         <li><a href="{{ route('nominate') }}" class="hover:text-[#047857] transition-colors">Nominate a Creator</a></li>
                         <li><a href="{{ route('timeline') }}" class="hover:text-[#047857] transition-colors">Milestone Timeline</a></li>
-                        <li><a href="{{ route('seal') }}" class="hover:text-[#047857] transition-colors">Leave a Message</a></li>
+                        <li><a href="{{ route('seal') }}" class="hover:text-[#047857] transition-colors">Leave Something</a></li>
                     </ul>
                 </div>
 

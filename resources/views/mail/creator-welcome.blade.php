@@ -1,12 +1,12 @@
 <x-mail.layout>
     <x-slot:preheader>
-        Your creator community vault is officially live! Fans can now seal letters for your milestone stream.
+        Your Creator Time Capsule is officially live! Fans can now leave memories and predictions for your milestone stream.
     </x-slot:preheader>
 
     <!-- Top Welcome Badge -->
     <div style="margin-bottom: 16px;">
         <span style="display: inline-block; padding: 4px 10px; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 9999px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 700; color: #064e3b; text-transform: uppercase; letter-spacing: 0.5px;">
-            🎉 Creator Vault Activated
+            🎉 Creator Time Capsule Activated
         </span>
     </div>
 
@@ -16,7 +16,7 @@
     </h1>
 
     <p style="margin: 0 0 20px 0; font-size: 15px; color: #475569; line-height: 1.6;">
-        Congratulations! Your creator community time capsule vault has been created and is ready to collect heartfelt letters, memories, and predictions from your fans.
+        Congratulations! Your Creator Time Capsule has been created and is ready to collect messages, memories, and predictions from your community.
     </p>
 
     <!-- Public Door Link Box -->
@@ -24,13 +24,13 @@
         <tr>
             <td style="padding: 20px;">
                 <span style="font-size: 11px; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; font-weight: 600; display: block; margin-bottom: 4px;">
-                    Your Public Fan Door
+                    Your Public Time Capsule Link
                 </span>
                 <a href="{{ url('/with/'.$creator->slug) }}" target="_blank" style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 16px; font-weight: 700; color: #047857; text-decoration: none; word-break: break-all;">
                     {{ url('/with/'.$creator->slug) }}
                 </a>
                 <p style="margin: 8px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.5;">
-                    💡 <strong>Pro Tip:</strong> Add this link to your stream overlay, video description, or channel bio so fans can seal letters today.
+                    💡 <strong>Pro Tip:</strong> Add this link to your stream overlay, video description, or channel bio so fans can leave something today.
                 </p>
             </td>
         </tr>
