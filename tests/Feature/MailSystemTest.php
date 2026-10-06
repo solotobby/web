@@ -203,6 +203,32 @@ class MailSystemTest extends TestCase
         $response2->assertSessionHas('authored', [$postcard->id]);
     }
 
+    public function test_creator_welcome_mail_renders_door_link_platforms_and_studio_cta(): void
+    {
+        $creator = Creator::create([
+            'id' => (string) Str::uuid(),
+            'name' => 'Kofi Kingston',
+            'handle' => '@kofik',
+            'slug' => 'kofik',
+            'email' => 'kofi@example.com',
+            'platform' => 'YouTube, Twitch, TikTok',
+            'milestone_title' => '250K Milestone Celebration',
+            'unlock_date' => Carbon::parse('2027-08-15'),
+        ]);
+
+        $mailable = new \App\Mail\CreatorWelcomeMail($creator, 'https://getfanvault.com/creators/studio');
+        $html = $mailable->render();
+
+        $this->assertStringContainsString('Welcome to FanVault, Kofi Kingston!', $html);
+        $this->assertStringContainsString('/with/kofik', $html);
+        $this->assertStringContainsString('YouTube', $html);
+        $this->assertStringContainsString('Twitch', $html);
+        $this->assertStringContainsString('TikTok', $html);
+        $this->assertStringContainsString('Open Your Creator Studio ➔', $html);
+        $this->assertStringContainsString('250K Milestone Celebration', $html);
+        $this->assertEquals("🎉 Welcome to FanVault, Kofi Kingston! Your Creator Vault is Live", $mailable->envelope()->subject);
+    }
+
     public function test_artisan_mail_test_command_executes_successfully(): void
     {
         $this->artisan('mail:test', [
@@ -211,7 +237,7 @@ class MailSystemTest extends TestCase
             '--mailer' => 'log',
         ])
         ->expectsOutputToContain('FanVault Transactional Email Test Runner')
-        ->expectsOutputToContain('SUCCESS: 3 test email(s) dispatched successfully')
+        ->expectsOutputToContain('SUCCESS: 4 test email(s) dispatched successfully')
         ->assertExitCode(0);
     }
 }

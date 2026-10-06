@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Mail\CreatorWelcomeMail;
 use App\Models\Creator;
 use App\Models\Envelope;
 use App\Models\Postcard;
@@ -10,6 +11,7 @@ use App\Models\Stat;
 use App\Services\CreatorAuthService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -513,5 +515,74 @@ class CreatorFanVaultTest extends TestCase
             ->assertSet('sealAmount', 50)
             ->call('addBooster', 10)
             ->assertSet('sealAmount', 60);
+    }
+
+    public function test_creator_can_launch_vault_with_multiple_platforms_and_receives_welcome_email(): void
+    {
+        Mail::fake();
+
+        \Livewire\Livewire::test('creator-join')
+            ->set('name', 'Multi Platform Streamer')
+            ->set('handle', 'multistream')
+            ->call('togglePlatform', 'Twitch')
+            ->call('togglePlatform', 'Kick')
+            ->assertSet('platforms', ['YouTube', 'Twitch', 'Kick'])
+            ->call('next')
+            ->set('milestone_title', '100K Stream Celebration')
+            ->set('unlock_date', '2027-12-01')
+            ->set('bio', 'Leave a memory for our multi-stream anniversary!')
+            ->call('next')
+            ->set('email', 'multi@creator.com')
+            ->call('join')
+            ->assertRedirect(route('creators.studio'));
+
+        $creator = Creator::where('email', 'multi@creator.com')->first();
+        $this->assertNotNull($creator);
+        $this->assertEquals('YouTube, Twitch, Kick', $creator->platform);
+        $this->assertEquals(['YouTube', 'Twitch', 'Kick'], $creator->platformsList());
+
+        Mail::assertSent(CreatorWelcomeMail::class, function ($mail) use ($creator) {
+            return $mail->hasTo('multi@creator.com') && $mail->creator->id === $creator->id;
+        });
+    }
+
+    public function test_creator_login_link_request_does_not_display_magic_link_on_screen(): void
+    {
+        Mail::fake();
+
+        \Livewire\Livewire::test('creator-access')
+            ->set('email', 'maya@example.com')
+            ->call('requestLink')
+            ->assertSet('mode', 'sent')
+            ->assertSee('Check your inbox')
+            ->assertSee('Magic link dispatched!')
+            ->assertDontSee('Local dev mail')
+            ->assertDontSee('Auto-Generated');
+
+        Mail::assertSent(\App\Mail\CreatorLoginLink::class, function ($mail) {
+            return $mail->hasTo('maya@example.com');
+        });
+    }
+
+    public function test_creator_door_displays_all_connected_platforms(): void
+    {
+        $creator = Creator::create([
+            'id' => (string) Str::uuid(),
+            'name' => 'Omni Streamer',
+            'handle' => '@omnistreamer',
+            'slug' => 'omnistreamer',
+            'email' => 'omni@streamer.com',
+            'platform' => 'YouTube, Twitch, TikTok, Kick',
+            'milestone_title' => 'Big Milestone',
+            'unlock_date' => Carbon::parse('2027-10-10'),
+            'joined_at' => now(),
+        ]);
+
+        $response = $this->get('/with/' . $creator->slug);
+        $response->assertStatus(200);
+        $response->assertSee('YouTube');
+        $response->assertSee('Twitch');
+        $response->assertSee('TikTok');
+        $response->assertSee('Kick');
     }
 }

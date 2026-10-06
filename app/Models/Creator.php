@@ -45,6 +45,22 @@ class Creator extends Model
         return '1 January 2028';
     }
 
+    /**
+     * Get list of platforms as an array.
+     *
+     * @return array<int, string>
+     */
+    public function platformsList(): array
+    {
+        if (empty($this->platform)) {
+            return ['YouTube'];
+        }
+
+        $items = array_filter(array_map('trim', explode(',', $this->platform)));
+
+        return ! empty($items) ? array_values($items) : ['YouTube'];
+    }
+
     public function needsOnboarding(): bool
     {
         return empty(trim($this->name ?? ''))

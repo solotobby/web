@@ -27,11 +27,35 @@ class extends Component
 
     public string $editName = '';
     public string $editHandle = '';
+    public array $editPlatforms = ['YouTube'];
     public string $editPlatform = 'YouTube';
     public string $editBio = '';
     public int $editMinPrice = 5;
     public string $settingsSuccess = '';
     public string $settingsError = '';
+
+    public function updatedEditPlatform($val): void
+    {
+        $parsed = array_values(array_filter(array_map('trim', explode(',', (string) $val))));
+        $this->editPlatforms = ! empty($parsed) ? $parsed : ['YouTube'];
+    }
+
+    public function updatedEditPlatforms($val): void
+    {
+        $this->editPlatform = implode(', ', (array) $val);
+    }
+
+    public function toggleEditPlatform(string $platform): void
+    {
+        if (in_array($platform, $this->editPlatforms, true)) {
+            if (count($this->editPlatforms) > 1) {
+                $this->editPlatforms = array_values(array_diff($this->editPlatforms, [$platform]));
+            }
+        } else {
+            $this->editPlatforms[] = $platform;
+        }
+        $this->editPlatform = implode(', ', $this->editPlatforms);
+    }
 
     public function rendering($view): void
     {
@@ -69,7 +93,8 @@ class extends Component
         if ($creator) {
             $this->editName = $creator->name;
             $this->editHandle = ltrim($creator->handle ?: $creator->slug, '@');
-            $this->editPlatform = $creator->platform ?: 'YouTube';
+            $this->editPlatforms = $creator->platformsList();
+            $this->editPlatform = implode(', ', $this->editPlatforms);
             $this->editBio = $creator->bio ?: '';
             $this->editMinPrice = (int) ($creator->minPriceDollars() ?: 5);
         }
@@ -90,10 +115,21 @@ class extends Component
         $this->settingsError = '';
         $this->settingsSuccess = '';
 
+        if (empty($this->editPlatforms) && ! empty($this->editPlatform)) {
+            $this->editPlatforms = array_values(array_filter(array_map('trim', explode(',', $this->editPlatform))));
+        }
+
+        if (empty($this->editPlatforms)) {
+            $this->editPlatforms = ['YouTube'];
+        }
+
+        $this->editPlatform = implode(', ', $this->editPlatforms);
+
         $this->validate([
             'editName' => 'required|string|max:120',
             'editHandle' => 'required|string|max:80',
-            'editPlatform' => 'required|string|in:YouTube,Twitch,TikTok,Podcast,Substack,Kick',
+            'editPlatforms' => 'required|array|min:1',
+            'editPlatforms.*' => 'required|string|max:40',
             'editBio' => 'nullable|string|max:600',
             'editMinPrice' => 'required|numeric|min:3|max:1000',
         ]);
@@ -112,7 +148,7 @@ class extends Component
             'name' => trim($this->editName),
             'handle' => '@' . $handle,
             'slug' => $slug,
-            'platform' => $this->editPlatform,
+            'platform' => implode(', ', $this->editPlatforms),
             'bio' => trim($this->editBio),
             'min_seal_price_cents' => (int) round($this->editMinPrice * 100),
         ]);
@@ -1535,18 +1571,23 @@ class extends Component
                   @error('editHandle') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
 
-                <div>
+                <div class="sm:col-span-2">
                   <label class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
-                    Primary Platform <span class="text-red-500">*</span>
+                    Connected Platforms <span class="text-xs font-normal text-[#64748b]">(select all that apply)</span> <span class="text-red-500">*</span>
                   </label>
-                  <select wire:model="editPlatform" class="w-full bg-[#faf9f5] border border-[#e7e5df] focus:bg-white focus:border-[#047857] rounded-2xl p-3.5 text-base text-[#0f172a] outline-none">
-                    <option value="YouTube">YouTube</option>
-                    <option value="Twitch">Twitch</option>
-                    <option value="TikTok">TikTok</option>
-                    <option value="Podcast">Podcast</option>
-                    <option value="Substack">Substack</option>
-                    <option value="Kick">Kick</option>
-                  </select>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    @foreach(['YouTube' => '📺', 'Twitch' => '👾', 'TikTok' => '🎵', 'Kick' => '⚡', 'Podcast' => '🎙️', 'Instagram' => '📸', 'X / Twitter' => '𝕏', 'Substack' => '✍️'] as $p => $icon)
+                      <button 
+                        type="button" 
+                        wire:click="toggleEditPlatform('{{ $p }}')"
+                        class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 {{ in_array($p, $editPlatforms, true) ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-[#faf9f5] text-[#475569] hover:bg-white' }}"
+                      >
+                        <span>{{ $icon }}</span>
+                        <span>{{ $p }}</span>
+                      </button>
+                    @endforeach
+                  </div>
+                  @error('editPlatforms') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
               </div>
 

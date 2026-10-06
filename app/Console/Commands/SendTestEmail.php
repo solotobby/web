@@ -21,7 +21,7 @@ class SendTestEmail extends Command
      */
     protected $signature = 'mail:test 
                             {email : Destination email address}
-                            {--type=all : Email type: all, fan, creator, or login}
+                            {--type=all : Email type: all, fan, creator, login, or welcome}
                             {--mailer= : Optional mailer override (e.g. smtp, ses, log, resend)}';
 
     /**
@@ -127,6 +127,16 @@ class SendTestEmail extends Command
                     loginUrl: route('creators.access'),
                 ));
                 $this->info("  ✓ Creator Magic Login Link sent.");
+                $sentCount++;
+            }
+
+            if (in_array($type, ['all', 'welcome'], true)) {
+                $this->line("Sending Creator Welcome Onboarding email...");
+                Mail::to($email)->send(new \App\Mail\CreatorWelcomeMail(
+                    creator: $creator,
+                    studioUrl: route('creators.studio'),
+                ));
+                $this->info("  ✓ Creator Welcome email sent.");
                 $sentCount++;
             }
 

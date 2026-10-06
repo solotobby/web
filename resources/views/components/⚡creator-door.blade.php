@@ -175,18 +175,24 @@ class extends Component
       <!-- Top Badges -->
       <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div class="flex items-center gap-2">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
-            <span>
-              @switch($creator->platform)
-                @case('YouTube') 📺 @break
-                @case('Twitch') 👾 @break
-                @case('Podcast') 🎙️ @break
-                @case('TikTok') 🎵 @break
-                @default 🌐
-              @endswitch
+          @foreach($creator->platformsList() as $plt)
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
+              <span>
+                @switch($plt)
+                  @case('YouTube') 📺 @break
+                  @case('Twitch') 👾 @break
+                  @case('Podcast') 🎙️ @break
+                  @case('TikTok') 🎵 @break
+                  @case('Kick') ⚡ @break
+                  @case('Instagram') 📸 @break
+                  @case('X / Twitter') 𝕏 @break
+                  @case('Substack') ✍️ @break
+                  @default 🌐
+                @endswitch
+              </span>
+              {{ $plt }}
             </span>
-            {{ $creator->platform }} Creator Vault
-          </span>
+          @endforeach
           <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#f5f4ee] text-[#334155] border border-[#e7e5df]">
             {{ $creator->handle }}
           </span>

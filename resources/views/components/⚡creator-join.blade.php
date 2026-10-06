@@ -28,7 +28,7 @@ class extends Component
 
     public string $email = '';
 
-    public string $platform = 'YouTube';
+    public array $platforms = ['YouTube'];
 
     public string $milestone_title = '';
 
@@ -39,6 +39,17 @@ class extends Component
     public int $step = 1;
 
     public string $error = '';
+
+    public function togglePlatform(string $platform): void
+    {
+        if (in_array($platform, $this->platforms, true)) {
+            if (count($this->platforms) > 1) {
+                $this->platforms = array_values(array_diff($this->platforms, [$platform]));
+            }
+        } else {
+            $this->platforms[] = $platform;
+        }
+    }
 
     public function mount(): void
     {
@@ -58,7 +69,8 @@ class extends Component
             $this->validate([
                 'name' => 'required|string|max:120',
                 'handle' => 'required|string|max:80',
-                'platform' => 'required|string|max:40',
+                'platforms' => 'required|array|min:1',
+                'platforms.*' => 'required|string|max:40',
             ]);
 
             $slug = Capsule::slugify($this->handle);
@@ -96,7 +108,8 @@ class extends Component
             'name' => 'required|string|max:120',
             'handle' => 'required|string|max:80',
             'email' => 'required|email|max:190',
-            'platform' => 'required|string|max:40',
+            'platforms' => 'required|array|min:1',
+            'platforms.*' => 'required|string|max:40',
             'milestone_title' => 'required|string|max:120',
             'unlock_date' => 'required|date',
             'bio' => 'nullable|string|max:400',
@@ -129,7 +142,7 @@ class extends Component
             'name' => trim($this->name),
             'handle' => trim($this->handle),
             'slug' => $slug,
-            'platform' => $this->platform,
+            'platform' => implode(', ', $this->platforms),
             'milestone_title' => trim($this->milestone_title),
             'unlock_date' => $this->unlock_date,
             'bio' => trim($this->bio) ?: 'Leave a letter or prediction for our milestone stream. I will unseal the vault and read my favorites live!',
@@ -143,6 +156,14 @@ class extends Component
             'description' => trim($this->bio),
             'is_active' => true,
         ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::to($creator->email)->send(
+                new \App\Mail\CreatorWelcomeMail($creator, route('creators.studio'))
+            );
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Failed sending creator welcome mail: ' . $e->getMessage());
+        }
 
         $auth->login($creator);
 
@@ -202,22 +223,20 @@ class extends Component
       </div>
 
       <div class="mb-6">
-        <label class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">Primary Platform</label>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          @foreach(['YouTube','Twitch','TikTok','Podcast','Substack','Kick'] as $p)
-            <button type="button" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all {{ $platform === $p ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-[#f5f4ee] text-[#475569] hover:bg-white' }}" wire:click="$set('platform', '{{ $p }}')">
-              @switch($p)
-                @case('YouTube') 📺 @break
-                @case('Twitch') 👾 @break
-                @case('TikTok') 🎵 @break
-                @case('Podcast') 🎙️ @break
-                @case('Substack') ✍️ @break
-                @case('Kick') ⚡ @break
-              @endswitch
-              {{ $p }}
+        <label class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
+          Active Platforms <span class="text-xs font-normal text-[#64748b]">(select all that apply)</span>
+        </label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          @foreach(['YouTube' => '📺', 'Twitch' => '👾', 'TikTok' => '🎵', 'Kick' => '⚡', 'Podcast' => '🎙️', 'Instagram' => '📸', 'X / Twitter' => '𝕏', 'Substack' => '✍️'] as $p => $icon)
+            <button type="button" 
+              class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 {{ in_array($p, $platforms, true) ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-[#f5f4ee] text-[#475569] hover:bg-white' }}" 
+              wire:click="togglePlatform('{{ $p }}')">
+              <span>{{ $icon }}</span>
+              <span>{{ $p }}</span>
             </button>
           @endforeach
         </div>
+        @error('platforms') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
       </div>
 
       <div class="pt-2">
@@ -280,7 +299,7 @@ class extends Component
       <div class="bg-[#f5f4ee] border border-[#e7e5df] rounded-2xl p-4 mb-5 text-center" aria-hidden="true">
         <span class="block text-xs text-[#64748b] uppercase tracking-wider font-semibold">{{ $name ?: 'Your Name' }}</span>
         <strong class="block font-mono text-base text-[#047857] my-1">/with/{{ $this->slugPreview() }}</strong>
-        <em class="block text-xs not-italic text-[#475569]">{{ $milestone_title ?: 'Community Milestone' }} · {{ $platform }}</em>
+        <em class="block text-xs not-italic text-[#475569]">{{ $milestone_title ?: 'Community Milestone' }} · {{ implode(', ', $platforms) }}</em>
       </div>
 
       <div class="mb-6">

@@ -25,8 +25,6 @@ class extends Component
 
     public string $error = '';
 
-    public string $devLoginUrl = '';
-
     public function mount(): void
     {
         if (session('creator_id')) {
@@ -42,7 +40,6 @@ class extends Component
     public function requestLink(CreatorAuthService $auth): void
     {
         $this->error = '';
-        $this->devLoginUrl = '';
         $this->validate([
             'email' => 'required|email|max:190',
         ]);
@@ -53,10 +50,6 @@ class extends Component
             $this->error = 'Unable to send link. Please verify your email and try again.';
 
             return;
-        }
-
-        if (! empty($result['login_url'])) {
-            $this->devLoginUrl = $result['login_url'];
         }
 
         $this->isNewCreator = ! empty($result['is_new']);
@@ -123,16 +116,6 @@ class extends Component
             A direct studio link has been dispatched to <strong class="text-[#047857]">{{ $email }}</strong>. It expires in 30 minutes and can only be used once.
           @endif
         </p>
-
-        @if($devLoginUrl)
-          <div class="bg-[#f5f4ee] border border-[#e7e5df] rounded-2xl p-4 mb-5 text-left text-xs">
-            <span class="block text-[11px] font-bold uppercase tracking-wider text-[#64748b] mb-1">Local dev mail (Auto-Generated)</span>
-            <strong class="font-mono text-[#047857] block break-all mb-2">{{ $devLoginUrl }}</strong>
-            <a href="{{ $devLoginUrl }}" class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-[#064e3b] to-[#047857] text-white font-bold text-xs shadow-xs transition-all">
-              {{ $isNewCreator ? 'Complete Vault Setup →' : 'Open Creator Studio →' }}
-            </a>
-          </div>
-        @endif
 
         <div class="flex flex-col gap-2.5">
           <button class="w-full inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-bold text-xs sm:text-sm transition-all shadow-xs" type="button" wire:click="resetForm">

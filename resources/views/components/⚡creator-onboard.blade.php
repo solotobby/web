@@ -25,6 +25,8 @@ class extends Component
 
     public string $handle = '';
 
+    public array $platforms = ['YouTube'];
+
     public string $platform = 'YouTube';
 
     public string $milestone_title = '';
@@ -34,6 +36,29 @@ class extends Component
     public string $bio = '';
 
     public string $error = '';
+
+    public function updatedPlatform($val): void
+    {
+        $parsed = array_values(array_filter(array_map('trim', explode(',', (string) $val))));
+        $this->platforms = ! empty($parsed) ? $parsed : ['YouTube'];
+    }
+
+    public function updatedPlatforms($val): void
+    {
+        $this->platform = implode(', ', (array) $val);
+    }
+
+    public function togglePlatform(string $platform): void
+    {
+        if (in_array($platform, $this->platforms, true)) {
+            if (count($this->platforms) > 1) {
+                $this->platforms = array_values(array_diff($this->platforms, [$platform]));
+            }
+        } else {
+            $this->platforms[] = $platform;
+        }
+        $this->platform = implode(', ', $this->platforms);
+    }
 
     public function mount(CreatorAuthService $auth): void
     {
@@ -54,7 +79,8 @@ class extends Component
         $this->email = $creator->email;
         $this->name = $creator->name ?? '';
         $this->handle = ltrim($creator->handle ?? '', '@');
-        $this->platform = $creator->platform ?: 'YouTube';
+        $this->platforms = $creator->platformsList();
+        $this->platform = implode(', ', $this->platforms);
         $this->milestone_title = $creator->milestone_title ?? '';
         $this->unlock_date = $creator->unlock_date ? $creator->unlock_date->toDateString() : now()->addYears(2)->format('Y-01-01');
         $this->bio = $creator->bio ?? '';
@@ -71,10 +97,21 @@ class extends Component
             return null;
         }
 
+        if (empty($this->platforms) && ! empty($this->platform)) {
+            $this->platforms = array_values(array_filter(array_map('trim', explode(',', $this->platform))));
+        }
+
+        if (empty($this->platforms)) {
+            $this->platforms = ['YouTube'];
+        }
+
+        $this->platform = implode(', ', $this->platforms);
+
         $this->validate([
             'name' => 'required|string|max:120',
             'handle' => 'required|string|max:80',
-            'platform' => 'required|string|max:40',
+            'platforms' => 'required|array|min:1',
+            'platforms.*' => 'required|string|max:40',
             'milestone_title' => 'required|string|max:120',
             'unlock_date' => 'required|date',
             'bio' => 'nullable|string|max:400',
@@ -102,7 +139,7 @@ class extends Component
             'name' => trim($this->name),
             'handle' => '@' . ltrim(trim($this->handle), '@'),
             'slug' => $slug,
-            'platform' => $this->platform,
+            'platform' => implode(', ', $this->platforms),
             'milestone_title' => trim($this->milestone_title),
             'unlock_date' => $this->unlock_date,
             'bio' => trim($this->bio) ?: 'Leave a letter or prediction for our milestone stream. I will unseal the vault and read my favorites live!',
@@ -123,6 +160,14 @@ class extends Component
                 'description' => trim($this->bio),
                 'is_active' => true,
             ]);
+        }
+
+        try {
+            \Illuminate\Support\Facades\Mail::to($creator->email)->send(
+                new \App\Mail\CreatorWelcomeMail($creator, route('creators.studio'))
+            );
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Failed sending creator welcome mail from onboarding: ' . $e->getMessage());
         }
 
         session([
@@ -208,21 +253,21 @@ class extends Component
     <!-- Platform Selector -->
     <div class="mb-5">
       <label class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
-        Primary Platform <span class="text-red-500">*</span>
+        Primary Platform & Connected Channels <span class="text-xs font-normal text-[#64748b]">(select all that apply)</span> <span class="text-red-500">*</span>
       </label>
-      <div class="grid grid-cols-3 gap-2">
-        @foreach(['YouTube' => '📺', 'Twitch' => '👾', 'TikTok' => '🎵', 'Podcast' => '🎙️', 'Substack' => '✍️', 'Kick' => '⚡'] as $plt => $icon)
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        @foreach(['YouTube' => '📺', 'Twitch' => '👾', 'TikTok' => '🎵', 'Kick' => '⚡', 'Podcast' => '🎙️', 'Instagram' => '📸', 'X / Twitter' => '𝕏', 'Substack' => '✍️'] as $plt => $icon)
           <button 
             type="button" 
-            class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 {{ $platform === $plt ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-[#f5f4ee] text-[#475569] hover:bg-white' }}"
-            wire:click="$set('platform', '{{ $plt }}')"
+            class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 {{ in_array($plt, $platforms, true) ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-[#f5f4ee] text-[#475569] hover:bg-white' }}"
+            wire:click="togglePlatform('{{ $plt }}')"
           >
             <span>{{ $icon }}</span>
             <span>{{ $plt }}</span>
           </button>
         @endforeach
       </div>
-      @error('platform') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
+      @error('platforms') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
     </div>
 
     <!-- Milestone Title -->
