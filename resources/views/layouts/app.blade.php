@@ -84,13 +84,6 @@
                 ])>
                     Fan Wall
                 </a>
-                <a href="{{ route('timeline') }}" @class([
-                    'px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all',
-                    'text-[#064e3b] bg-[#ecfdf5] font-semibold' => request()->routeIs('timeline*'),
-                    'text-[#475569] hover:text-[#0f172a] hover:bg-[#f7f6f0]' => !request()->routeIs('timeline*'),
-                ])>
-                    Timeline
-                </a>
             </nav>
 
             <!-- Actions: Creator CTA + Mobile Menu Button -->
@@ -155,12 +148,6 @@
                     </div>
                 </a>
 
-                <a href="{{ route('timeline') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('timeline*') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
-                    <div>
-                        <div class="font-semibold text-sm">Timeline</div>
-                        <div class="text-xs text-[#64748b]">Upcoming vault unlock dates</div>
-                    </div>
-                </a>
 
                 <a href="{{ route('creators.join') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('creators.join') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
                     <div>
