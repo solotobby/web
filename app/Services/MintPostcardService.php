@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Mail\CreatorNewLetterMail;
+use App\Mail\FanCapsuleSealedMail;
 use App\Models\Creator;
 use App\Models\Envelope;
 use App\Models\Payment;
@@ -10,6 +12,8 @@ use App\Models\Referral;
 use App\Models\Stat;
 use App\Support\Capsule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class MintPostcardService
@@ -119,7 +123,49 @@ class MintPostcardService
                     ]);
             }
 
-            return ['postcard' => $postcard->load('envelope'), 'claim_token' => null];
+            $claimToken = $payload['claim_token'] ?? null;
+            $amountCents = (int) ($payload['amount_cents'] ?? Capsule::DEFAULT_SEAL_PRICE_CENTS);
+            $cutCents = Capsule::calculateCreatorCut($amountCents);
+
+            DB::afterCommit(function () use ($postcard, $creatorId, $claimToken, $amountCents, $cutCents) {
+                try {
+                    $postcard->loadMissing(['envelope', 'creator', 'milestone']);
+                    $envelope = $postcard->envelope;
+                    $creator = $postcard->creator;
+
+                    // 1. Send confirmation to fan
+                    if ($envelope && ! empty($envelope->email) && filter_var($envelope->email, FILTER_VALIDATE_EMAIL)) {
+                        try {
+                            Mail::to($envelope->email)->send(new FanCapsuleSealedMail(
+                                postcard: $postcard,
+                                envelope: $envelope,
+                                claimToken: $claimToken,
+                                amountCents: $amountCents,
+                            ));
+                        } catch (\Throwable $e) {
+                            Log::warning('Failed sending fan capsule confirmation email: ' . $e->getMessage());
+                        }
+                    }
+
+                    // 2. Send notification to creator
+                    if ($creator && ! empty($creator->email) && filter_var($creator->email, FILTER_VALIDATE_EMAIL)) {
+                        try {
+                            Mail::to($creator->email)->send(new CreatorNewLetterMail(
+                                creator: $creator,
+                                postcard: $postcard,
+                                amountCents: $amountCents,
+                                creatorCutCents: $cutCents,
+                            ));
+                        } catch (\Throwable $e) {
+                            Log::warning('Failed sending creator new letter alert email: ' . $e->getMessage());
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning('Postcard mint mail dispatch error: ' . $e->getMessage());
+                }
+            });
+
+            return ['postcard' => $postcard->load('envelope'), 'claim_token' => $claimToken];
         });
     }
 }

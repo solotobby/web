@@ -28,7 +28,7 @@ class CreatorLoginLink extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.creator-login',
+            view: 'mail.creator-login',
         );
     }
 }

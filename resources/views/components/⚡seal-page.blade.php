@@ -248,6 +248,7 @@ class extends Component
             'creator_slug' => session('ref_slug'),
             'milestone_id' => $this->milestoneId,
             'amount_cents' => $amountCents,
+            'claim_token' => $claimToken,
             'claim_token_hash' => hash('sha256', $claimToken),
         ];
 

@@ -44,6 +44,17 @@ class extends Component
     {
         $authored = session('authored', []);
         $mine = in_array($this->postcard->id, $authored, true);
+        if (! $mine && ($claim = request()->query('claim'))) {
+            $expectedHash = $this->postcard->envelope?->claim_token_hash;
+            if ($expectedHash && hash_equals($expectedHash, hash('sha256', (string) $claim))) {
+                $mine = true;
+                $authored[] = $this->postcard->id;
+                session([
+                    'authored' => array_values(array_unique($authored)),
+                    "claim.{$this->postcard->id}" => (string) $claim,
+                ]);
+            }
+        }
         $env = $mine ? $this->postcard->envelope : null;
         $creator = $this->postcard->creator;
         $milestone = $this->postcard->milestone;

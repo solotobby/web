@@ -50,6 +50,9 @@ class CheckoutReturnController extends Controller
             $draft = $payment->draft;
             $draft['stripe_session_id'] = $sessionId;
             $draft['amount_cents'] = $payment->amount_cents ?? \App\Support\Capsule::DEFAULT_SEAL_PRICE_CENTS;
+            if ($claim !== '' && empty($draft['claim_token'])) {
+                $draft['claim_token'] = $claim;
+            }
             $result = $mint->mint($draft);
             $postcard = $result['postcard'];
         }
