@@ -86,7 +86,6 @@ class CreatorSeeder extends Seeder
                 $creator->milestones()->create([
                     'id' => (string) Str::uuid(),
                     'title' => $data['milestone_title'],
-                    'goal' => '100K Community Milestone',
                     'unlock_date' => $data['unlock_date'] ?? now()->addYear(),
                     'description' => $data['bio'] ?? null,
                     'is_active' => true,
