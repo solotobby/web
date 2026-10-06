@@ -33,6 +33,13 @@ Route::livewire('/with/{slug}', 'creator-door')->name('with');
 Route::get('/checkout/return', CheckoutReturnController::class)->name('checkout.return');
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
+// Legal, Trust & Security Routes
+Route::livewire('/privacy', 'privacy-page')->name('privacy');
+Route::livewire('/terms', 'terms-page')->name('terms');
+Route::livewire('/data-retention', 'data-retention-page')->name('data-retention');
+Route::livewire('/data-deletion', 'data-deletion-page')->name('data-deletion');
+Route::livewire('/security', 'security-page')->name('security');
+
 Route::get('/og/postcard/{postcard}.png', [OpenGraphController::class, 'postcard'])->name('og.postcard');
 Route::get('/og/creator/{slug}.png', [OpenGraphController::class, 'creator'])->name('og.creator');
 Route::get('/og/cover.png', [OpenGraphController::class, 'cover'])->name('og.cover');

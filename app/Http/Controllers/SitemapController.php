@@ -47,6 +47,36 @@ class SitemapController extends Controller
                 'changefreq' => 'monthly',
                 'priority' => 0.8,
             ],
+            [
+                'loc' => route('privacy'),
+                'lastmod' => now()->startOfMonth()->toAtomString(),
+                'changefreq' => 'monthly',
+                'priority' => 0.5,
+            ],
+            [
+                'loc' => route('terms'),
+                'lastmod' => now()->startOfMonth()->toAtomString(),
+                'changefreq' => 'monthly',
+                'priority' => 0.5,
+            ],
+            [
+                'loc' => route('data-retention'),
+                'lastmod' => now()->startOfMonth()->toAtomString(),
+                'changefreq' => 'monthly',
+                'priority' => 0.5,
+            ],
+            [
+                'loc' => route('data-deletion'),
+                'lastmod' => now()->startOfMonth()->toAtomString(),
+                'changefreq' => 'monthly',
+                'priority' => 0.5,
+            ],
+            [
+                'loc' => route('security'),
+                'lastmod' => now()->startOfMonth()->toAtomString(),
+                'changefreq' => 'monthly',
+                'priority' => 0.5,
+            ],
         ];
 
         // Creator Doors

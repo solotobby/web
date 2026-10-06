@@ -238,37 +238,32 @@
                     </ul>
                 </div>
 
-                <!-- Column 4: Architecture & Trust -->
+                <!-- Column 4: Legal & Security -->
                 <div class="space-y-3">
-                    <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94a3b8]">Security & Trust</h4>
-                    <ul class="space-y-2.5 text-xs text-[#64748b]">
-                        <li class="flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span>
-                            <span>256-Bit Stripe Encryption</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span>
-                            <span>Automated Creator Payouts</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span>
-                            <span>Zero Physical Clutter</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span>
-                            <span>Digital Time Capsules</span>
-                        </li>
+                    <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94a3b8]">Trust & Legal</h4>
+                    <ul class="space-y-2.5 text-xs text-[#475569]">
+                        <li><a href="{{ route('privacy') }}" class="hover:text-[#047857] transition-colors flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span> Privacy Policy</a></li>
+                        <li><a href="{{ route('terms') }}" class="hover:text-[#047857] transition-colors flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span> Terms of Service</a></li>
+                        <li><a href="{{ route('data-retention') }}" class="hover:text-[#047857] transition-colors flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span> Data Retention</a></li>
+                        <li><a href="{{ route('data-deletion') }}" class="hover:text-[#047857] transition-colors flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span> Deletion Procedure</a></li>
+                        <li><a href="{{ route('security') }}" class="hover:text-[#047857] transition-colors flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span> Security Disclosure</a></li>
                     </ul>
                 </div>
             </div>
 
             <!-- Bottom Legal Bar -->
-            <div class="pt-8 border-t border-[#e7e5df] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#64748b]">
+            <div class="pt-8 border-t border-[#e7e5df] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#64748b]">
                 <p>© {{ date('Y') }} <strong>FanVault</strong> · Permanent Community Time Capsules for Creators · Sealed until Milestone Streams</p>
-                <div class="flex items-center gap-3 font-mono text-[11px] text-[#64748b]">
-                    <span>getfanvault.com</span>
+                <div class="flex flex-wrap items-center justify-center gap-3 text-xs">
+                    <a href="{{ route('privacy') }}" class="hover:text-[#047857] transition-colors">Privacy</a>
                     <span>·</span>
-                    <span>Ledger Protocol v2.4</span>
+                    <a href="{{ route('terms') }}" class="hover:text-[#047857] transition-colors">Terms</a>
+                    <span>·</span>
+                    <a href="{{ route('data-retention') }}" class="hover:text-[#047857] transition-colors">Retention</a>
+                    <span>·</span>
+                    <a href="{{ route('data-deletion') }}" class="hover:text-[#047857] transition-colors">Deletion</a>
+                    <span>·</span>
+                    <a href="{{ route('security') }}" class="hover:text-[#047857] transition-colors">Security</a>
                 </div>
             </div>
         </div>
