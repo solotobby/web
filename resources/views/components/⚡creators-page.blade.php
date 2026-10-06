@@ -182,13 +182,13 @@ class extends Component
             How Creator-Set Pricing & Booster Tips Unlock Higher Earnings
           </h4>
           <p class="text-xs sm:text-sm text-[#475569]">
-            Fixed $5 fees leave money on the table. Setting your own amount and letting superfans add booster tips allows your community to support you at every level.
+            Fixed $5 fees leave money on the table. Setting your own floor price and letting superfans add voluntary booster tips allows your community to support you at every level under FanVault’s transparent 80/20 revenue model.
           </p>
         </div>
         <div class="shrink-0 text-left md:text-right">
-          <span class="text-xs font-mono text-[#64748b] block">Typical 500-Letter Community</span>
-          <span class="font-mono text-2xl font-bold text-[#047857]">~$2,650 Estimated Earnings</span>
-          <span class="text-[11px] text-[#059669] font-medium block">vs. $750 on old flat $1.50 models (+253%)</span>
+          <span class="text-xs font-mono text-[#64748b] block">Model Simulation (500 Contributions)</span>
+          <span class="font-mono text-2xl font-bold text-[#047857]">~$2,650 Projected Creator Cut</span>
+          <span class="text-[11px] text-[#059669] font-medium block">Illustrative model: $3 floor + voluntary 20% booster tips</span>
         </div>
       </div>
 

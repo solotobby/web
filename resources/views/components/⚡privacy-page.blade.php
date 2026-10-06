@@ -40,7 +40,7 @@ class extends Component
       Privacy Policy
     </h1>
     <p class="text-base sm:text-lg text-[#475569] leading-relaxed max-w-3xl">
-      FanVault (“we”, “our”, or “us”) provides digital milestone time capsules and fan mail vaults for online creators and their communities. We believe your memories, letters, and identity should remain private, encrypted, and handled with institutional rigor.
+      FanVault is operated by Solotob Technologies LTD (“we”, “our”, or “us”), providing digital milestone time capsules and permanent community archives for online creators and their communities. We believe your memories, letters, and identity should remain private, encrypted, and handled with institutional rigor.
     </p>
   </header>
 

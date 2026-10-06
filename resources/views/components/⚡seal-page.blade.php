@@ -906,7 +906,7 @@ class extends Component
       </div>
 
       <p class="text-xs text-[#64748b] text-center mb-6">
-        🔒 Secure 256-bit Stripe checkout. Direct creator payouts. Your unique fan capsule number is minted upon payment confirmation.
+        🔒 PCI-DSS Level 1 compliant card tokenization via Stripe · AES-256 encrypted storage · Direct creator payouts
       </p>
 
       <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#e7e5df]">

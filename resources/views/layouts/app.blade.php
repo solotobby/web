@@ -267,7 +267,7 @@
 
             <!-- Bottom Legal Bar -->
             <div class="pt-8 border-t border-[#e7e5df] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#64748b]">
-                <p>© {{ date('Y') }} <strong>FanVault</strong> · Permanent Community Time Capsules for Creators · Sealed until Milestone Streams</p>
+                <p>© {{ date('Y') }} <strong>FanVault</strong> (Operated by Solotob Technologies LTD) · Permanent Community Time Capsules for Creators · Sealed until Milestone Streams</p>
                 <div class="flex flex-wrap items-center justify-center gap-3 text-xs">
                     <a href="{{ route('privacy') }}" class="hover:text-[#047857] transition-colors">Privacy</a>
                     <span>·</span>

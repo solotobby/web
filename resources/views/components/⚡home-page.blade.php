@@ -478,13 +478,13 @@ class extends Component
     <div class="max-w-3xl mx-auto text-center mb-8 sm:mb-10">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ecfdf5] border border-[#a7f3d0]/80 text-[#064e3b] text-xs font-mono uppercase tracking-wider mb-2">
         <span class="w-1.5 h-1.5 rounded-full bg-[#047857] animate-pulse"></span>
-        Creator Economics
+        Creator Economics Simulator
       </div>
       <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-[#0f172a] mb-2">
-        Creator-defined pricing changes everything
+        Model your milestone revenue
       </h2>
       <p class="text-sm sm:text-base text-[#64748b] leading-relaxed">
-        Set your own seal amount that fits your audience. Superfans can add booster tips to back your milestone. Direct automated payouts via Stripe.
+        Simulate your projected earnings based on community size and chosen price floor under FanVault’s transparent 80/20 revenue model. Direct automated payouts via Stripe.
       </p>
     </div>
 
@@ -572,7 +572,7 @@ class extends Component
       <div class="lg:col-span-6 bg-white border border-[#a7f3d0] rounded-3xl p-6 sm:p-8 shadow-[0_4px_24px_rgba(4,120,87,0.06)] flex flex-col justify-between space-y-6">
         <div>
           <span class="text-xs font-mono font-semibold uppercase tracking-wider text-[#047857] block mb-1">
-            Your Estimated Creator Earnings
+            Simulated Creator Share (80%)
           </span>
           <div class="font-serif text-4xl sm:text-5xl font-normal text-[#064e3b] tracking-tight">
             $<span x-text="creatorPayout.toLocaleString()"></span>
@@ -596,8 +596,13 @@ class extends Component
           </div>
         </div>
 
-        <div class="text-xs text-[#475569] leading-relaxed pt-1">
-          💡 <strong>Fair economics that respect your audience:</strong> Choose the price that feels right for your community, while superfans can add $10, $25, or $50 booster tips to back the milestone.
+        <div class="text-xs text-[#475569] leading-relaxed pt-1 space-y-2">
+          <p>
+            💡 <strong>Fair economics that respect your audience:</strong> Choose the price that feels right for your community, while superfans can add $10, $25, or $50 booster tips to back the milestone.
+          </p>
+          <p class="text-[11px] text-[#94a3b8] font-mono">
+            ※ Model simulation for planning purposes under the 80/20 platform split. Actual proceeds depend on community participation and voluntary tips.
+          </p>
         </div>
       </div>
     </div>

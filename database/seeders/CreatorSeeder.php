@@ -53,6 +53,16 @@ class CreatorSeeder extends Seeder
                 'unlock_date' => Carbon::parse('2028-09-01'),
             ],
             [
+                'name' => 'MKBHD (Community)',
+                'handle' => '@mkbhd',
+                'slug' => 'mkbhd',
+                'platform' => 'YouTube',
+                'email' => 'mkbhd.vault@example.test',
+                'bio' => '20 Million Subscribers incoming. Sealing 10-year tech predictions and studio memories with the community.',
+                'milestone_title' => '20 Million Subscribers Time Capsule',
+                'unlock_date' => Carbon::parse('2028-12-31'),
+            ],
+            [
                 'name' => 'Oluwatobi Solomon',
                 'handle' => '@solotob3',
                 'slug' => 'solotob3',
@@ -66,10 +76,37 @@ class CreatorSeeder extends Seeder
 
         foreach ($creators as $data) {
             $existing = Creator::where('slug', $data['slug'])->first();
-            Creator::query()->updateOrCreate(
+            $creator = Creator::query()->updateOrCreate(
                 ['slug' => $data['slug']],
                 array_merge($data, ['id' => $existing?->id ?? (string) Str::uuid()])
             );
+
+            // Ensure active milestone exists
+            if ($creator->milestones()->count() === 0 && ! empty($data['milestone_title'])) {
+                $creator->milestones()->create([
+                    'id' => (string) Str::uuid(),
+                    'title' => $data['milestone_title'],
+                    'goal' => '100K Community Milestone',
+                    'unlock_date' => $data['unlock_date'] ?? now()->addYear(),
+                    'description' => $data['bio'] ?? null,
+                    'is_active' => true,
+                ]);
+            }
+
+            // Ensure starter followers exist
+            if ($creator->followers()->count() === 0) {
+                $followers = [
+                    'fan.anticipation.' . $creator->slug . '1@example.com',
+                    'fan.anticipation.' . $creator->slug . '2@example.com',
+                    'fan.anticipation.' . $creator->slug . '3@example.com',
+                ];
+                foreach ($followers as $email) {
+                    \App\Models\CapsuleFollower::query()->firstOrCreate([
+                        'creator_id' => $creator->id,
+                        'email' => $email,
+                    ]);
+                }
+            }
         }
     }
 }
