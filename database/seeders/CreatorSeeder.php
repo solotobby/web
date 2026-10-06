@@ -64,8 +64,8 @@ class CreatorSeeder extends Seeder
             ],
             [
                 'name' => 'Oluwatobi Solomon',
-                'handle' => '@solotob3',
-                'slug' => 'solotob3',
+                'handle' => '@solotob',
+                'slug' => 'solotob',
                 'platform' => 'YouTube',
                 'email' => 'solotob3@gmail.com',
                 'bio' => 'Building software in public, tech breakdowns, and community milestones.',
