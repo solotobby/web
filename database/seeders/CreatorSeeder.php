@@ -75,11 +75,25 @@ class CreatorSeeder extends Seeder
         ];
 
         foreach ($creators as $data) {
-            $existing = Creator::where('slug', $data['slug'])->first();
-            $creator = Creator::query()->updateOrCreate(
-                ['slug' => $data['slug']],
-                array_merge($data, ['id' => $existing?->id ?? (string) Str::uuid()])
-            );
+            $existing = Creator::where('email', $data['email'])
+                ->orWhere('slug', $data['slug'])
+                ->first();
+
+            if ($existing) {
+                $existing->update([
+                    'name' => $data['name'],
+                    'handle' => $data['handle'],
+                    'platform' => $data['platform'],
+                    'bio' => $existing->bio ?: $data['bio'],
+                    'milestone_title' => $existing->milestone_title ?: $data['milestone_title'],
+                    'unlock_date' => $existing->unlock_date ?: $data['unlock_date'],
+                ]);
+                $creator = $existing;
+            } else {
+                $creator = Creator::query()->create(
+                    array_merge($data, ['id' => (string) Str::uuid()])
+                );
+            }
 
             // Ensure active milestone exists
             if ($creator->milestones()->count() === 0 && ! empty($data['milestone_title'])) {

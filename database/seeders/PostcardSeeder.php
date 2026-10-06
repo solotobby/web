@@ -113,6 +113,11 @@ class PostcardSeeder extends Seeder
                     ? $creatorsBySlug[$creatorSlug]
                     : null;
 
+                $milestoneId = null;
+                if ($creatorId) {
+                    $milestoneId = \App\Models\Milestone::where('creator_id', $creatorId)->value('id');
+                }
+
                 $existing = Postcard::query()->where('number', $n)->first();
                 if ($existing) {
                     $existing->update([
@@ -121,6 +126,7 @@ class PostcardSeeder extends Seeder
                         'teaser' => $teaser,
                         'addressed_to' => Capsule::clampAddressDate($day),
                         'creator_id' => $creatorId,
+                        'milestone_id' => $milestoneId,
                     ]);
                     $existing->envelope()->updateOrCreate(
                         ['postcard_id' => $existing->id],
@@ -154,6 +160,7 @@ class PostcardSeeder extends Seeder
                     'sealed_at' => now()->subDays(max(1, count($seeds) - $i)),
                     'founding' => true,
                     'creator_id' => $creatorId,
+                    'milestone_id' => $milestoneId,
                     'seeded' => true,
                 ]);
 
