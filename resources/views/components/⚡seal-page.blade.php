@@ -264,13 +264,10 @@ class extends Component
 
         $stripeKey = config('services.stripe.secret');
         if (! $stripeKey) {
-            $result = $mint->mint($draft);
-            $id = $result['postcard']->id;
-            $authored = session('authored', []);
-            $authored[] = $id;
-            session(['authored' => array_values(array_unique($authored)), "claim.{$id}" => $claimToken]);
+            $this->sealing = false;
+            $this->error = 'Live payment processing is required. Stripe payment is not currently configured.';
 
-            return $this->redirect(route('message', $result['postcard']), navigate: true);
+            return null;
         }
 
         $activeMilestone = $creator && $this->milestoneId 
@@ -909,14 +906,14 @@ class extends Component
       </div>
 
       <p class="text-xs text-[#64748b] text-center mb-6">
-        {{ $stripeOn ? '🔒 Secure 256-bit Stripe checkout. Your unique fan capsule number is minted immediately.' : '⚡ Demo Mode: Seals instantly and generates your collectible certificate!' }}
+        🔒 Secure 256-bit Stripe checkout. Direct creator payouts. Your unique fan capsule number is minted upon payment confirmation.
       </p>
 
       <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#e7e5df]">
         <button class="w-full sm:w-auto px-5 py-3 rounded-full bg-white hover:bg-[#f5f4ee] border border-[#e7e5df] text-[#475569] font-medium text-sm transition-all" wire:click="back" type="button" @disabled($sealing)>← Back</button>
         <button class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 active:translate-y-0 transition-all" wire:click="seal" type="button" wire:loading.attr="disabled">
-          <span wire:loading.remove wire:target="seal">{{ $stripeOn ? ($creator ? "Pay \${$sealAmount} & Seal in Time Capsule" : "Pay \${$sealAmount} & Seal in Time Capsule") : ($creator ? "Seal in Time Capsule (\${$sealAmount})" : "Seal in Time Capsule (\${$sealAmount})") }}</span>
-          <span wire:loading wire:target="seal">Sealing into Time Capsule… ⏳</span>
+          <span wire:loading.remove wire:target="seal">Pay ${{ $sealAmount }} & Seal in Time Capsule</span>
+          <span wire:loading wire:target="seal">Connecting to Secure Stripe Checkout… ⏳</span>
         </button>
       </div>
     @endif

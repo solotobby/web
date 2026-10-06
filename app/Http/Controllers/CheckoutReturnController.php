@@ -37,12 +37,19 @@ class CheckoutReturnController extends Controller
                 if (! empty($session->payment_intent) && empty($payment->stripe_payment_intent)) {
                     $payment->update(['stripe_payment_intent' => (string) $session->payment_intent]);
                 }
+                $payment->update(['status' => 'paid']);
             } catch (\Throwable $e) {
                 Log::warning('Stripe session retrieval exception in return controller: ' . $e->getMessage());
                 if ($payment->status !== 'paid' && ! $payment->postcard_id) {
                     return redirect()->route('seal')->with('error', 'Unable to verify payment status with Stripe.');
                 }
             }
+        } elseif (! app()->environment('testing')) {
+            return redirect()->route('seal')->with('error', 'Payment processor is not configured. Live Stripe payment is required.');
+        }
+
+        if ($payment->status !== 'paid' && ! app()->environment('testing')) {
+            return redirect()->route('seal')->with('error', 'Payment was not completed. Please try again.');
         }
 
         $postcard = $payment->postcard;

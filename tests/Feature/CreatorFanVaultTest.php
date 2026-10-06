@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Mail\CreatorWelcomeMail;
 use App\Models\Creator;
 use App\Models\Envelope;
+use App\Models\Payment;
 use App\Models\Postcard;
 use App\Models\Referral;
 use App\Models\Stat;
@@ -340,7 +341,35 @@ class CreatorFanVaultTest extends TestCase
             ->set('email', 'chloe@example.com')
             ->set('message', 'Thank you for raising money for pets!')
             ->set('teaser', 'Keep saving the animals!')
-            ->call('seal');
+            ->assertSet('milestoneId', $m2->id);
+
+        $sessionId = 'cs_test_milestone_chloe';
+        $claim = Str::random(64);
+
+        Payment::create([
+            'id' => (string) Str::uuid(),
+            'stripe_session_id' => $sessionId,
+            'amount_cents' => 1000,
+            'currency' => 'usd',
+            'status' => 'created',
+            'creator_slug' => $this->creator->slug,
+            'draft' => [
+                'name' => 'Chloe Fan',
+                'location' => 'Toronto, Canada',
+                'letter' => 'Thank you for raising money for pets!',
+                'teaser' => 'Keep saving the animals!',
+                'email' => 'chloe@example.com',
+                'addressed_to' => '2028-06-30',
+                'photo_path' => null,
+                'predictions' => [],
+                'creator_slug' => $this->creator->slug,
+                'milestone_id' => $m2->id,
+                'amount_cents' => 1000,
+                'claim_token_hash' => hash('sha256', $claim),
+            ],
+        ]);
+
+        $this->get(route('checkout.return', ['session_id' => $sessionId, 'claim' => $claim]));
 
         $postcard = Postcard::where('name', 'Chloe Fan')->first();
         $this->assertNotNull($postcard);
@@ -462,8 +491,35 @@ class CreatorFanVaultTest extends TestCase
             ->set('message', 'Keep up the amazing content! Here is a super boost for the stream!')
             ->set('teaser', 'Huge congratulations!')
             ->call('setAmount', 25)
-            ->assertSet('sealAmount', 25)
-            ->call('seal');
+            ->assertSet('sealAmount', 25);
+
+        $sessionId = 'cs_test_custom_amount_80';
+        $claim = Str::random(64);
+
+        Payment::create([
+            'id' => (string) Str::uuid(),
+            'stripe_session_id' => $sessionId,
+            'amount_cents' => 2500,
+            'currency' => 'usd',
+            'status' => 'created',
+            'creator_slug' => $this->creator->slug,
+            'draft' => [
+                'name' => 'Big Supporter',
+                'location' => 'San Francisco, CA',
+                'letter' => 'Keep up the amazing content! Here is a super boost for the stream!',
+                'teaser' => 'Huge congratulations!',
+                'email' => 'supporter@example.com',
+                'addressed_to' => '2028-01-01',
+                'photo_path' => null,
+                'predictions' => [],
+                'creator_slug' => $this->creator->slug,
+                'milestone_id' => null,
+                'amount_cents' => 2500,
+                'claim_token_hash' => hash('sha256', $claim),
+            ],
+        ]);
+
+        $this->get(route('checkout.return', ['session_id' => $sessionId, 'claim' => $claim]));
 
         $postcard = Postcard::where('name', 'Big Supporter')->first();
         $this->assertNotNull($postcard);
@@ -647,6 +703,25 @@ class CreatorFanVaultTest extends TestCase
         $this->assertDatabaseHas('capsule_followers', [
             'creator_id' => $this->creator->id,
             'email' => 'fan@example.com',
+        ]);
+    }
+
+    public function test_seal_page_requires_stripe_checkout_and_never_bypasses_payment(): void
+    {
+        config(['services.stripe.secret' => null]);
+
+        $this->withSession(['ref_slug' => $this->creator->slug]);
+
+        \Livewire\Livewire::test('seal-page')
+            ->set('name', 'Unpaid User')
+            ->set('location', 'Nowhere')
+            ->set('email', 'unpaid@example.com')
+            ->set('message', 'Attempting unpaid bypass')
+            ->call('seal')
+            ->assertSet('error', 'Live payment processing is required. Stripe payment is not currently configured.');
+
+        $this->assertDatabaseMissing('postcards', [
+            'name' => 'Unpaid User',
         ]);
     }
 }
