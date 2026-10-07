@@ -151,5 +151,67 @@ class AdminPanelTest extends TestCase
         $ref->refresh();
         $this->assertEquals('paid', $ref->status);
     }
+
+    public function test_authenticated_admin_can_view_outreach_crm_and_seeded_prospects(): void
+    {
+        $this->seed(\Database\Seeders\CreatorProspectSeeder::class);
+        $this->assertEquals(500, \App\Models\CreatorProspect::count());
+
+        $response = $this->withSession(['admin_authenticated' => true])
+            ->get('/admin?tab=prospects');
+
+        $response->assertStatus(200);
+        $response->assertSee('Creator Outreach Pipeline & CRM', false);
+        $response->assertSee('500 Potential Creators');
+        $response->assertSee('Jacksepticeye');
+        $response->assertSee('Gaming');
+        $response->assertSee('Jacksepticeye × FanVault — your next milestone', false);
+    }
+
+    public function test_admin_can_filter_and_search_prospects_in_crm(): void
+    {
+        $this->seed(\Database\Seeders\CreatorProspectSeeder::class);
+
+        \Livewire\Livewire::test('admin-dashboard')
+            ->set('tab', 'prospects')
+            ->set('searchProspects', 'Unbox Therapy')
+            ->assertSee('Unbox Therapy')
+            ->assertSee('Technology')
+            ->set('searchProspects', '')
+            ->set('filterProspectSpeciality', 'Travel')
+            ->assertSee('Travel')
+            ->assertDontSee('Jacksepticeye');
+    }
+
+    public function test_admin_can_update_prospect_status_and_enrich_details(): void
+    {
+        $this->seed(\Database\Seeders\CreatorProspectSeeder::class);
+        $prospect = \App\Models\CreatorProspect::where('prospect_number', 1)->first();
+        $this->assertNotNull($prospect);
+
+        \Livewire\Livewire::test('admin-dashboard')
+            ->set('tab', 'prospects')
+            ->call('inspectProspect', $prospect->id)
+            ->set('editProspectEmail', 'jack@directagency.com')
+            ->set('editProspectStatus', 'Contacted')
+            ->set('editProspectNotes', 'Sent email pitch via agent')
+            ->call('saveProspectDetails');
+
+        $prospect->refresh();
+        $this->assertEquals('jack@directagency.com', $prospect->email);
+        $this->assertEquals('Contacted', $prospect->status);
+        $this->assertEquals('Sent email pitch via agent', $prospect->internal_notes);
+        $this->assertNotNull($prospect->last_contacted_at);
+    }
+
+    public function test_admin_can_export_prospects_csv(): void
+    {
+        $this->seed(\Database\Seeders\CreatorProspectSeeder::class);
+
+        $component = \Livewire\Livewire::test('admin-dashboard');
+        $response = $component->call('exportProspectsCsv');
+
+        $this->assertNotNull($response);
+    }
 }
 

@@ -5,6 +5,7 @@ use App\Mail\CreatorNewLetterMail;
 use App\Mail\FanCapsuleSealedMail;
 use App\Models\Creator;
 use App\Models\CreatorLoginToken;
+use App\Models\CreatorProspect;
 use App\Models\Envelope;
 use App\Models\Milestone;
 use App\Models\Payment;
@@ -19,6 +20,7 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 new
 #[Title('Executive Console — FanVault')]
@@ -36,6 +38,21 @@ class extends Component
 
     public string $searchPayments = '';
     public string $filterPaymentStatus = 'all';
+
+    // Outreach CRM & Prospects Pipeline
+    public string $searchProspects = '';
+    public string $filterProspectSpeciality = 'all';
+    public string $filterProspectPriority = 'all';
+    public string $filterProspectStatus = 'all';
+    public string $filterProspectEmail = 'all';
+    public int $prospectsPerPage = 25;
+    public int $prospectsPage = 1;
+
+    // Prospect Inspect/Edit Modal
+    public ?string $inspectProspectId = null;
+    public string $editProspectEmail = '';
+    public string $editProspectStatus = 'Not contacted';
+    public string $editProspectNotes = '';
 
     // Letter Inspect Modal
     public ?string $inspectPostcardId = null;
@@ -69,6 +86,7 @@ class extends Component
     {
         $this->tab = $tab;
         $this->inspectPostcardId = null;
+        $this->inspectProspectId = null;
         $this->editCreatorId = null;
         $this->generatedLoginUrl = '';
     }
@@ -222,6 +240,140 @@ class extends Component
         }
     }
 
+    public function inspectProspect(string $id): void
+    {
+        $this->inspectProspectId = $id;
+        $prospect = CreatorProspect::find($id);
+        if ($prospect) {
+            $this->editProspectEmail = (string) ($prospect->email ?? $prospect->public_email ?? '');
+            $this->editProspectStatus = (string) $prospect->status;
+            $this->editProspectNotes = (string) ($prospect->internal_notes ?? '');
+        }
+    }
+
+    public function closeInspectProspect(): void
+    {
+        $this->inspectProspectId = null;
+    }
+
+    public function updateProspectStatus(string $id, string $status): void
+    {
+        $prospect = CreatorProspect::find($id);
+        if (! $prospect) return;
+
+        $update = ['status' => $status];
+        if ($status === 'Contacted' && ! $prospect->last_contacted_at) {
+            $update['last_contacted_at'] = now();
+        }
+
+        $prospect->update($update);
+        session()->flash('success', "Updated {$prospect->creator} status to '{$status}'.");
+    }
+
+    public function saveProspectDetails(): void
+    {
+        if (! $this->inspectProspectId) return;
+        $prospect = CreatorProspect::find($this->inspectProspectId);
+        if (! $prospect) return;
+
+        $update = [
+            'email' => trim($this->editProspectEmail) ?: null,
+            'status' => $this->editProspectStatus,
+            'internal_notes' => trim($this->editProspectNotes) ?: null,
+        ];
+        if ($this->editProspectStatus === 'Contacted' && ! $prospect->last_contacted_at) {
+            $update['last_contacted_at'] = now();
+        }
+
+        $prospect->update($update);
+        session()->flash('success', "Prospect '{$prospect->creator}' details updated.");
+    }
+
+    public function setProspectsPage(int $page): void
+    {
+        $this->prospectsPage = max(1, $page);
+    }
+
+    public function previousProspectsPage(): void
+    {
+        if ($this->prospectsPage > 1) {
+            $this->prospectsPage--;
+        }
+    }
+
+    public function nextProspectsPage(int $totalPages): void
+    {
+        if ($this->prospectsPage < $totalPages) {
+            $this->prospectsPage++;
+        }
+    }
+
+    public function updatedSearchProspects(): void
+    {
+        $this->prospectsPage = 1;
+    }
+
+    public function updatedFilterProspectSpeciality(): void
+    {
+        $this->prospectsPage = 1;
+    }
+
+    public function updatedFilterProspectPriority(): void
+    {
+        $this->prospectsPage = 1;
+    }
+
+    public function updatedFilterProspectStatus(): void
+    {
+        $this->prospectsPage = 1;
+    }
+
+    public function updatedFilterProspectEmail(): void
+    {
+        $this->prospectsPage = 1;
+    }
+
+    public function exportProspectsCsv(): StreamedResponse
+    {
+        $prospects = CreatorProspect::query()
+            ->orderBy('prospect_number', 'asc')
+            ->get();
+
+        $csvFileName = 'fanvault_creator_prospects_' . now()->format('Y_m_d') . '.csv';
+
+        return response()->streamDownload(function () use ($prospects) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, [
+                'Prospect #', 'Creator', 'Speciality', 'Primary outreach angle',
+                'Contact type', 'Public email', 'Email status', 'Contact/search URL',
+                'Recommended priority', 'Email subject', 'Status', 'Personalisation note', 'Email',
+                'Internal notes', 'Last contacted at'
+            ]);
+
+            foreach ($prospects as $p) {
+                fputcsv($handle, [
+                    $p->prospect_number,
+                    $p->creator,
+                    $p->speciality,
+                    $p->primary_outreach_angle,
+                    $p->contact_type,
+                    $p->public_email,
+                    $p->email_status,
+                    $p->contact_url,
+                    $p->recommended_priority,
+                    $p->email_subject,
+                    $p->status,
+                    $p->personalisation_note,
+                    $p->email,
+                    $p->internal_notes,
+                    $p->last_contacted_at?->toIso8601String(),
+                ]);
+            }
+
+            fclose($handle);
+        }, $csvFileName, ['Content-Type' => 'text/csv']);
+    }
+
     public function with(): array
     {
         // Global Financial Metrics
@@ -316,6 +468,80 @@ class extends Component
             ? Postcard::with(['envelope', 'creator', 'milestone', 'referral'])->find($this->inspectPostcardId)
             : null;
 
+        // Outreach CRM Prospects Queries
+        $totalProspectsCount = CreatorProspect::count();
+        $priorityACount = CreatorProspect::where('recommended_priority', 'A')->count();
+        $hasEmailCount = CreatorProspect::where(function($q) {
+            $q->whereNotNull('email')->where('email', '!=', '')
+              ->orWhere(function($q2) {
+                  $q2->whereNotNull('public_email')->where('public_email', '!=', '');
+              });
+        })->count();
+        $contactedCount = CreatorProspect::where('status', '!=', 'Not contacted')->count();
+        $onboardedCount = CreatorProspect::where('status', 'Onboarded')->count();
+
+        $gamingCount = CreatorProspect::where('speciality', 'Gaming')->count();
+        $techCount = CreatorProspect::where('speciality', 'Technology')->count();
+        $lifestyleCount = CreatorProspect::where('speciality', 'Lifestyle')->count();
+        $travelCount = CreatorProspect::where('speciality', 'Travel')->count();
+
+        $prospectsQuery = CreatorProspect::query();
+
+        if ($this->searchProspects !== '') {
+            $s = '%' . trim($this->searchProspects) . '%';
+            $prospectsQuery->where(function($q) use ($s) {
+                $q->where('creator', 'like', $s)
+                  ->orWhere('email', 'like', $s)
+                  ->orWhere('public_email', 'like', $s)
+                  ->orWhere('speciality', 'like', $s)
+                  ->orWhere('primary_outreach_angle', 'like', $s)
+                  ->orWhere('email_subject', 'like', $s)
+                  ->orWhere('prospect_number', 'like', $s);
+            });
+        }
+
+        if ($this->filterProspectSpeciality !== 'all') {
+            $prospectsQuery->where('speciality', $this->filterProspectSpeciality);
+        }
+
+        if ($this->filterProspectPriority !== 'all') {
+            $prospectsQuery->where('recommended_priority', $this->filterProspectPriority);
+        }
+
+        if ($this->filterProspectStatus !== 'all') {
+            $prospectsQuery->where('status', $this->filterProspectStatus);
+        }
+
+        if ($this->filterProspectEmail === 'has_email') {
+            $prospectsQuery->where(function($q) {
+                $q->whereNotNull('email')->where('email', '!=', '')
+                  ->orWhere(function($q2) {
+                      $q2->whereNotNull('public_email')->where('public_email', '!=', '');
+                  });
+            });
+        } elseif ($this->filterProspectEmail === 'needs_enrichment') {
+            $prospectsQuery->where(function($q) {
+                $q->whereNull('email')->orWhere('email', '');
+            })->where(function($q) {
+                $q->whereNull('public_email')->orWhere('public_email', '');
+            });
+        }
+
+        $filteredProspectsCount = (clone $prospectsQuery)->count();
+        $totalProspectsPages = max(1, (int) ceil($filteredProspectsCount / max(1, $this->prospectsPerPage)));
+        if ($this->prospectsPage > $totalProspectsPages) {
+            $this->prospectsPage = $totalProspectsPages;
+        }
+
+        $prospects = $prospectsQuery->orderBy('prospect_number', 'asc')
+            ->skip(($this->prospectsPage - 1) * $this->prospectsPerPage)
+            ->take($this->prospectsPerPage)
+            ->get();
+
+        $inspectedProspect = $this->inspectProspectId
+            ? CreatorProspect::find($this->inspectProspectId)
+            : null;
+
         return [
             'totalLetters' => $totalLetters,
             'totalGmvCents' => $totalGmvCents,
@@ -331,6 +557,19 @@ class extends Component
             'referrals' => $referrals,
             'milestones' => $milestones,
             'inspectedPostcard' => $inspectedPostcard,
+            'totalProspectsCount' => $totalProspectsCount,
+            'priorityACount' => $priorityACount,
+            'hasEmailCount' => $hasEmailCount,
+            'contactedCount' => $contactedCount,
+            'onboardedCount' => $onboardedCount,
+            'gamingCount' => $gamingCount,
+            'techCount' => $techCount,
+            'lifestyleCount' => $lifestyleCount,
+            'travelCount' => $travelCount,
+            'prospects' => $prospects,
+            'filteredProspectsCount' => $filteredProspectsCount,
+            'totalProspectsPages' => $totalProspectsPages,
+            'inspectedProspect' => $inspectedProspect,
         ];
     }
 };
@@ -360,6 +599,19 @@ class extends Component
                 <span>Creators</span>
                 <span class="px-1.5 py-0.2 rounded-md {{ $tab === 'creators' ? 'bg-[#090d16]/30 text-[#090d16]' : 'bg-[#1e293b] text-[#cbd5e1]' }} text-[11px] font-bold">
                     {{ $creators->count() }}
+                </span>
+            </button>
+
+            <button 
+                wire:click="setTab('prospects')" 
+                class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-mono font-medium transition-all flex items-center gap-2 cursor-pointer {{ $tab === 'prospects' ? 'bg-[#10b981] text-[#090d16] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-[#111827] text-[#94a3b8] hover:text-white hover:bg-[#161f30]' }}"
+            >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                </svg>
+                <span>Outreach CRM</span>
+                <span class="px-1.5 py-0.2 rounded-md {{ $tab === 'prospects' ? 'bg-[#090d16]/30 text-[#090d16]' : 'bg-[#1e293b] text-[#cbd5e1]' }} text-[11px] font-bold">
+                    {{ $totalProspectsCount }}
                 </span>
             </button>
 
@@ -627,6 +879,30 @@ class extends Component
                             <span class="text-[#38bdf8]">Test ➔</span>
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Outreach Pipeline Summary Banner -->
+            <div class="rounded-2xl bg-gradient-to-r from-[#0e1626] via-[#131d31] to-[#0e1626] border border-[#1e293b] p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-[#10b981]/10 text-[#34d399] border border-[#10b981]/20 flex items-center justify-center text-lg shrink-0">
+                        🎯
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-mono font-bold text-white">Creator Outreach Pipeline & Marketing CRM</span>
+                            <span class="px-2 py-0.5 rounded-full bg-[#10b981]/20 text-[#34d399] text-[10px] font-mono font-bold">{{ $totalProspectsCount }} Creators</span>
+                        </div>
+                        <p class="text-xs text-[#94a3b8] mt-0.5">
+                            {{ $priorityACount }} Priority A targets across Gaming ({{ $gamingCount }}), Tech ({{ $techCount }}), Lifestyle ({{ $lifestyleCount }}), and Travel ({{ $travelCount }}).
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <button wire:click="setTab('prospects')" class="px-4 py-2 rounded-xl bg-[#10b981] hover:bg-[#059669] text-[#090d16] font-mono font-bold text-xs transition-colors flex items-center gap-1.5 cursor-pointer">
+                        <span>Open Outreach CRM</span>
+                        <span>➔</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1104,6 +1380,530 @@ class extends Component
                             {{ $testEmailResult }}
                         </div>
                     @endif
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- TAB 6: CREATOR OUTREACH CRM & PROSPECT PIPELINE -->
+    @if($tab === 'prospects')
+        <div class="space-y-6">
+            <!-- Header Bar -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+                <div>
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse"></span>
+                        <h1 class="text-xl sm:text-2xl font-bold font-mono text-white tracking-tight">
+                            Creator Outreach Pipeline & CRM
+                        </h1>
+                        <span class="px-2.5 py-0.5 rounded-full bg-[#10b981]/20 text-[#34d399] font-mono text-xs font-bold border border-[#10b981]/30">
+                            500 Potential Creators
+                        </span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-[#94a3b8] mt-1">
+                        Seeded database mirroring 500 creator targets with tailored outreach angles, email subjects, and contact routes for marketing acquisition.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                    <button 
+                        wire:click="exportProspectsCsv" 
+                        class="px-4 py-2 rounded-xl bg-[#1e293b] hover:bg-[#334155] border border-[#334155] text-xs font-mono font-bold text-white transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+                    >
+                        <svg class="w-4 h-4 text-[#34d399]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span>Export CSV (500)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 5 Outreach Metric Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+                <div class="p-4 rounded-2xl bg-[#0e1626] border border-[#1e293b] hover:border-[#10b981]/40 transition-colors">
+                    <div class="text-[11px] font-mono text-[#64748b] uppercase">Total Pipeline</div>
+                    <div class="text-2xl font-extrabold font-mono text-white mt-1">{{ number_format($totalProspectsCount) }}</div>
+                    <div class="text-[10px] text-[#94a3b8] font-mono mt-1">Seeded Prospects</div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-[#0e1626] border border-[#1e293b] hover:border-[#34d399]/40 transition-colors">
+                    <div class="text-[11px] font-mono text-[#34d399] uppercase">Priority A Tier</div>
+                    <div class="text-2xl font-extrabold font-mono text-[#34d399] mt-1">{{ number_format($priorityACount) }}</div>
+                    <div class="text-[10px] text-[#94a3b8] font-mono mt-1">{{ round(($priorityACount / max(1, $totalProspectsCount)) * 100) }}% High Leverage</div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-[#0e1626] border border-[#1e293b] hover:border-[#38bdf8]/40 transition-colors">
+                    <div class="text-[11px] font-mono text-[#38bdf8] uppercase">Email Enriched</div>
+                    <div class="text-2xl font-extrabold font-mono text-[#38bdf8] mt-1">{{ number_format($hasEmailCount) }}</div>
+                    <div class="text-[10px] text-[#94a3b8] font-mono mt-1">Ready for Direct Send</div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-[#0e1626] border border-[#1e293b] hover:border-[#fbbf24]/40 transition-colors">
+                    <div class="text-[11px] font-mono text-[#fbbf24] uppercase">Pipeline Active</div>
+                    <div class="text-2xl font-extrabold font-mono text-[#fbbf24] mt-1">{{ number_format($contactedCount) }}</div>
+                    <div class="text-[10px] text-[#94a3b8] font-mono mt-1">Contacted / In Progress</div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-[#0e1626] border border-[#1e293b] hover:border-[#a855f7]/40 transition-colors col-span-2 sm:col-span-1">
+                    <div class="text-[11px] font-mono text-[#a855f7] uppercase">Onboarded</div>
+                    <div class="text-2xl font-extrabold font-mono text-[#a855f7] mt-1">{{ number_format($onboardedCount) }}</div>
+                    <div class="text-[10px] text-[#94a3b8] font-mono mt-1">Vaults Active</div>
+                </div>
+            </div>
+
+            <!-- Filters & Search Controls -->
+            <div class="p-4 rounded-2xl bg-[#0e1626] border border-[#1e293b] space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+                    <!-- Search Input (2 cols on large) -->
+                    <div class="lg:col-span-2 relative">
+                        <input 
+                            type="text" 
+                            wire:model.live.debounce.300ms="searchProspects" 
+                            placeholder="Search creator, angle, subject, or email..." 
+                            class="w-full px-4 py-2.5 rounded-xl bg-[#090d16] border border-[#1e293b] text-xs font-mono text-white placeholder-[#64748b] focus:outline-none focus:border-[#10b981]"
+                        />
+                    </div>
+
+                    <!-- Speciality Filter -->
+                    <div>
+                        <select 
+                            wire:model.live="filterProspectSpeciality" 
+                            class="w-full px-3 py-2.5 rounded-xl bg-[#090d16] border border-[#1e293b] text-xs font-mono text-[#cbd5e1] focus:outline-none focus:border-[#10b981]"
+                        >
+                            <option value="all">All Niches ({{ $totalProspectsCount }})</option>
+                            <option value="Gaming">Gaming ({{ $gamingCount }})</option>
+                            <option value="Technology">Technology ({{ $techCount }})</option>
+                            <option value="Lifestyle">Lifestyle ({{ $lifestyleCount }})</option>
+                            <option value="Travel">Travel ({{ $travelCount }})</option>
+                        </select>
+                    </div>
+
+                    <!-- Priority Filter -->
+                    <div>
+                        <select 
+                            wire:model.live="filterProspectPriority" 
+                            class="w-full px-3 py-2.5 rounded-xl bg-[#090d16] border border-[#1e293b] text-xs font-mono text-[#cbd5e1] focus:outline-none focus:border-[#10b981]"
+                        >
+                            <option value="all">All Priorities</option>
+                            <option value="A">Priority A (High)</option>
+                            <option value="B">Priority B</option>
+                        </select>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div>
+                        <select 
+                            wire:model.live="filterProspectStatus" 
+                            class="w-full px-3 py-2.5 rounded-xl bg-[#090d16] border border-[#1e293b] text-xs font-mono text-[#cbd5e1] focus:outline-none focus:border-[#10b981]"
+                        >
+                            <option value="all">All Statuses</option>
+                            <option value="Not contacted">Not contacted</option>
+                            <option value="Contacted">Contacted</option>
+                            <option value="Replied">Replied</option>
+                            <option value="In Discussion">In Discussion</option>
+                            <option value="Onboarded">Onboarded</option>
+                            <option value="Declined">Declined</option>
+                            <option value="Passed">Passed</option>
+                        </select>
+                    </div>
+
+                    <!-- Email Filter & Per Page -->
+                    <div class="flex items-center gap-2">
+                        <select 
+                            wire:model.live="filterProspectEmail" 
+                            class="w-full px-3 py-2.5 rounded-xl bg-[#090d16] border border-[#1e293b] text-xs font-mono text-[#cbd5e1] focus:outline-none focus:border-[#10b981]"
+                        >
+                            <option value="all">All Email Status</option>
+                            <option value="has_email">Has Email Only</option>
+                            <option value="needs_enrichment">Needs Enrichment</option>
+                        </select>
+
+                        <select 
+                            wire:model.live="prospectsPerPage" 
+                            class="w-20 px-2 py-2.5 rounded-xl bg-[#090d16] border border-[#1e293b] text-xs font-mono text-[#cbd5e1] focus:outline-none focus:border-[#10b981]"
+                            title="Rows per page"
+                        >
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Quick Active Filter Tags -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#1e293b]/60 text-xs font-mono text-[#64748b]">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span>Showing {{ $filteredProspectsCount }} of {{ $totalProspectsCount }} prospects</span>
+                        @if($searchProspects || $filterProspectSpeciality !== 'all' || $filterProspectPriority !== 'all' || $filterProspectStatus !== 'all' || $filterProspectEmail !== 'all')
+                            <button 
+                                wire:click="$set('searchProspects', ''); $set('filterProspectSpeciality', 'all'); $set('filterProspectPriority', 'all'); $set('filterProspectStatus', 'all'); $set('filterProspectEmail', 'all');" 
+                                class="text-[#34d399] hover:underline cursor-pointer"
+                            >
+                                (Reset Filters)
+                            </button>
+                        @endif
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>Page {{ $prospectsPage }} of {{ $totalProspectsPages }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- High-Density Mirroring Table -->
+            <div class="rounded-2xl bg-[#0e1626] border border-[#1e293b] overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-mono">
+                        <thead class="bg-[#111827] text-[#94a3b8] uppercase text-[11px] border-b border-[#1e293b]">
+                            <tr>
+                                <th class="p-3.5 w-14 text-center">#</th>
+                                <th class="p-3.5 min-w-[160px]">Creator</th>
+                                <th class="p-3.5 w-28">Speciality</th>
+                                <th class="p-3.5 w-16 text-center">Priority</th>
+                                <th class="p-3.5 min-w-[180px]">Email & Contact</th>
+                                <th class="p-3.5 min-w-[260px]">Outreach Angle & Personalisation</th>
+                                <th class="p-3.5 min-w-[220px]">Email Subject</th>
+                                <th class="p-3.5 w-36">Status</th>
+                                <th class="p-3.5 w-24 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#1e293b]">
+                            @forelse($prospects as $p)
+                                <tr class="hover:bg-[#111827]/60 transition-colors group">
+                                    <!-- Prospect # -->
+                                    <td class="p-3.5 text-center text-[#94a3b8] font-bold">
+                                        #{{ $p->prospect_number }}
+                                    </td>
+
+                                    <!-- Creator Name & URL -->
+                                    <td class="p-3.5">
+                                        <div class="font-bold text-white text-sm group-hover:text-[#34d399] transition-colors flex items-center gap-1.5">
+                                            <span>{{ $p->creator }}</span>
+                                            @if($p->contact_url)
+                                                <a 
+                                                    href="{{ $p->contact_url }}" 
+                                                    target="_blank" 
+                                                    class="text-[#64748b] hover:text-[#38bdf8] transition-colors"
+                                                    title="Open YouTube / Contact Search"
+                                                >
+                                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                    </svg>
+                                                </a>
+                                            @endif
+                                        </div>
+                                        <div class="text-[10px] text-[#64748b] truncate mt-0.5">
+                                            {{ $p->contact_type ?: 'YouTube Business Enquiry' }}
+                                        </div>
+                                    </td>
+
+                                    <!-- Speciality -->
+                                    <td class="p-3.5">
+                                        <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-bold border {{ $p->specialityBadgeClass() }}">
+                                            {{ $p->speciality }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Recommended Priority -->
+                                    <td class="p-3.5 text-center">
+                                        <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-bold border {{ $p->priorityBadgeClass() }}">
+                                            {{ $p->recommended_priority }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Email & Status -->
+                                    <td class="p-3.5">
+                                        @if($p->hasEmail())
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-[#34d399] font-bold truncate max-w-[150px] select-all">
+                                                    {{ $p->effectiveEmail() }}
+                                                </span>
+                                                <button 
+                                                    type="button" 
+                                                    onclick="navigator.clipboard.writeText('{{ $p->effectiveEmail() }}'); alert('Copied {{ $p->effectiveEmail() }}');" 
+                                                    class="text-[#64748b] hover:text-white"
+                                                    title="Copy Email"
+                                                >
+                                                    📋
+                                                </button>
+                                            </div>
+                                            <div class="text-[10px] text-[#94a3b8]">Verified Address</div>
+                                        @else
+                                            <div class="text-[#f59e0b] text-[11px] flex items-center gap-1">
+                                                <span>Needs Enrichment</span>
+                                            </div>
+                                            <div class="text-[10px] text-[#64748b] truncate max-w-[170px]" title="{{ $p->email_status }}">
+                                                {{ Str::limit($p->email_status, 28) }}
+                                            </div>
+                                        @endif
+                                    </td>
+
+                                    <!-- Primary Outreach Angle & Note -->
+                                    <td class="p-3.5 text-[#cbd5e1] max-w-xs">
+                                        <div class="line-clamp-2 text-xs leading-relaxed" title="{{ $p->primary_outreach_angle }}">
+                                            {{ $p->primary_outreach_angle }}
+                                        </div>
+                                        @if($p->personalisation_note && $p->personalisation_note !== $p->primary_outreach_angle)
+                                            <div class="text-[10px] text-[#64748b] italic mt-1 truncate" title="{{ $p->personalisation_note }}">
+                                                Note: {{ $p->personalisation_note }}
+                                            </div>
+                                        @endif
+                                    </td>
+
+                                    <!-- Email Subject -->
+                                    <td class="p-3.5 max-w-xs">
+                                        <div class="flex items-center justify-between gap-1 bg-[#090d16] p-1.5 rounded-lg border border-[#1e293b]">
+                                            <span class="text-[#94a3b8] text-[11px] truncate select-all" title="{{ $p->email_subject }}">
+                                                {{ $p->email_subject }}
+                                            </span>
+                                            <button 
+                                                type="button" 
+                                                onclick="navigator.clipboard.writeText('{{ addslashes($p->email_subject) }}'); alert('Copied subject line!');" 
+                                                class="text-[#64748b] hover:text-[#34d399] shrink-0 text-xs px-1"
+                                                title="Copy Subject"
+                                            >
+                                                📋
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                    <!-- Status (Live Dropdown) -->
+                                    <td class="p-3.5">
+                                        <select 
+                                            wire:change="updateProspectStatus('{{ $p->id }}', $event.target.value)" 
+                                            class="w-full px-2 py-1.5 rounded-lg bg-[#090d16] border border-[#1e293b] text-[11px] font-bold focus:outline-none focus:border-[#10b981] {{ $p->statusBadgeClass() }}"
+                                        >
+                                            <option value="Not contacted" {{ $p->status === 'Not contacted' ? 'selected' : '' }}>Not contacted</option>
+                                            <option value="Contacted" {{ $p->status === 'Contacted' ? 'selected' : '' }}>Contacted</option>
+                                            <option value="Replied" {{ $p->status === 'Replied' ? 'selected' : '' }}>Replied</option>
+                                            <option value="In Discussion" {{ $p->status === 'In Discussion' ? 'selected' : '' }}>In Discussion</option>
+                                            <option value="Onboarded" {{ $p->status === 'Onboarded' ? 'selected' : '' }}>Onboarded</option>
+                                            <option value="Declined" {{ $p->status === 'Declined' ? 'selected' : '' }}>Declined</option>
+                                            <option value="Passed" {{ $p->status === 'Passed' ? 'selected' : '' }}>Passed</option>
+                                        </select>
+                                    </td>
+
+                                    <!-- Action -->
+                                    <td class="p-3.5 text-right">
+                                        <button 
+                                            wire:click="inspectProspect('{{ $p->id }}')" 
+                                            class="px-2.5 py-1.5 rounded-lg bg-[#10b981]/20 hover:bg-[#10b981]/30 text-[#34d399] font-bold transition-colors cursor-pointer text-xs"
+                                        >
+                                            Inspect ➔
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="p-12 text-center text-[#64748b]">
+                                        <div class="text-base mb-1">🔍 No creator prospects found matching your search.</div>
+                                        <p class="text-xs">Try clearing your filters or search query.</p>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Footer -->
+                @if($totalProspectsPages > 1)
+                    <div class="p-4 bg-[#111827] border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono">
+                        <div class="text-[#94a3b8]">
+                            Showing {{ ($prospectsPage - 1) * $prospectsPerPage + 1 }} - {{ min($filteredProspectsCount, $prospectsPage * $prospectsPerPage) }} of {{ $filteredProspectsCount }} prospects
+                        </div>
+
+                        <div class="flex items-center gap-1.5">
+                            <button 
+                                wire:click="previousProspectsPage" 
+                                @if($prospectsPage <= 1) disabled @endif
+                                class="px-3 py-1.5 rounded-lg bg-[#1e293b] text-[#cbd5e1] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                            >
+                                Previous
+                            </button>
+
+                            <div class="px-3 py-1.5 rounded-lg bg-[#090d16] text-[#34d399] font-bold border border-[#1e293b]">
+                                {{ $prospectsPage }} / {{ $totalProspectsPages }}
+                            </div>
+
+                            <button 
+                                wire:click="nextProspectsPage({{ $totalProspectsPages }})" 
+                                @if($prospectsPage >= $totalProspectsPages) disabled @endif
+                                class="px-3 py-1.5 rounded-lg bg-[#1e293b] text-[#cbd5e1] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
+
+    <!-- INSPECT & OUTREACH PROSPECT MODAL -->
+    @if($inspectedProspect)
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <div class="w-full max-w-3xl bg-[#0e1626] border border-[#1e293b] rounded-2xl p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+                <!-- Modal Header -->
+                <div class="flex items-start justify-between border-b border-[#1e293b] pb-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-mono text-xs font-bold text-[#34d399]">
+                                PROSPECT #{{ $inspectedProspect->prospect_number }}
+                            </span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border {{ $inspectedProspect->priorityBadgeClass() }}">
+                                Priority {{ $inspectedProspect->recommended_priority }}
+                            </span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border {{ $inspectedProspect->specialityBadgeClass() }}">
+                                {{ $inspectedProspect->speciality }}
+                            </span>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mt-1.5 flex items-center gap-2">
+                            <span>{{ $inspectedProspect->creator }}</span>
+                            @if($inspectedProspect->contact_url)
+                                <a 
+                                    href="{{ $inspectedProspect->contact_url }}" 
+                                    target="_blank" 
+                                    class="text-xs px-2.5 py-1 rounded-lg bg-[#1e293b] text-[#38bdf8] hover:bg-[#334155] font-mono font-medium flex items-center gap-1"
+                                >
+                                    <span>Search Channel</span>
+                                    <span>↗</span>
+                                </a>
+                            @endif
+                        </h2>
+                    </div>
+                    <button wire:click="closeInspectProspect" class="text-gray-400 hover:text-white text-lg font-mono cursor-pointer">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- Complete 13-Column Breakdown Mirroring Dataset -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs font-mono">
+                    <div class="p-3 rounded-xl bg-[#111827] border border-[#1e293b]">
+                        <span class="text-[#64748b] block text-[10px] uppercase">Primary Outreach Angle</span>
+                        <p class="text-[#e2e8f0] font-sans text-xs mt-1 leading-relaxed">
+                            {{ $inspectedProspect->primary_outreach_angle }}
+                        </p>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-[#111827] border border-[#1e293b]">
+                        <span class="text-[#64748b] block text-[10px] uppercase">Personalisation Note</span>
+                        <p class="text-[#cbd5e1] font-sans text-xs mt-1 leading-relaxed">
+                            {{ $inspectedProspect->personalisation_note ?: 'No extra personalisation notes.' }}
+                        </p>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-[#111827] border border-[#1e293b]">
+                        <span class="text-[#64748b] block text-[10px] uppercase">Contact Route & Type</span>
+                        <div class="text-white font-bold mt-1">{{ $inspectedProspect->contact_type ?: 'YouTube Business Enquiry' }}</div>
+                        <div class="text-[10px] text-[#94a3b8] mt-0.5">{{ $inspectedProspect->email_status }}</div>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-[#111827] border border-[#1e293b]">
+                        <span class="text-[#64748b] block text-[10px] uppercase">Email Subject Line</span>
+                        <div class="flex items-center justify-between gap-1 mt-1">
+                            <span class="text-[#34d399] font-bold truncate select-all">{{ $inspectedProspect->email_subject }}</span>
+                            <button 
+                                type="button" 
+                                onclick="navigator.clipboard.writeText('{{ addslashes($inspectedProspect->email_subject) }}'); alert('Subject copied!');" 
+                                class="text-xs px-2 py-0.5 rounded bg-[#1e293b] text-white hover:bg-[#334155]"
+                            >
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ready-to-Send Outreach Pitch Box -->
+                <div class="p-4 rounded-xl bg-[#090d16] border border-[#10b981]/30 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-mono uppercase text-[#34d399] font-bold flex items-center gap-1.5">
+                            <span>⚡ Ready-to-Send Pitch Draft</span>
+                        </span>
+                        <button 
+                            type="button" 
+                            onclick="navigator.clipboard.writeText('Subject: {{ addslashes($inspectedProspect->email_subject) }}\n\nHi {{ addslashes(explode(' ', $inspectedProspect->creator)[0]) }},\n\n{{ addslashes($inspectedProspect->primary_outreach_angle) }}\n\nWe built FanVault (https://getfanvault.com) — digital time capsules where fans seal messages, memories, and predictions for your next milestone, unlocked live on stream.\n\nWould love to set up a private capsule for your next milestone: https://getfanvault.com/with/{{ Str::slug($inspectedProspect->creator) }}\n\nBest,\nFanVault Creator Partnerships'); alert('Complete outreach pitch copied to clipboard!');" 
+                            class="px-2.5 py-1 rounded-lg bg-[#10b981] hover:bg-[#059669] text-[#090d16] font-mono font-bold text-xs cursor-pointer transition-colors"
+                        >
+                            📋 Copy Full Email Pitch
+                        </button>
+                    </div>
+
+                    <div class="bg-[#111827] p-3.5 rounded-lg text-xs font-mono text-[#cbd5e1] space-y-2 select-all leading-relaxed">
+                        <div class="text-[#94a3b8] font-bold">Subject: {{ $inspectedProspect->email_subject }}</div>
+                        <div class="text-white">Hi {{ explode(' ', $inspectedProspect->creator)[0] }},</div>
+                        <div>{{ $inspectedProspect->primary_outreach_angle }}</div>
+                        <div class="text-[#94a3b8]">We built FanVault (https://getfanvault.com) — digital time capsules where your fans seal messages, memories, and predictions for your upcoming milestone, opened live on your reveal stream.</div>
+                        <div class="text-[#34d399]">Would love to get a time capsule opened for your community: https://getfanvault.com/with/{{ Str::slug($inspectedProspect->creator) }}</div>
+                    </div>
+                </div>
+
+                <!-- Update Prospect Details Form -->
+                <div class="p-4 rounded-xl bg-[#111827] border border-[#1e293b] space-y-3">
+                    <div class="text-xs font-mono font-bold text-white uppercase tracking-wider">
+                        Update Marketing & Enrichment Details
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-mono text-[#94a3b8] mb-1">Direct Contact Email</label>
+                            <input 
+                                type="email" 
+                                wire:model="editProspectEmail" 
+                                placeholder="creator@business.com" 
+                                class="w-full px-3 py-2 rounded-xl bg-[#090d16] border border-[#1e293b] text-white text-xs font-mono focus:outline-none focus:border-[#10b981]"
+                            />
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono text-[#94a3b8] mb-1">Pipeline Status</label>
+                            <select 
+                                wire:model="editProspectStatus" 
+                                class="w-full px-3 py-2 rounded-xl bg-[#090d16] border border-[#1e293b] text-white text-xs font-mono focus:outline-none focus:border-[#10b981]"
+                            >
+                                <option value="Not contacted">Not contacted</option>
+                                <option value="Contacted">Contacted</option>
+                                <option value="Replied">Replied</option>
+                                <option value="In Discussion">In Discussion</option>
+                                <option value="Onboarded">Onboarded</option>
+                                <option value="Declined">Declined</option>
+                                <option value="Passed">Passed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-[#94a3b8] mb-1">Internal Notes & History</label>
+                        <textarea 
+                            wire:model="editProspectNotes" 
+                            rows="2" 
+                            placeholder="Add notes (e.g., outreach date, channel response, manager contact details)..." 
+                            class="w-full px-3 py-2 rounded-xl bg-[#090d16] border border-[#1e293b] text-white text-xs font-mono focus:outline-none focus:border-[#10b981]"
+                        ></textarea>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2">
+                        <button 
+                            type="button" 
+                            wire:click="updateProspectStatus('{{ $inspectedProspect->id }}', 'Contacted')" 
+                            class="px-3 py-1.5 rounded-lg bg-[#f59e0b]/20 hover:bg-[#f59e0b]/30 text-[#fbbf24] text-xs font-mono font-bold transition-colors cursor-pointer"
+                        >
+                            ✓ Mark Contacted (Stamp Now)
+                        </button>
+
+                        <div class="flex items-center gap-2">
+                            <button 
+                                wire:click="closeInspectProspect" 
+                                class="px-3.5 py-1.5 rounded-xl bg-[#1e293b] text-xs font-mono text-[#cbd5e1] hover:text-white"
+                            >
+                                Close
+                            </button>
+                            <button 
+                                wire:click="saveProspectDetails" 
+                                class="px-4 py-1.5 rounded-xl bg-[#10b981] hover:bg-[#059669] text-xs font-mono font-bold text-[#090d16] transition-colors cursor-pointer"
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -52,5 +52,8 @@ Route::post('/admin/logout', [\App\Http\Controllers\AdminAuthController::class, 
 
 Route::middleware('admin')->prefix('admin')->group(function () {
     Route::livewire('/', 'admin-dashboard')->name('admin.dashboard');
+    Route::get('/prospects', function () {
+        return redirect()->route('admin.dashboard', ['tab' => 'prospects']);
+    })->name('admin.prospects');
 });
 

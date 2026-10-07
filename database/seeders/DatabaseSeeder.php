@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CreatorSeeder::class,
             PostcardSeeder::class,
+            CreatorProspectSeeder::class,
         ]);
     }
 }
