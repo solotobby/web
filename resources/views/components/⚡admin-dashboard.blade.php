@@ -2,6 +2,7 @@
 
 use App\Mail\CreatorLoginLink;
 use App\Mail\CreatorNewLetterMail;
+use App\Mail\CreatorOutreachMail;
 use App\Mail\FanCapsuleSealedMail;
 use App\Models\Creator;
 use App\Models\CreatorLoginToken;
@@ -54,6 +55,20 @@ class extends Component
     public string $editProspectStatus = 'Not contacted';
     public string $editProspectNotes = '';
 
+    // Outreach Email Composer & Preview Modal
+    public ?string $outreachProspectId = null;
+    public string $outreachToEmail = '';
+    public string $outreachSubject = '';
+    public string $outreachBody = '';
+    public string $outreachMode = 'compose'; // 'compose' or 'preview'
+    public string $outreachSendResult = '';
+    public bool $outreachSendSuccess = false;
+    public string $testOutreachRecipient = '';
+
+    // Quick Inline Email Edit
+    public ?string $quickEditEmailProspectId = null;
+    public string $quickEditEmailValue = '';
+
     // Letter Inspect Modal
     public ?string $inspectPostcardId = null;
 
@@ -87,6 +102,8 @@ class extends Component
         $this->tab = $tab;
         $this->inspectPostcardId = null;
         $this->inspectProspectId = null;
+        $this->outreachProspectId = null;
+        $this->quickEditEmailProspectId = null;
         $this->editCreatorId = null;
         $this->generatedLoginUrl = '';
     }
@@ -287,6 +304,145 @@ class extends Component
 
         $prospect->update($update);
         session()->flash('success', "Prospect '{$prospect->creator}' details updated.");
+    }
+
+    public function startQuickEditEmail(string $id): void
+    {
+        $this->quickEditEmailProspectId = $id;
+        $prospect = CreatorProspect::find($id);
+        $this->quickEditEmailValue = $prospect ? (string) ($prospect->effectiveEmail() ?? '') : '';
+    }
+
+    public function cancelQuickEditEmail(): void
+    {
+        $this->quickEditEmailProspectId = null;
+        $this->quickEditEmailValue = '';
+    }
+
+    public function saveQuickEditEmail(string $id): void
+    {
+        $prospect = CreatorProspect::find($id);
+        if (! $prospect) return;
+
+        $email = trim($this->quickEditEmailValue);
+        $update = ['email' => $email ?: null];
+        if ($email && empty($prospect->public_email)) {
+            $update['email_status'] = 'Admin enriched address';
+        }
+        $prospect->update($update);
+
+        $this->quickEditEmailProspectId = null;
+        $this->quickEditEmailValue = '';
+        session()->flash('success', "Email updated for {$prospect->creator}: " . ($email ?: '(Cleared)'));
+    }
+
+    public function openOutreachComposer(string $id): void
+    {
+        $prospect = CreatorProspect::find($id);
+        if (! $prospect) return;
+
+        $this->outreachProspectId = $id;
+        $this->outreachToEmail = (string) ($prospect->effectiveEmail() ?? '');
+        $this->outreachSubject = (string) ($prospect->email_subject ?: "{$prospect->creator} × FanVault — a free idea for your next milestone");
+        $this->outreachBody = (string) $prospect->defaultEmailBody();
+        $this->outreachMode = 'compose';
+        $this->outreachSendResult = '';
+        $this->outreachSendSuccess = false;
+        $this->testOutreachRecipient = (string) config('mail.from.address', 'oluwatobi@getfanvault.com');
+    }
+
+    public function closeOutreachComposer(): void
+    {
+        $this->outreachProspectId = null;
+        $this->outreachSendResult = '';
+    }
+
+    public function setOutreachMode(string $mode): void
+    {
+        $this->outreachMode = in_array($mode, ['compose', 'preview']) ? $mode : 'compose';
+    }
+
+    public function resetOutreachTemplate(): void
+    {
+        if (! $this->outreachProspectId) return;
+        $prospect = CreatorProspect::find($this->outreachProspectId);
+        if ($prospect) {
+            $this->outreachSubject = (string) ($prospect->email_subject ?: "{$prospect->creator} × FanVault — a free idea for your next milestone");
+            $this->outreachBody = (string) $prospect->defaultEmailBody();
+        }
+    }
+
+    public function sendOutreachEmail(): void
+    {
+        if (! $this->outreachProspectId) return;
+        $prospect = CreatorProspect::findOrFail($this->outreachProspectId);
+
+        $this->validate([
+            'outreachToEmail' => ['required', 'email'],
+            'outreachSubject' => ['required', 'string', 'max:255'],
+            'outreachBody' => ['required', 'string'],
+        ], [
+            'outreachToEmail.required' => 'Please provide a valid creator email address before sending.',
+            'outreachToEmail.email' => 'The destination email address must be valid.',
+            'outreachSubject.required' => 'Please provide an email subject line.',
+            'outreachBody.required' => 'The email outreach body cannot be empty.',
+        ]);
+
+        try {
+            Mail::to($this->outreachToEmail)->send(new CreatorOutreachMail(
+                prospect: $prospect,
+                customSubject: $this->outreachSubject,
+                customBody: $this->outreachBody,
+                replyToEmail: 'oluwatobi@getfanvault.com',
+                replyToName: 'Oluwatobi Solomon',
+            ));
+
+            $timestamp = now()->format('Y-m-d H:i');
+            $log = "Outreach email sent to {$this->outreachToEmail} on {$timestamp} (Subject: '{$this->outreachSubject}').";
+            $notes = $prospect->internal_notes ? ($prospect->internal_notes . "\n" . $log) : $log;
+
+            $prospect->update([
+                'email' => $this->outreachToEmail,
+                'status' => 'Contacted',
+                'last_contacted_at' => now(),
+                'internal_notes' => $notes,
+            ]);
+
+            $this->outreachSendSuccess = true;
+            $this->outreachSendResult = "✓ Outreach email dispatched to {$prospect->creator} ({$this->outreachToEmail}) with Reply-To set to oluwatobi@getfanvault.com!";
+            session()->flash('success', $this->outreachSendResult);
+        } catch (\Throwable $e) {
+            $this->outreachSendSuccess = false;
+            $this->outreachSendResult = "✕ Error dispatching outreach email: " . $e->getMessage();
+        }
+    }
+
+    public function sendTestOutreach(): void
+    {
+        if (! $this->outreachProspectId) return;
+        $prospect = CreatorProspect::findOrFail($this->outreachProspectId);
+
+        $this->validate([
+            'testOutreachRecipient' => ['required', 'email'],
+            'outreachSubject' => ['required', 'string', 'max:255'],
+            'outreachBody' => ['required', 'string'],
+        ]);
+
+        try {
+            Mail::to($this->testOutreachRecipient)->send(new CreatorOutreachMail(
+                prospect: $prospect,
+                customSubject: "[PREVIEW TEST] " . $this->outreachSubject,
+                customBody: $this->outreachBody,
+                replyToEmail: 'oluwatobi@getfanvault.com',
+                replyToName: 'Oluwatobi Solomon',
+            ));
+
+            $this->outreachSendSuccess = true;
+            $this->outreachSendResult = "✓ Preview test email dispatched to {$this->testOutreachRecipient}. Check your inbox!";
+        } catch (\Throwable $e) {
+            $this->outreachSendSuccess = false;
+            $this->outreachSendResult = "✕ Test email delivery error: " . $e->getMessage();
+        }
     }
 
     public function setProspectsPage(int $page): void
@@ -542,6 +698,10 @@ class extends Component
             ? CreatorProspect::find($this->inspectProspectId)
             : null;
 
+        $outreachProspect = $this->outreachProspectId
+            ? CreatorProspect::find($this->outreachProspectId)
+            : null;
+
         return [
             'totalLetters' => $totalLetters,
             'totalGmvCents' => $totalGmvCents,
@@ -570,6 +730,7 @@ class extends Component
             'filteredProspectsCount' => $filteredProspectsCount,
             'totalProspectsPages' => $totalProspectsPages,
             'inspectedProspect' => $inspectedProspect,
+            'outreachProspect' => $outreachProspect,
         ];
     }
 };
@@ -1610,29 +1771,76 @@ class extends Component
                                         </span>
                                     </td>
 
-                                    <!-- Email & Status -->
+                                    <!-- Email & Status (Supports Inline Editing) -->
                                     <td class="p-3.5">
-                                        @if($p->hasEmail())
-                                            <div class="flex items-center gap-1.5">
-                                                <span class="text-[#34d399] font-bold truncate max-w-[150px] select-all">
-                                                    {{ $p->effectiveEmail() }}
-                                                </span>
+                                        @if($quickEditEmailProspectId === $p->id)
+                                            <div class="space-y-1.5 min-w-[210px]">
+                                                <input 
+                                                    type="email" 
+                                                    wire:model="quickEditEmailValue" 
+                                                    wire:keydown.enter="saveQuickEditEmail('{{ $p->id }}')" 
+                                                    wire:keydown.escape="cancelQuickEditEmail"
+                                                    placeholder="creator@business.com" 
+                                                    class="w-full px-2.5 py-1 text-xs rounded-lg bg-[#090d16] border border-[#10b981] text-white focus:outline-none font-mono"
+                                                    autofocus
+                                                />
+                                                <div class="flex items-center gap-1.5 font-mono">
+                                                    <button 
+                                                        type="button" 
+                                                        wire:click="saveQuickEditEmail('{{ $p->id }}')" 
+                                                        class="px-2 py-0.5 rounded bg-[#10b981] hover:bg-[#059669] text-[#090d16] font-bold text-[10px] cursor-pointer"
+                                                    >
+                                                        Save
+                                                    </button>
+                                                    <button 
+                                                        type="button" 
+                                                        wire:click="cancelQuickEditEmail" 
+                                                        class="px-2 py-0.5 rounded bg-[#1e293b] text-[#94a3b8] hover:text-white text-[10px] cursor-pointer"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="flex items-center justify-between gap-1 group/email">
+                                                <div class="truncate max-w-[170px]">
+                                                    @if($p->hasEmail())
+                                                        <div class="flex items-center gap-1">
+                                                            <span class="text-[#34d399] font-bold truncate select-all" title="{{ $p->effectiveEmail() }}">
+                                                                {{ $p->effectiveEmail() }}
+                                                            </span>
+                                                            <button 
+                                                                type="button" 
+                                                                onclick="navigator.clipboard.writeText('{{ $p->effectiveEmail() }}'); alert('Copied {{ $p->effectiveEmail() }}');" 
+                                                                class="text-[#64748b] hover:text-white shrink-0" 
+                                                                title="Copy Email"
+                                                            >
+                                                                📋
+                                                            </button>
+                                                        </div>
+                                                        <div class="text-[10px] text-[#94a3b8] flex items-center gap-1 mt-0.5">
+                                                            @if($p->email_type)
+                                                                <span class="text-[#38bdf8] font-mono text-[9px] uppercase px-1 rounded bg-[#38bdf8]/10">{{ $p->email_type }}</span>
+                                                            @endif
+                                                            <span>{{ $p->outreach_readiness ?: 'Verified Address' }}</span>
+                                                        </div>
+                                                    @else
+                                                        <div class="text-[#f59e0b] text-[11px] flex items-center gap-1 font-bold">
+                                                            <span>Needs Enrichment</span>
+                                                        </div>
+                                                        <div class="text-[10px] text-[#64748b] truncate max-w-[170px]" title="{{ $p->email_status }}">
+                                                            {{ Str::limit($p->email_status, 26) }}
+                                                        </div>
+                                                    @endif
+                                                </div>
                                                 <button 
                                                     type="button" 
-                                                    onclick="navigator.clipboard.writeText('{{ $p->effectiveEmail() }}'); alert('Copied {{ $p->effectiveEmail() }}');" 
-                                                    class="text-[#64748b] hover:text-white"
-                                                    title="Copy Email"
+                                                    wire:click="startQuickEditEmail('{{ $p->id }}')" 
+                                                    class="text-[#64748b] hover:text-[#38bdf8] text-xs px-1 py-0.5 rounded hover:bg-[#1e293b] transition-colors shrink-0 cursor-pointer"
+                                                    title="Edit / Update Creator Email"
                                                 >
-                                                    📋
+                                                    ✏️
                                                 </button>
-                                            </div>
-                                            <div class="text-[10px] text-[#94a3b8]">Verified Address</div>
-                                        @else
-                                            <div class="text-[#f59e0b] text-[11px] flex items-center gap-1">
-                                                <span>Needs Enrichment</span>
-                                            </div>
-                                            <div class="text-[10px] text-[#64748b] truncate max-w-[170px]" title="{{ $p->email_status }}">
-                                                {{ Str::limit($p->email_status, 28) }}
                                             </div>
                                         @endif
                                     </td>
@@ -1683,13 +1891,26 @@ class extends Component
                                     </td>
 
                                     <!-- Action -->
-                                    <td class="p-3.5 text-right">
-                                        <button 
-                                            wire:click="inspectProspect('{{ $p->id }}')" 
-                                            class="px-2.5 py-1.5 rounded-lg bg-[#10b981]/20 hover:bg-[#10b981]/30 text-[#34d399] font-bold transition-colors cursor-pointer text-xs"
-                                        >
-                                            Inspect ➔
-                                        </button>
+                                    <td class="p-3.5 text-right whitespace-nowrap">
+                                        <div class="flex items-center justify-end gap-1.5">
+                                            <button 
+                                                type="button" 
+                                                wire:click="openOutreachComposer('{{ $p->id }}')" 
+                                                class="px-2.5 py-1.5 rounded-lg bg-[#38bdf8]/15 hover:bg-[#38bdf8]/25 text-[#38bdf8] font-bold transition-colors cursor-pointer text-xs flex items-center gap-1"
+                                                title="Compose, preview and send outreach email to {{ $p->creator }}"
+                                            >
+                                                <span>✉️</span>
+                                                <span class="hidden xl:inline">Email</span>
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                wire:click="inspectProspect('{{ $p->id }}')" 
+                                                class="px-2.5 py-1.5 rounded-lg bg-[#10b981]/15 hover:bg-[#10b981]/25 text-[#34d399] font-bold transition-colors cursor-pointer text-xs"
+                                                title="Inspect all details and update status"
+                                            >
+                                                Inspect ➔
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -1891,8 +2112,15 @@ class extends Component
 
                         <div class="flex items-center gap-2">
                             <button 
+                                type="button" 
+                                wire:click="openOutreachComposer('{{ $inspectedProspect->id }}')" 
+                                class="px-3.5 py-1.5 rounded-xl bg-[#38bdf8] hover:bg-[#0284c7] text-[#090d16] font-mono font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-md transition-colors"
+                            >
+                                ✉️ Compose & Preview Email
+                            </button>
+                            <button 
                                 wire:click="closeInspectProspect" 
-                                class="px-3.5 py-1.5 rounded-xl bg-[#1e293b] text-xs font-mono text-[#cbd5e1] hover:text-white"
+                                class="px-3.5 py-1.5 rounded-xl bg-[#1e293b] text-xs font-mono text-[#cbd5e1] hover:text-white cursor-pointer"
                             >
                                 Close
                             </button>
@@ -1903,6 +2131,241 @@ class extends Component
                                 Save Changes
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- OUTREACH EMAIL COMPOSER & PREVIEW MODAL -->
+    @if($outreachProspect)
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+            <div class="w-full max-w-4xl bg-[#0e1626] border border-[#1e293b] rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
+                <!-- Modal Top Header -->
+                <div class="px-6 py-4 bg-[#111827] border-b border-[#1e293b] flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-[#38bdf8]/15 border border-[#38bdf8]/30 flex items-center justify-center text-lg">
+                            ✉️
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono text-xs font-bold text-[#38bdf8]">
+                                    OUTREACH TO {{ strtoupper($outreachProspect->creator) }}
+                                </span>
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border {{ $outreachProspect->priorityBadgeClass() }}">
+                                    Priority {{ $outreachProspect->recommended_priority }}
+                                </span>
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border {{ $outreachProspect->specialityBadgeClass() }}">
+                                    {{ $outreachProspect->speciality }}
+                                </span>
+                                @if($outreachProspect->outreach_readiness)
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#10b981]/20 text-[#34d399] border border-[#10b981]/30">
+                                        {{ $outreachProspect->outreach_readiness }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="text-xs text-[#94a3b8] font-mono mt-0.5">
+                                Prospect #{{ $outreachProspect->prospect_number }} • Contact channel: {{ $outreachProspect->contact_type ?: 'YouTube Business' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <!-- Mode Tabs -->
+                        <div class="inline-flex rounded-xl bg-[#090d16] p-1 border border-[#1e293b]">
+                            <button 
+                                type="button" 
+                                wire:click="setOutreachMode('compose')" 
+                                class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors cursor-pointer {{ $outreachMode === 'compose' ? 'bg-[#38bdf8] text-[#090d16]' : 'text-[#94a3b8] hover:text-white' }}"
+                            >
+                                ✏️ Compose
+                            </button>
+                            <button 
+                                type="button" 
+                                wire:click="setOutreachMode('preview')" 
+                                class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors cursor-pointer {{ $outreachMode === 'preview' ? 'bg-[#10b981] text-[#090d16]' : 'text-[#94a3b8] hover:text-white' }}"
+                            >
+                                👁️ Live Preview
+                            </button>
+                        </div>
+
+                        <button wire:click="closeOutreachComposer" class="text-gray-400 hover:text-white text-lg font-mono p-1 ml-2 cursor-pointer">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Alert Result Message (if dispatched) -->
+                @if($outreachSendResult)
+                    <div class="px-6 py-3 border-b text-xs font-mono flex items-center justify-between {{ $outreachSendSuccess ? 'bg-[#10b981]/15 border-[#10b981]/30 text-[#34d399]' : 'bg-[#ef4444]/15 border-[#ef4444]/30 text-[#fca5a5]' }}">
+                        <div class="flex items-center gap-2">
+                            <span>{{ $outreachSendSuccess ? '✓' : '✕' }}</span>
+                            <span>{{ $outreachSendResult }}</span>
+                        </div>
+                        <button type="button" wire:click="$set('outreachSendResult', '')" class="text-gray-400 hover:text-white">✕</button>
+                    </div>
+                @endif
+
+                <!-- Email Header Metadata Strip (To, From, Reply-To) -->
+                <div class="px-6 py-3 bg-[#090d16] border-b border-[#1e293b] font-mono text-xs grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div class="flex items-center gap-2 truncate">
+                        <span class="text-[#64748b]">To:</span>
+                        <input 
+                            type="email" 
+                            wire:model="outreachToEmail" 
+                            placeholder="creator@email.com" 
+                            class="bg-[#111827] px-2.5 py-1 rounded-lg border border-[#1e293b] text-white focus:outline-none focus:border-[#38bdf8] text-xs font-mono flex-1 min-w-0"
+                        />
+                    </div>
+                    <div class="flex items-center gap-1.5 truncate text-[#94a3b8]">
+                        <span class="text-[#64748b]">From:</span>
+                        <span class="text-white">{{ config('mail.from.name', 'FanVault') }}</span>
+                        <span class="text-[#64748b] text-[10px]">&lt;{{ config('mail.from.address', 'noreply@getfanvault.com') }}&gt;</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 truncate text-[#34d399] bg-[#10b981]/10 px-2.5 py-1 rounded-lg border border-[#10b981]/25">
+                        <span class="text-[#10b981] font-bold">Reply-To:</span>
+                        <span class="font-bold select-all">oluwatobi@getfanvault.com</span>
+                        <span class="text-[10px] text-[#6ee7b7]">(Oluwatobi Solomon)</span>
+                    </div>
+                </div>
+
+                <!-- Body Content Area (Scrollable) -->
+                <div class="p-6 overflow-y-auto space-y-4 flex-1">
+                    @if($outreachMode === 'compose')
+                        <!-- COMPOSE MODE -->
+                        <div class="space-y-4 font-mono text-xs">
+                            <!-- Subject line with reset button -->
+                            <div>
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <label class="text-[#94a3b8] font-bold">Email Subject</label>
+                                    <button 
+                                        type="button" 
+                                        wire:click="resetOutreachTemplate" 
+                                        class="text-[11px] text-[#38bdf8] hover:underline cursor-pointer"
+                                    >
+                                        ↺ Reset to Default Template
+                                    </button>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    wire:model="outreachSubject" 
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-[#090d16] border border-[#1e293b] text-white focus:outline-none focus:border-[#38bdf8] text-xs font-mono"
+                                />
+                            </div>
+
+                            <!-- Outreach Angle Context Hint -->
+                            <div class="p-3 rounded-xl bg-[#111827] border border-[#1e293b] text-xs space-y-1">
+                                <div class="text-[#64748b] text-[10px] uppercase font-bold">Targeted Creator Hook</div>
+                                <div class="text-[#cbd5e1] font-sans">{{ $outreachProspect->primary_outreach_angle }}</div>
+                            </div>
+
+                            <!-- Email Body Area -->
+                            <div>
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <label class="text-[#94a3b8] font-bold">Email Message Body</label>
+                                    <span class="text-[11px] text-[#64748b]">Plain-text / Formatted with direct links & personalized angle</span>
+                                </div>
+                                <textarea 
+                                    wire:model="outreachBody" 
+                                    rows="12" 
+                                    class="w-full p-4 rounded-xl bg-[#090d16] border border-[#1e293b] text-white focus:outline-none focus:border-[#38bdf8] text-xs font-mono leading-relaxed resize-y"
+                                ></textarea>
+                            </div>
+                        </div>
+                    @else
+                        <!-- LIVE PREVIEW MODE -->
+                        <div class="max-w-2xl mx-auto rounded-2xl bg-white text-[#1e293b] p-8 shadow-xl space-y-6 font-sans">
+                            <!-- Simulated Email Header -->
+                            <div class="border-b border-gray-100 pb-5">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-lg bg-[#0f172a] flex items-center justify-center text-white font-bold font-mono text-sm">
+                                            FV
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-sm text-[#0f172a]">FanVault</div>
+                                            <div class="text-[11px] text-gray-500">Milestone Time Capsules</div>
+                                        </div>
+                                    </div>
+                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">
+                                        LIVE EMAIL PREVIEW
+                                    </span>
+                                </div>
+
+                                <div class="space-y-1 text-xs">
+                                    <div><span class="text-gray-400 font-mono">To:</span> <strong class="text-gray-900">{{ $outreachToEmail ?: '(No recipient email provided)' }}</strong></div>
+                                    <div><span class="text-gray-400 font-mono">Reply-To:</span> <strong class="text-emerald-700">Oluwatobi Solomon &lt;oluwatobi@getfanvault.com&gt;</strong></div>
+                                    <div><span class="text-gray-400 font-mono">Subject:</span> <strong class="text-gray-900">{{ $outreachSubject }}</strong></div>
+                                </div>
+                            </div>
+
+                            <!-- Body Rendered -->
+                            <div class="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap font-sans">
+{{ $outreachBody }}
+                            </div>
+
+                            <!-- Simulated Action Button -->
+                            <div class="pt-2 pb-2">
+                                <a 
+                                    href="https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}" 
+                                    target="_blank" 
+                                    class="inline-block px-5 py-2.5 rounded-xl bg-[#0f172a] text-white font-bold text-xs shadow-md hover:bg-black transition-colors"
+                                >
+                                    View FanVault Concept for {{ $outreachProspect->creator }} ➔
+                                </a>
+                            </div>
+
+                            <!-- Footer Signature -->
+                            <div class="pt-5 border-t border-gray-100 text-xs text-gray-500 space-y-1">
+                                <div class="font-bold text-gray-900">Oluwatobi Solomon</div>
+                                <div>Founder, FanVault</div>
+                                <div><a href="mailto:oluwatobi@getfanvault.com" class="text-blue-600 underline">oluwatobi@getfanvault.com</a> • <a href="https://getfanvault.com" class="text-blue-600 underline">getfanvault.com</a></div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Modal Bottom Action Bar -->
+                <div class="px-6 py-4 bg-[#111827] border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs">
+                    <!-- Left: Test Send Box -->
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <span class="text-[#64748b] text-[11px] shrink-0">Send Test:</span>
+                        <input 
+                            type="email" 
+                            wire:model="testOutreachRecipient" 
+                            placeholder="admin@email.com" 
+                            class="px-2.5 py-1.5 rounded-lg bg-[#090d16] border border-[#1e293b] text-white text-xs focus:outline-none focus:border-[#38bdf8] w-48"
+                        />
+                        <button 
+                            type="button" 
+                            wire:click="sendTestOutreach" 
+                            wire:loading.attr="disabled"
+                            class="px-3 py-1.5 rounded-lg bg-[#1e293b] hover:bg-[#334155] text-[#cbd5e1] hover:text-white font-bold cursor-pointer transition-colors shrink-0 disabled:opacity-50"
+                        >
+                            <span wire:loading.remove wire:target="sendTestOutreach">Send Test</span>
+                            <span wire:loading wire:target="sendTestOutreach">Sending...</span>
+                        </button>
+                    </div>
+
+                    <!-- Right: Main Send / Close Actions -->
+                    <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                        <button 
+                            type="button" 
+                            wire:click="closeOutreachComposer" 
+                            class="px-4 py-2 rounded-xl bg-[#1e293b] text-[#cbd5e1] hover:text-white cursor-pointer"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="button" 
+                            wire:click="sendOutreachEmail" 
+                            wire:loading.attr="disabled"
+                            wire:confirm="Ready to send this personalized outreach email to {{ $outreachToEmail }}? Reply-to is set to oluwatobi@getfanvault.com."
+                            class="px-5 py-2 rounded-xl bg-[#10b981] hover:bg-[#059669] text-[#090d16] font-bold cursor-pointer transition-colors shadow-lg shadow-[#10b981]/20 disabled:opacity-50 flex items-center gap-1.5"
+                        >
+                            <span wire:loading.remove wire:target="sendOutreachEmail">🚀 Send to {{ $outreachProspect->creator }}</span>
+                            <span wire:loading wire:target="sendOutreachEmail">Dispatching Email...</span>
+                        </button>
                     </div>
                 </div>
             </div>

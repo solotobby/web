@@ -43,9 +43,13 @@ class CreatorProspectSeeder extends Seeder
                 'contact_type' => $item['contact_type'] ?? null,
                 'public_email' => $item['public_email'] ?? null,
                 'email_status' => $item['email_status'] ?? null,
+                'email_type' => $item['email_type'] ?? null,
+                'email_source' => $item['email_source'] ?? null,
+                'outreach_readiness' => $item['outreach_readiness'] ?? null,
                 'contact_url' => $item['contact_url'] ?? null,
                 'recommended_priority' => $item['recommended_priority'] ?? 'A',
                 'email_subject' => $item['email_subject'] ?? null,
+                'personalised_email' => $item['personalised_email'] ?? null,
                 'status' => $item['status'] ?? 'Not contacted',
                 'personalisation_note' => $item['personalisation_note'] ?? null,
                 'email' => $item['email'] ?? null,
@@ -59,8 +63,9 @@ class CreatorProspectSeeder extends Seeder
                     ['prospect_number'],
                     [
                         'creator', 'speciality', 'primary_outreach_angle', 'contact_type',
-                        'public_email', 'email_status', 'contact_url', 'recommended_priority',
-                        'email_subject', 'personalisation_note', 'email', 'updated_at'
+                        'public_email', 'email_status', 'email_type', 'email_source', 'outreach_readiness',
+                        'contact_url', 'recommended_priority', 'email_subject', 'personalised_email',
+                        'personalisation_note', 'email', 'updated_at'
                     ]
                 );
                 $batch = [];
@@ -73,8 +78,9 @@ class CreatorProspectSeeder extends Seeder
                 ['prospect_number'],
                 [
                     'creator', 'speciality', 'primary_outreach_angle', 'contact_type',
-                    'public_email', 'email_status', 'contact_url', 'recommended_priority',
-                    'email_subject', 'personalisation_note', 'email', 'updated_at'
+                    'public_email', 'email_status', 'email_type', 'email_source', 'outreach_readiness',
+                    'contact_url', 'recommended_priority', 'email_subject', 'personalised_email',
+                    'personalisation_note', 'email', 'updated_at'
                 ]
             );
         }

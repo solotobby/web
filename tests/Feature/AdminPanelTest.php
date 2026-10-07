@@ -2,13 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Mail\CreatorOutreachMail;
 use App\Models\Creator;
+use App\Models\CreatorProspect;
 use App\Models\Milestone;
 use App\Models\Postcard;
 use App\Models\Referral;
 use App\Support\Capsule;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -165,7 +168,7 @@ class AdminPanelTest extends TestCase
         $response->assertSee('500 Potential Creators');
         $response->assertSee('Jacksepticeye');
         $response->assertSee('Gaming');
-        $response->assertSee('Jacksepticeye × FanVault — your next milestone', false);
+        $response->assertSee('Jacksepticeye × FanVault — a free idea for your next milestone', false);
     }
 
     public function test_admin_can_filter_and_search_prospects_in_crm(): void
@@ -212,6 +215,80 @@ class AdminPanelTest extends TestCase
         $response = $component->call('exportProspectsCsv');
 
         $this->assertNotNull($response);
+    }
+
+    public function test_admin_can_inline_edit_prospect_email(): void
+    {
+        $this->seed(\Database\Seeders\CreatorProspectSeeder::class);
+        $prospect = CreatorProspect::where('prospect_number', 2)->first();
+        $this->assertNotNull($prospect);
+
+        \Livewire\Livewire::test('admin-dashboard')
+            ->set('tab', 'prospects')
+            ->call('startQuickEditEmail', $prospect->id)
+            ->set('quickEditEmailValue', 'new_email_inline@pewdiepie.com')
+            ->call('saveQuickEditEmail', $prospect->id);
+
+        $prospect->refresh();
+        $this->assertEquals('new_email_inline@pewdiepie.com', $prospect->email);
+        $this->assertEquals('new_email_inline@pewdiepie.com', $prospect->effectiveEmail());
+    }
+
+    public function test_admin_can_preview_and_send_outreach_email_with_reply_to(): void
+    {
+        Mail::fake();
+
+        $this->seed(\Database\Seeders\CreatorProspectSeeder::class);
+        $prospect = CreatorProspect::where('prospect_number', 1)->first();
+        $this->assertNotNull($prospect);
+
+        $component = \Livewire\Livewire::test('admin-dashboard')
+            ->set('tab', 'prospects')
+            ->call('openOutreachComposer', $prospect->id)
+            ->assertSet('outreachProspectId', $prospect->id)
+            ->assertSet('outreachMode', 'compose')
+            ->set('outreachToEmail', 'partner@jacksepticeye.com')
+            ->set('outreachSubject', 'Custom Exclusive Milestone Time Capsule Pitch')
+            ->call('setOutreachMode', 'preview')
+            ->assertSet('outreachMode', 'preview')
+            ->call('sendOutreachEmail');
+
+        $component->assertSet('outreachSendSuccess', true);
+
+        // Assert mail was sent with correct recipient & Reply-To: oluwatobi@getfanvault.com
+        Mail::assertSent(CreatorOutreachMail::class, function (CreatorOutreachMail $mail) {
+            return $mail->hasTo('partner@jacksepticeye.com') &&
+                   $mail->subject === 'Custom Exclusive Milestone Time Capsule Pitch' &&
+                   $mail->hasReplyTo('oluwatobi@getfanvault.com', 'Oluwatobi Solomon');
+        });
+
+        $prospect->refresh();
+        $this->assertEquals('partner@jacksepticeye.com', $prospect->email);
+        $this->assertEquals('Contacted', $prospect->status);
+        $this->assertNotNull($prospect->last_contacted_at);
+        $this->assertStringContainsString('Outreach email sent to partner@jacksepticeye.com', $prospect->internal_notes);
+    }
+
+    public function test_admin_can_send_test_preview_outreach_email(): void
+    {
+        Mail::fake();
+
+        $this->seed(\Database\Seeders\CreatorProspectSeeder::class);
+        $prospect = CreatorProspect::where('prospect_number', 1)->first();
+        $this->assertNotNull($prospect);
+
+        \Livewire\Livewire::test('admin-dashboard')
+            ->set('tab', 'prospects')
+            ->call('openOutreachComposer', $prospect->id)
+            ->set('testOutreachRecipient', 'tester@getfanvault.com')
+            ->call('sendTestOutreach')
+            ->assertSet('outreachSendSuccess', true);
+
+        Mail::assertSent(CreatorOutreachMail::class, function (CreatorOutreachMail $mail) {
+            return $mail->hasTo('tester@getfanvault.com') &&
+                   str_starts_with($mail->subject, '[PREVIEW TEST]') &&
+                   $mail->hasReplyTo('oluwatobi@getfanvault.com', 'Oluwatobi Solomon');
+        });
     }
 }
 
