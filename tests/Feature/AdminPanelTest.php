@@ -107,6 +107,13 @@ class AdminPanelTest extends TestCase
         $response->assertSee('GROSS VOLUME (GMV)');
         $response->assertSee('PLATFORM NET (20%)');
         $response->assertSee('CREATOR SHARE (80%)');
+        $response->assertSee('CAPSULE CAPACITY');
+        $response->assertSee('System & Platform Analytics', false);
+        $response->assertSee('Average Order Value');
+        $response->assertSee('Payout Settlement Rate');
+        $response->assertSee('Pipeline Enrichment');
+        $response->assertSee('Founding Tier Fill');
+        $response->assertSee('Protocol Revenue Allocation');
         $response->assertSee('Alice Supporter');
         $response->assertSee('#' . Capsule::formatNumber(101));
     }

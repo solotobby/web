@@ -876,6 +876,15 @@ class extends Component
             ],
         ];
 
+        // System Analytics Calculations
+        $avgLetterCents = $totalLetters > 0 ? (int) round($totalGmvCents / $totalLetters) : 500;
+        $settledRatePercent = $totalCreatorCutCents > 0 ? round(($totalPaidPayoutsCents / $totalCreatorCutCents) * 100, 1) : 0;
+        $enrichmentRatePercent = $totalProspectsCount > 0 ? round(($hasEmailCount / $totalProspectsCount) * 100, 1) : 0;
+        $contactRatePercent = $totalProspectsCount > 0 ? round(($contactedCount / $totalProspectsCount) * 100, 1) : 0;
+        $foundingFillPercent = round(($foundingCount / 1000) * 100, 1);
+        $creatorTakeRatePercent = $totalGmvCents > 0 ? round(($totalCreatorCutCents / $totalGmvCents) * 100, 1) : 80.0;
+        $platformTakeRatePercent = $totalGmvCents > 0 ? round(($totalPlatformRevenueCents / $totalGmvCents) * 100, 1) : 20.0;
+
         return [
             'totalLetters' => $totalLetters,
             'totalGmvCents' => $totalGmvCents,
@@ -907,6 +916,13 @@ class extends Component
             'outreachProspect' => $outreachProspect,
             'systemInfo' => $systemInfo,
             'tableLedger' => $tableLedger,
+            'avgLetterCents' => $avgLetterCents,
+            'settledRatePercent' => $settledRatePercent,
+            'enrichmentRatePercent' => $enrichmentRatePercent,
+            'contactRatePercent' => $contactRatePercent,
+            'foundingFillPercent' => $foundingFillPercent,
+            'creatorTakeRatePercent' => $creatorTakeRatePercent,
+            'platformTakeRatePercent' => $platformTakeRatePercent,
         ];
     }
 };
@@ -1487,6 +1503,267 @@ class extends Component
             <!-- ========================================== -->
             @if($tab === 'overview')
                 <div class="space-y-7">
+                    <!-- ========================================== -->
+                    <!-- FINANCIAL REVENUE CARDS & CAPSULE CAPACITY (TOP) -->
+                    <!-- ========================================== -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <!-- GMV Card -->
+                        <div class="p-6 rounded-2xl bg-white border border-[#eaecf0] shadow-2xs space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-[#6b7280]">GROSS VOLUME (GMV)</span>
+                                <span class="text-[11px] font-bold text-[#10b981] bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">100%</span>
+                            </div>
+                            <div class="text-3xl font-extrabold text-[#111827] tracking-tight">
+                                ${{ number_format($totalGmvCents / 100, 2) }}
+                            </div>
+                            <div class="text-xs text-[#10b981] font-semibold pt-1 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
+                                100% Processed volume across letters
+                            </div>
+                        </div>
+
+                        <!-- Platform Net (20%) -->
+                        <div class="p-6 rounded-2xl bg-white border border-[#eaecf0] shadow-2xs space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-[#6b7280]">PLATFORM NET (20%)</span>
+                                <span class="text-[11px] font-bold text-[#2563eb] bg-[#eff6ff] px-2 py-0.5 rounded-full border border-[#bfdbfe]">Protocol Fee</span>
+                            </div>
+                            <div class="text-3xl font-extrabold text-[#2563eb] tracking-tight">
+                                ${{ number_format($totalPlatformRevenueCents / 100, 2) }}
+                            </div>
+                            <div class="text-xs text-[#4b5563] pt-1 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#2563eb]"></span>
+                                Direct retained protocol fee
+                            </div>
+                        </div>
+
+                        <!-- Creator Share (80%) -->
+                        <div class="p-6 rounded-2xl bg-white border border-[#eaecf0] shadow-2xs space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-[#6b7280]">CREATOR SHARE (80%)</span>
+                                <span class="text-[11px] font-bold text-[#059669] bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">Earnings</span>
+                            </div>
+                            <div class="text-3xl font-extrabold text-[#059669] tracking-tight">
+                                ${{ number_format($totalCreatorCutCents / 100, 2) }}
+                            </div>
+                            <div class="text-xs text-[#6b7280] pt-1 flex items-center justify-between">
+                                <span class="text-[#10b981] font-semibold">Settled: ${{ number_format($totalPaidPayoutsCents / 100, 2) }}</span>
+                                <span class="text-[#f59e0b] font-semibold">Pending: ${{ number_format($totalPendingPayoutsCents / 100, 2) }}</span>
+                            </div>
+                        </div>
+
+                        <!-- 10M Capsule Capacity -->
+                        <div class="p-6 rounded-2xl bg-white border border-[#eaecf0] shadow-2xs space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-[#6b7280]">CAPSULE CAPACITY</span>
+                                <span class="text-[11px] font-mono font-bold text-[#f59e0b] bg-[#fef3c7] px-2 py-0.5 rounded-full">
+                                    {{ $foundingCount }}/1,000
+                                </span>
+                            </div>
+                            <div class="text-3xl font-extrabold text-[#111827] tracking-tight font-mono">
+                                {{ Capsule::formatNumber($totalLetters) }}
+                            </div>
+                            <div class="w-full bg-[#f1f3f5] rounded-full h-2 mt-2 overflow-hidden">
+                                <div class="bg-[#2563eb] h-2 rounded-full transition-all duration-500" style="width: {{ max(1, min(100, ($totalLetters / 10000000) * 100)) }}%"></div>
+                            </div>
+                            <div class="text-xs text-[#6b7280] pt-1 flex items-center justify-between font-mono">
+                                <span>{{ Capsule::formatNumber(Capsule::TOTAL_CAP - $totalLetters) }} Left</span>
+                                <span class="font-bold text-[#f59e0b] font-sans">{{ $foundingCount }}/1,000 Founding</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- SYSTEM ANALYTICS & VELOCITY OVERVIEW -->
+                    <!-- ========================================== -->
+                    <div class="bg-white rounded-2xl border border-[#eaecf0] shadow-2xs p-6 space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#f1f3f5]">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg">📊</span>
+                                    <h3 class="text-base font-bold text-[#111827]">System & Platform Analytics</h3>
+                                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#eff6ff] text-[#2563eb]">Real-time Performance</span>
+                                </div>
+                                <p class="text-xs text-[#6b7280] mt-0.5">High-level conversion rates, revenue distributions, pipeline health, and capsule adoption metrics.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" wire:click="setTab('letters')" class="px-3 py-1.5 rounded-xl border border-[#eaecf0] bg-white hover:bg-[#f9fafb] text-xs font-semibold text-[#4b5563] transition-colors cursor-pointer shadow-2xs">
+                                    Capsule Letters ➔
+                                </button>
+                                <button type="button" wire:click="setTab('prospects')" class="px-3 py-1.5 rounded-xl border border-[#eaecf0] bg-[#2563eb] hover:bg-[#1d4ed8] text-xs font-semibold text-white transition-colors cursor-pointer shadow-xs">
+                                    Outreach CRM ➔
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 4 Mini Analytic Ratio Cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- Metric 1: Avg Order Value (AOV) -->
+                            <div class="p-4 rounded-xl bg-[#f8fafc] border border-[#eaecf0] space-y-2">
+                                <div class="flex items-center justify-between text-xs text-[#6b7280]">
+                                    <span class="font-semibold">Average Order Value</span>
+                                    <span class="text-[#2563eb] font-bold">AOV</span>
+                                </div>
+                                <div class="text-2xl font-black text-[#111827]">
+                                    ${{ number_format($avgLetterCents / 100, 2) }}
+                                </div>
+                                <div class="text-[11px] text-[#6b7280]">
+                                    Average per sealed capsule across {{ $totalLetters }} letters
+                                </div>
+                            </div>
+
+                            <!-- Metric 2: Creator Payout Settlement Rate -->
+                            <div class="p-4 rounded-xl bg-[#f8fafc] border border-[#eaecf0] space-y-2">
+                                <div class="flex items-center justify-between text-xs text-[#6b7280]">
+                                    <span class="font-semibold">Payout Settlement Rate</span>
+                                    <span class="text-[#10b981] font-bold">{{ $settledRatePercent }}%</span>
+                                </div>
+                                <div class="text-2xl font-black text-[#111827]">
+                                    ${{ number_format($totalPaidPayoutsCents / 100, 2) }}
+                                </div>
+                                <div class="w-full bg-[#e2e8f0] h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-[#10b981] h-1.5 rounded-full" style="width: {{ $settledRatePercent }}%"></div>
+                                </div>
+                                <div class="text-[11px] text-[#6b7280] flex justify-between">
+                                    <span>${{ number_format($totalPendingPayoutsCents / 100, 2) }} pending payout</span>
+                                </div>
+                            </div>
+
+                            <!-- Metric 3: Outreach Enrichment Rate -->
+                            <div class="p-4 rounded-xl bg-[#f8fafc] border border-[#eaecf0] space-y-2">
+                                <div class="flex items-center justify-between text-xs text-[#6b7280]">
+                                    <span class="font-semibold">Pipeline Enrichment</span>
+                                    <span class="text-[#2563eb] font-bold">{{ $enrichmentRatePercent }}%</span>
+                                </div>
+                                <div class="text-2xl font-black text-[#111827]">
+                                    {{ $hasEmailCount }} <span class="text-xs font-normal text-[#6b7280]">/ {{ $totalProspectsCount }}</span>
+                                </div>
+                                <div class="w-full bg-[#e2e8f0] h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-[#2563eb] h-1.5 rounded-full" style="width: {{ $enrichmentRatePercent }}%"></div>
+                                </div>
+                                <div class="text-[11px] text-[#6b7280]">
+                                    {{ $contactedCount }} prospects contacted
+                                </div>
+                            </div>
+
+                            <!-- Metric 4: Founding Tier Fill Rate -->
+                            <div class="p-4 rounded-xl bg-[#f8fafc] border border-[#eaecf0] space-y-2">
+                                <div class="flex items-center justify-between text-xs text-[#6b7280]">
+                                    <span class="font-semibold">Founding Tier Fill</span>
+                                    <span class="text-[#f59e0b] font-bold">{{ $foundingFillPercent }}%</span>
+                                </div>
+                                <div class="text-2xl font-black text-[#111827]">
+                                    {{ $foundingCount }} <span class="text-xs font-normal text-[#6b7280]">/ 1,000</span>
+                                </div>
+                                <div class="w-full bg-[#e2e8f0] h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-[#f59e0b] h-1.5 rounded-full" style="width: {{ min(100, $foundingFillPercent) }}%"></div>
+                                </div>
+                                <div class="text-[11px] text-[#6b7280]">
+                                    {{ 1000 - $foundingCount }} founding badges remaining
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2-Column Split: Revenue Split vs Category Breakdown -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+                            <!-- Left: Revenue Distribution & Flow -->
+                            <div class="p-5 rounded-xl border border-[#eaecf0] bg-white space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-bold text-xs uppercase tracking-wider text-[#6b7280]">Protocol Revenue Allocation</h4>
+                                    <span class="text-xs font-bold text-[#111827]">${{ number_format($totalGmvCents / 100, 2) }} Total GMV</span>
+                                </div>
+
+                                <!-- Dual-colored Proportional Bar -->
+                                <div class="w-full h-3 rounded-full bg-[#f1f3f5] overflow-hidden flex">
+                                    <div class="bg-[#059669] h-full" style="width: {{ $creatorTakeRatePercent }}%" title="Creator Share 80%"></div>
+                                    <div class="bg-[#2563eb] h-full" style="width: {{ $platformTakeRatePercent }}%" title="Platform Net 20%"></div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4 text-xs pt-1">
+                                    <div class="p-3 rounded-xl bg-[#ecfdf5] border border-[#a7f3d0]">
+                                        <div class="flex items-center gap-1.5 text-[#059669] font-bold">
+                                            <span class="w-2 h-2 rounded-full bg-[#059669]"></span>
+                                            <span>Creator Share (80%)</span>
+                                        </div>
+                                        <div class="text-lg font-black text-[#111827] mt-1">
+                                            ${{ number_format($totalCreatorCutCents / 100, 2) }}
+                                        </div>
+                                        <div class="text-[11px] text-[#4b5563] mt-0.5">
+                                            ${{ number_format($totalPaidPayoutsCents / 100, 2) }} paid · ${{ number_format($totalPendingPayoutsCents / 100, 2) }} pending
+                                        </div>
+                                    </div>
+
+                                    <div class="p-3 rounded-xl bg-[#eff6ff] border border-[#bfdbfe]">
+                                        <div class="flex items-center gap-1.5 text-[#2563eb] font-bold">
+                                            <span class="w-2 h-2 rounded-full bg-[#2563eb]"></span>
+                                            <span>Platform Net (20%)</span>
+                                        </div>
+                                        <div class="text-lg font-black text-[#111827] mt-1">
+                                            ${{ number_format($totalPlatformRevenueCents / 100, 2) }}
+                                        </div>
+                                        <div class="text-[11px] text-[#4b5563] mt-0.5">
+                                            Direct protocol treasury retained
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Category Distribution of Prospects & Creators -->
+                            <div class="p-5 rounded-xl border border-[#eaecf0] bg-white space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-bold text-xs uppercase tracking-wider text-[#6b7280]">Outreach Pipeline by Speciality</h4>
+                                    <span class="text-xs font-bold text-[#111827]">{{ $totalProspectsCount }} Targets</span>
+                                </div>
+
+                                <div class="space-y-2.5 text-xs">
+                                    <!-- Gaming -->
+                                    <div>
+                                        <div class="flex justify-between font-semibold text-[#111827] mb-1">
+                                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c084fc]"></span> Gaming</span>
+                                            <span>{{ $gamingCount }} ({{ round(($gamingCount / max(1, $totalProspectsCount)) * 100) }}%)</span>
+                                        </div>
+                                        <div class="w-full bg-[#f1f3f5] h-2 rounded-full overflow-hidden">
+                                            <div class="bg-[#c084fc] h-2 rounded-full" style="width: {{ ($gamingCount / max(1, $totalProspectsCount)) * 100 }}%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Technology -->
+                                    <div>
+                                        <div class="flex justify-between font-semibold text-[#111827] mb-1">
+                                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#2563eb]"></span> Technology</span>
+                                            <span>{{ $techCount }} ({{ round(($techCount / max(1, $totalProspectsCount)) * 100) }}%)</span>
+                                        </div>
+                                        <div class="w-full bg-[#f1f3f5] h-2 rounded-full overflow-hidden">
+                                            <div class="bg-[#2563eb] h-2 rounded-full" style="width: {{ ($techCount / max(1, $totalProspectsCount)) * 100 }}%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Lifestyle -->
+                                    <div>
+                                        <div class="flex justify-between font-semibold text-[#111827] mb-1">
+                                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#ec4899]"></span> Lifestyle</span>
+                                            <span>{{ $lifestyleCount }} ({{ round(($lifestyleCount / max(1, $totalProspectsCount)) * 100) }}%)</span>
+                                        </div>
+                                        <div class="w-full bg-[#f1f3f5] h-2 rounded-full overflow-hidden">
+                                            <div class="bg-[#ec4899] h-2 rounded-full" style="width: {{ ($lifestyleCount / max(1, $totalProspectsCount)) * 100 }}%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Travel -->
+                                    <div>
+                                        <div class="flex justify-between font-semibold text-[#111827] mb-1">
+                                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#10b981]"></span> Travel & Culture</span>
+                                            <span>{{ $travelCount }} ({{ round(($travelCount / max(1, $totalProspectsCount)) * 100) }}%)</span>
+                                        </div>
+                                        <div class="w-full bg-[#f1f3f5] h-2 rounded-full overflow-hidden">
+                                            <div class="bg-[#10b981] h-2 rounded-full" style="width: {{ ($travelCount / max(1, $totalProspectsCount)) * 100 }}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- SECTION 1: MY PROJECTS (DSTUDIO MAIN TABLE CARD) -->
                     <div class="bg-white rounded-2xl border border-[#eaecf0] shadow-2xs overflow-hidden">
                         <!-- Card Header Row -->
@@ -1856,57 +2133,6 @@ class extends Component
                         </div>
                     </div>
 
-                    <!-- SECTION 3: FINANCIAL REVENUE CARDS & CAPSULE CAPACITY -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                        <!-- GMV Card -->
-                        <div class="p-6 rounded-2xl bg-white border border-[#eaecf0] shadow-2xs space-y-1">
-                            <div class="text-xs font-semibold text-[#6b7280]">GROSS VOLUME (GMV)</div>
-                            <div class="text-3xl font-extrabold text-[#111827] tracking-tight">
-                                ${{ number_format($totalGmvCents / 100, 2) }}
-                            </div>
-                            <div class="text-xs text-[#10b981] font-semibold pt-1">
-                                100% Processed volume across letters
-                            </div>
-                        </div>
-
-                        <!-- Platform Net (20%) -->
-                        <div class="p-6 rounded-2xl bg-white border border-[#eaecf0] shadow-2xs space-y-1">
-                            <div class="text-xs font-semibold text-[#6b7280]">PLATFORM NET (20%)</div>
-                            <div class="text-3xl font-extrabold text-[#2563eb] tracking-tight">
-                                ${{ number_format($totalPlatformRevenueCents / 100, 2) }}
-                            </div>
-                            <div class="text-xs text-[#4b5563] pt-1">
-                                Direct retained protocol fee
-                            </div>
-                        </div>
-
-                        <!-- Creator Share (80%) -->
-                        <div class="p-6 rounded-2xl bg-white border border-[#eaecf0] shadow-2xs space-y-1">
-                            <div class="text-xs font-semibold text-[#6b7280]">CREATOR SHARE (80%)</div>
-                            <div class="text-3xl font-extrabold text-[#059669] tracking-tight">
-                                ${{ number_format($totalCreatorCutCents / 100, 2) }}
-                            </div>
-                            <div class="text-xs text-[#6b7280] pt-1 flex items-center justify-between">
-                                <span class="text-[#10b981]">Settled: ${{ number_format($totalPaidPayoutsCents / 100, 2) }}</span>
-                                <span class="text-[#f59e0b]">Pending: ${{ number_format($totalPendingPayoutsCents / 100, 2) }}</span>
-                            </div>
-                        </div>
-
-                        <!-- 10M Capsule Capacity -->
-                        <div class="p-6 rounded-2xl bg-white border border-[#eaecf0] shadow-2xs space-y-1">
-                            <div class="text-xs font-semibold text-[#6b7280]">CAPSULE CAPACITY</div>
-                            <div class="text-3xl font-extrabold text-[#111827] tracking-tight">
-                                {{ Capsule::formatNumber($totalLetters) }}
-                            </div>
-                            <div class="w-full bg-[#f1f3f5] rounded-full h-2 mt-2 overflow-hidden">
-                                <div class="bg-[#2563eb] h-2 rounded-full" style="width: {{ max(1, min(100, ($totalLetters / 10000000) * 100)) }}%"></div>
-                            </div>
-                            <div class="text-xs text-[#6b7280] pt-1 flex items-center justify-between">
-                                <span>{{ Capsule::formatNumber(Capsule::TOTAL_CAP - $totalLetters) }} Left</span>
-                                <span class="font-bold text-[#f59e0b]">{{ $foundingCount }}/1,000 Founding</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             @endif
 
