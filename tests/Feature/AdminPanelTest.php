@@ -295,5 +295,33 @@ class AdminPanelTest extends TestCase
                    $mail->hasReplyTo('oluwatobi@getfanvault.com', 'Oluwatobi Solomon');
         });
     }
+
+    public function test_admin_can_access_milestones_documents_tab_with_null_target_letter_count(): void
+    {
+        $creator = Creator::create([
+            'id' => (string) Str::uuid(),
+            'name' => 'Milestone Streamer',
+            'handle' => '@mstreamer',
+            'slug' => 'mstreamer',
+            'email' => 'mstreamer@example.com',
+        ]);
+
+        \App\Models\Milestone::create([
+            'id' => (string) Str::uuid(),
+            'creator_id' => $creator->id,
+            'title' => '1M Subscribers Reveal Stream',
+            'description' => 'Unboxing fan letters live on stream.',
+            'target_letter_count' => null,
+            'unlock_date' => now()->addMonths(6),
+        ]);
+
+        $response = $this->withSession(['admin_authenticated' => true])
+            ->get('/admin?tab=milestones');
+
+        $response->assertStatus(200);
+        $response->assertSee('Community Milestone Vaults');
+        $response->assertSee('1M Subscribers Reveal Stream');
+        $response->assertSee('Goal: Open Goal');
+    }
 }
 

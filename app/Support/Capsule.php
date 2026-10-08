@@ -81,9 +81,9 @@ class Capsule
         return mb_substr($clean, 0, self::MAX_TEASER - 1).'…';
     }
 
-    public static function formatNumber(int $n): string
+    public static function formatNumber(?int $n): string
     {
-        return str_pad((string) max(0, $n), 8, '0', STR_PAD_LEFT);
+        return str_pad((string) max(0, (int) $n), 8, '0', STR_PAD_LEFT);
     }
 
     public static function formatDay(string $iso): string

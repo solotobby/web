@@ -1908,14 +1908,12 @@ class extends Component
                                 <thead class="bg-[#fcfcfd] text-[#6b7280] uppercase text-[11px] font-semibold border-b border-[#eaecf0]">
                                     <tr>
                                         <th class="p-3.5 w-14 text-center">#</th>
-                                        <th class="p-3.5 min-w-[170px]">Creator</th>
-                                        <th class="p-3.5 w-28">Speciality</th>
-                                        <th class="p-3.5 w-16 text-center">Priority</th>
-                                        <th class="p-3.5 min-w-[190px]">Email & Contact</th>
-                                        <th class="p-3.5 min-w-[260px]">Outreach Angle</th>
-                                        <th class="p-3.5 min-w-[220px]">Email Subject</th>
+                                        <th class="p-3.5 min-w-[200px]">Creator</th>
+                                        <th class="p-3.5 w-32">Speciality</th>
+                                        <th class="p-3.5 w-20 text-center">Priority</th>
+                                        <th class="p-3.5 min-w-[220px]">Email & Contact</th>
                                         <th class="p-3.5 w-36">Status</th>
-                                        <th class="p-3.5 w-28 text-right">Action</th>
+                                        <th class="p-3.5 w-36 text-right">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-[#f1f3f5]">
@@ -2033,30 +2031,7 @@ class extends Component
                                                 @endif
                                             </td>
 
-                                            <!-- Angle -->
-                                            <td class="p-3.5 text-[#374151] max-w-xs">
-                                                <div class="line-clamp-2 text-xs leading-relaxed" title="{{ $p->primary_outreach_angle }}">
-                                                    {{ $p->primary_outreach_angle }}
-                                                </div>
-                                            </td>
-
-                                            <!-- Email Subject -->
-                                            <td class="p-3.5 max-w-xs">
-                                                <div class="flex items-center justify-between gap-1 bg-[#f8fafc] p-1.5 rounded-lg border border-[#eaecf0]">
-                                                    <span class="text-[#4b5563] text-[11px] truncate select-all" title="{{ $p->email_subject }}">
-                                                        {{ $p->email_subject }}
-                                                    </span>
-                                                    <button 
-                                                        type="button" 
-                                                        onclick="navigator.clipboard.writeText('{{ addslashes($p->email_subject) }}'); alert('Copied subject!');" 
-                                                        class="text-[#9ca3af] hover:text-[#2563eb] shrink-0 text-xs px-1"
-                                                    >
-                                                        📋
-                                                    </button>
-                                                </div>
-                                            </td>
-
-                                            <!-- Status -->
+                                             <!-- Status -->
                                             <td class="p-3.5">
                                                 <select 
                                                     wire:change="updateProspectStatus('{{ $p->id }}', $event.target.value)" 
@@ -2079,7 +2054,7 @@ class extends Component
                                                         type="button" 
                                                         wire:click="openOutreachComposer('{{ $p->id }}')" 
                                                         class="px-2.5 py-1.5 rounded-lg bg-[#eff6ff] hover:bg-[#dbeafe] text-[#2563eb] font-bold transition-colors cursor-pointer text-xs flex items-center gap-1"
-                                                        title="Compose & Send"
+                                                        title="Compose & Send to {{ $p->creator }}"
                                                     >
                                                         <span>✉️</span>
                                                         <span class="hidden xl:inline">Email</span>
@@ -2088,6 +2063,9 @@ class extends Component
                                                         type="button" 
                                                         wire:click="inspectProspect('{{ $p->id }}')" 
                                                         class="px-2.5 py-1.5 rounded-lg bg-[#f4f5f6] hover:bg-[#e5e7eb] text-[#374151] font-bold transition-colors cursor-pointer text-xs"
+                                                        title="Inspect {{ $p->creator }} pitch & angle: {{ $p->email_subject }}"
+                                                        data-subject="{{ $p->email_subject }}"
+                                                        data-angle="{{ $p->primary_outreach_angle }}"
                                                     >
                                                         Inspect
                                                     </button>
@@ -2096,7 +2074,7 @@ class extends Component
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="9" class="p-12 text-center text-[#9ca3af]">
+                                            <td colspan="7" class="p-12 text-center text-[#9ca3af]">
                                                 <div class="text-base font-semibold mb-1">🔍 No creator prospects found.</div>
                                                 <p class="text-xs">Try clearing filters or adjusting your query.</p>
                                             </td>
@@ -2448,13 +2426,13 @@ class extends Component
                                         {{ $m->creator?->name ?? 'Community' }}
                                     </span>
                                     <span class="text-xs text-[#9ca3af] font-mono">
-                                        Goal: {{ Capsule::formatNumber($m->target_letter_count) }}
+                                        Goal: {{ $m->target_letter_count ? Capsule::formatNumber($m->target_letter_count) : 'Open Goal' }}
                                     </span>
                                 </div>
                                 <h3 class="font-bold text-[#111827] text-base">{{ $m->title }}</h3>
                                 <p class="text-xs text-[#6b7280] line-clamp-2 leading-relaxed">{{ $m->description }}</p>
                                 <div class="pt-2 border-t border-[#f1f3f5] flex items-center justify-between text-xs text-[#4b5563]">
-                                    <span>Reveal: {{ $m->unlocks_at?->format('M d, Y') ?? 'On Stream' }}</span>
+                                    <span>Reveal: {{ $m->unlock_date ? $m->unlock_date->format('M d, Y') : 'On Stream' }}</span>
                                     <span class="font-bold text-[#059669]">Active Vault</span>
                                 </div>
                             </div>
@@ -2813,39 +2791,61 @@ class extends Component
                     </button>
                 </div>
 
-                <!-- Breakdown Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-                    <div class="p-3.5 rounded-xl bg-[#f8fafc] border border-[#eaecf0]">
-                        <span class="text-[#6b7280] block text-[10px] uppercase font-bold">Primary Outreach Angle</span>
-                        <p class="text-[#111827] mt-1 leading-relaxed">
+                <!-- Breakdown Cards (Featuring Outreach Angle & Email Subject with Instant Copy) -->
+                <div class="space-y-3.5 text-xs">
+                    <!-- Email Subject Line Box -->
+                    <div class="p-4 rounded-xl bg-[#eff6ff] border border-[#bfdbfe]">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="text-[#1d4ed8] text-[11px] uppercase font-bold flex items-center gap-1.5">
+                                <span>✉️ Email Subject Line</span>
+                            </span>
+                            <button 
+                                type="button" 
+                                onclick="navigator.clipboard.writeText('{{ addslashes($inspectedProspect->email_subject) }}'); alert('Subject copied to clipboard!');" 
+                                class="text-xs px-2.5 py-1 rounded-lg bg-white border border-[#bfdbfe] text-[#1d4ed8] font-bold hover:bg-[#eff6ff] transition-colors flex items-center gap-1 shadow-2xs cursor-pointer"
+                            >
+                                <span>📋</span>
+                                <span>Copy Subject</span>
+                            </button>
+                        </div>
+                        <div class="text-sm font-bold text-[#111827] select-all mt-1">
+                            {{ $inspectedProspect->email_subject }}
+                        </div>
+                    </div>
+
+                    <!-- Primary Outreach Angle Box -->
+                    <div class="p-4 rounded-xl bg-[#f8fafc] border border-[#eaecf0]">
+                        <div class="flex items-center justify-between gap-2 mb-1.5">
+                            <span class="text-[#4b5563] text-[11px] uppercase font-bold flex items-center gap-1.5">
+                                <span>🎯 Primary Outreach Angle</span>
+                            </span>
+                            <button 
+                                type="button" 
+                                onclick="navigator.clipboard.writeText('{{ addslashes($inspectedProspect->primary_outreach_angle) }}'); alert('Outreach angle copied to clipboard!');" 
+                                class="text-xs px-2.5 py-1 rounded-lg bg-white border border-[#eaecf0] text-[#374151] font-semibold hover:bg-[#f9fafb] transition-colors flex items-center gap-1 shadow-2xs cursor-pointer"
+                            >
+                                <span>📋</span>
+                                <span>Copy Angle</span>
+                            </button>
+                        </div>
+                        <p class="text-xs text-[#111827] leading-relaxed font-medium">
                             {{ $inspectedProspect->primary_outreach_angle }}
                         </p>
                     </div>
 
-                    <div class="p-3.5 rounded-xl bg-[#f8fafc] border border-[#eaecf0]">
-                        <span class="text-[#6b7280] block text-[10px] uppercase font-bold">Personalisation Note</span>
-                        <p class="text-[#4b5563] mt-1 leading-relaxed">
-                            {{ $inspectedProspect->personalisation_note ?: 'No extra personalisation notes.' }}
-                        </p>
-                    </div>
+                    <!-- 2-Column: Personalisation Note & Contact Route -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3.5 rounded-xl bg-[#f8fafc] border border-[#eaecf0]">
+                            <span class="text-[#6b7280] block text-[10px] uppercase font-bold">Personalisation Note</span>
+                            <p class="text-[#4b5563] mt-1 leading-relaxed">
+                                {{ $inspectedProspect->personalisation_note ?: 'No extra personalisation notes.' }}
+                            </p>
+                        </div>
 
-                    <div class="p-3.5 rounded-xl bg-[#f8fafc] border border-[#eaecf0]">
-                        <span class="text-[#6b7280] block text-[10px] uppercase font-bold">Contact Route & Type</span>
-                        <div class="text-[#111827] font-bold mt-1">{{ $inspectedProspect->contact_type ?: 'YouTube Business Enquiry' }}</div>
-                        <div class="text-[11px] text-[#6b7280] mt-0.5">{{ $inspectedProspect->email_status }}</div>
-                    </div>
-
-                    <div class="p-3.5 rounded-xl bg-[#f8fafc] border border-[#eaecf0]">
-                        <span class="text-[#6b7280] block text-[10px] uppercase font-bold">Email Subject Line</span>
-                        <div class="flex items-center justify-between gap-1 mt-1">
-                            <span class="text-[#059669] font-bold truncate select-all">{{ $inspectedProspect->email_subject }}</span>
-                            <button 
-                                type="button" 
-                                onclick="navigator.clipboard.writeText('{{ addslashes($inspectedProspect->email_subject) }}'); alert('Subject copied!');" 
-                                class="text-xs px-2 py-0.5 rounded bg-white border border-[#eaecf0] text-[#374151] hover:bg-[#f9fafb]"
-                            >
-                                Copy
-                            </button>
+                        <div class="p-3.5 rounded-xl bg-[#f8fafc] border border-[#eaecf0]">
+                            <span class="text-[#6b7280] block text-[10px] uppercase font-bold">Contact Route & Type</span>
+                            <div class="text-[#111827] font-bold mt-1">{{ $inspectedProspect->contact_type ?: 'YouTube Business Enquiry' }}</div>
+                            <div class="text-[11px] text-[#6b7280] mt-0.5">{{ $inspectedProspect->email_status }}</div>
                         </div>
                     </div>
                 </div>
