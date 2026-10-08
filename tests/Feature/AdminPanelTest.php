@@ -323,5 +323,37 @@ class AdminPanelTest extends TestCase
         $response->assertSee('1M Subscribers Reveal Stream');
         $response->assertSee('Goal: Open Goal');
     }
+
+    public function test_admin_can_access_system_tab_and_view_telemetry(): void
+    {
+        $response = $this->withSession(['admin_authenticated' => true])
+            ->get('/admin?tab=system');
+
+        $response->assertStatus(200);
+        $response->assertSee('System Diagnostics', false);
+        $response->assertSee('System Health & Infrastructure', false);
+        $response->assertSee('Stack Engine', false);
+        $response->assertSee('Memory Allocation', false);
+        $response->assertSee('Disk Capacity', false);
+        $response->assertSee('Server & Host Architecture', false);
+        $response->assertSee('Security & Protocol Policies', false);
+        $response->assertSee('Database Health & Table Ledger Breakdown', false);
+        $response->assertSee('Mail Service Architecture', false);
+        $response->assertSee('Maintenance & Operational Utilities', false);
+    }
+
+    public function test_admin_can_trigger_system_maintenance_actions(): void
+    {
+        \Livewire\Livewire::test('admin-dashboard')
+            ->set('tab', 'system')
+            ->call('pingDatabase')
+            ->assertSet('systemOpSuccess', true)
+            ->assertSee('Database connection active & healthy')
+            ->call('pruneExpiredTokens')
+            ->assertSet('systemOpSuccess', true)
+            ->assertSee('Pruned')
+            ->call('clearSystemCache')
+            ->assertSet('systemOpSuccess', true);
+    }
 }
 
