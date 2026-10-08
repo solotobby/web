@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminAuthMiddleware::class,
         ]);
 
+        $middleware->web(append: [
+            \App\Http\Middleware\TrackVisitorMiddleware::class,
+        ]);
+
         $middleware->validateCsrfTokens(except: [
             'stripe/webhook',
         ]);

@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             CreatorSeeder::class,
             PostcardSeeder::class,
             CreatorProspectSeeder::class,
+            VisitorLogSeeder::class,
         ]);
     }
 }

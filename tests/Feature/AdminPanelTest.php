@@ -8,6 +8,7 @@ use App\Models\CreatorProspect;
 use App\Models\Milestone;
 use App\Models\Postcard;
 use App\Models\Referral;
+use App\Models\VisitorLog;
 use App\Support\Capsule;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -361,6 +362,57 @@ class AdminPanelTest extends TestCase
             ->assertSee('Pruned')
             ->call('clearSystemCache')
             ->assertSet('systemOpSuccess', true);
+    }
+
+    public function test_admin_overview_renders_traffic_analytics_world_map_and_ip_stream(): void
+    {
+        VisitorLog::seedRealisticData(30);
+
+        $response = $this->withSession(['admin_authenticated' => true])
+            ->get('/admin?tab=overview');
+
+        $response->assertStatus(200);
+        $response->assertSee('Traffic & Audience Analytics', false);
+        $response->assertSee('TOTAL VISITS');
+        $response->assertSee('UNIQUE IP ADDRESSES');
+        $response->assertSee('ACTIVE CONCURRENT');
+        $response->assertSee('AVG. SESSION TIME');
+        $response->assertSee('Global Audience Density Map');
+        $response->assertSee('Top Locations');
+        $response->assertSee('Device Breakdown');
+        $response->assertSee('Operating Systems');
+        $response->assertSee('Web Browsers');
+        $response->assertSee('Live Visitor IP & Telemetry Stream', false);
+
+        // Assert elements removed as requested by user
+        $response->assertDontSee('+ New Project');
+        $response->assertDontSee('+ Add Task');
+        $response->assertDontSee('Help & Support');
+        $response->assertDontSee('My Projects');
+        $response->assertDontSee('Kickoff Meeting'); // From Schedule widget
+        $response->assertDontSee('Verify Stripe Payout Thresholds'); // From Notes widget
+    }
+
+    public function test_admin_notification_bell_dropdown_is_active(): void
+    {
+        $response = $this->withSession(['admin_authenticated' => true])
+            ->get('/admin');
+
+        $response->assertStatus(200);
+        $response->assertSee('Notifications');
+        $response->assertSee('Mark all as read');
+        $response->assertSee('New Fan Capsule Sealed');
+    }
+
+    public function test_visitor_tracking_middleware_logs_public_page_views(): void
+    {
+        $initialCount = VisitorLog::count();
+
+        $this->get('/');
+
+        $this->assertGreaterThan($initialCount, VisitorLog::count());
+        $latest = VisitorLog::latest()->first();
+        $this->assertEquals('/', $latest->path);
     }
 }
 
