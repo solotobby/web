@@ -28,60 +28,6 @@
         Hi {{ explode(' ', $prospect->creator)[0] }} — we put together a private FanVault time capsule concept specifically for <strong>{{ $prospect->creator }}</strong>.
     </p>
 
-    <!-- Capsule Summary Card (Paystack Clean Light Box) -->
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 24px;">
-        <tr>
-            <td style="padding: 16px 20px; border-bottom: 1px solid #f3f4f6;">
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                        <td align="left" valign="middle">
-                            <span style="font-size: 11px; font-weight: 700; color: #059669; text-transform: uppercase; letter-spacing: 0.5px;">
-                                🔒 Capsule No. #{{ sprintf('%03d', $prospect->prospect_number) }}
-                            </span>
-                            <div style="font-size: 15px; font-weight: 700; color: #111827; margin-top: 2px;">
-                                {{ $prospect->creator }} Community Vault
-                            </div>
-                        </td>
-                        <td align="right" valign="middle">
-                            <span style="display: inline-block; padding: 3px 8px; background-color: #ecfdf5; border-radius: 4px; font-size: 10px; font-weight: 600; color: #059669; text-transform: uppercase;">
-                                ● Ready to Activate
-                            </span>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td style="padding: 18px 20px;">
-                <!-- 3-Step Flow in Paystack Clean Layout -->
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                        <td width="30%" align="center" valign="top" style="padding: 4px;">
-                            <div style="font-size: 20px; margin-bottom: 4px;">✍️</div>
-                            <div style="font-size: 12px; font-weight: 700; color: #111827;">1. Fans Seal Today</div>
-                            <div style="font-size: 11px; color: #6b7280; line-height: 1.4; margin-top: 2px;">Predictions, photos & notes</div>
-                        </td>
-                        <td width="5%" align="center" valign="middle" style="color: #9ca3af; font-size: 14px;">
-                            ➔
-                        </td>
-                        <td width="30%" align="center" valign="top" style="padding: 4px;">
-                            <div style="font-size: 20px; margin-bottom: 4px;">🔐</div>
-                            <div style="font-size: 12px; font-weight: 700; color: #111827;">2. Stays Secret</div>
-                            <div style="font-size: 11px; color: #6b7280; line-height: 1.4; margin-top: 2px;">Zero spoilers until unlock date</div>
-                        </td>
-                        <td width="5%" align="center" valign="middle" style="color: #9ca3af; font-size: 14px;">
-                            ➔
-                        </td>
-                        <td width="30%" align="center" valign="top" style="padding: 4px;">
-                            <div style="font-size: 20px; margin-bottom: 4px;">🎬</div>
-                            <div style="font-size: 12px; font-weight: 700; color: #111827;">3. Reveal On Stream</div>
-                            <div style="font-size: 11px; color: #6b7280; line-height: 1.4; margin-top: 2px;">Unboxed live for reactions</div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
 
     <!-- Personalized Message Body -->
     <div style="font-size: 15px; line-height: 1.65; color: #374151; margin-bottom: 24px;">

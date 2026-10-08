@@ -2770,41 +2770,6 @@ class extends Component
                                         </p>
                                     </div>
 
-                                    <!-- Paystack-style Capsule Summary Box -->
-                                    <div class="rounded-lg bg-[#f9fafb] border border-[#e5e7eb] overflow-hidden">
-                                        <div class="px-4 py-3 border-b border-[#f3f4f6] flex items-center justify-between">
-                                            <div>
-                                                <span class="text-[11px] font-bold text-[#059669] tracking-wider uppercase block">
-                                                    🔒 Capsule No. #{{ sprintf('%03d', $outreachProspect->prospect_number) }}
-                                                </span>
-                                                <div class="text-xs font-bold text-[#111827] mt-0.5">
-                                                    {{ $outreachProspect->creator }} Community Vault
-                                                </div>
-                                            </div>
-                                            <span class="px-2 py-0.5 rounded bg-[#ecfdf5] text-[10px] font-semibold text-[#059669] uppercase">
-                                                ● Ready to Activate
-                                            </span>
-                                        </div>
-
-                                        <!-- 3-Step Flow in Clean Layout -->
-                                        <div class="p-4 grid grid-cols-3 gap-2 text-center text-[11px]">
-                                            <div class="p-2">
-                                                <div class="text-xl mb-1">✍️</div>
-                                                <div class="font-bold text-[#111827]">1. Fans Seal Today</div>
-                                                <div class="text-[#6b7280] text-[10px] mt-0.5 leading-tight">Predictions & notes</div>
-                                            </div>
-                                            <div class="p-2 border-l border-r border-[#f3f4f6]">
-                                                <div class="text-xl mb-1">🔐</div>
-                                                <div class="font-bold text-[#111827]">2. Stays Secret</div>
-                                                <div class="text-[#6b7280] text-[10px] mt-0.5 leading-tight">Zero spoilers until unlock</div>
-                                            </div>
-                                            <div class="p-2">
-                                                <div class="text-xl mb-1">🎬</div>
-                                                <div class="font-bold text-[#111827]">3. Reveal On Stream</div>
-                                                <div class="text-[#6b7280] text-[10px] mt-0.5 leading-tight">Unboxed live on stream</div>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     <!-- Personalized Message Body -->
                                     <div class="text-xs sm:text-sm text-[#374151] leading-relaxed whitespace-pre-wrap font-sans">
