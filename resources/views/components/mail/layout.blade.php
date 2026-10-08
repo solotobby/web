@@ -10,46 +10,47 @@
         table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; }
         td { vertical-align: top; }
         img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
-        body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #fbfaf6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #0f172a; line-height: 1.5; }
+        body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #f4f5f7 !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #111827; line-height: 1.6; }
         @media only screen and (max-width: 620px) {
-            .mobile-shell { padding: 12px 6px 28px 6px !important; }
+            .mobile-shell { padding: 16px 10px 32px 10px !important; }
             .wrapper { width: 100% !important; max-width: 100% !important; }
-            .card { padding: 22px 16px !important; border-radius: 16px !important; }
-            .badge-table { width: 100% !important; }
+            .card { padding: 24px 20px !important; border-radius: 8px !important; }
+            .column-step { width: 100% !important; display: block !important; margin-bottom: 12px !important; }
+            .step-divider { display: none !important; }
         }
     </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #fbfaf6; -webkit-font-smoothing: antialiased;">
+<body style="margin: 0; padding: 0; background-color: #f4f5f7; -webkit-font-smoothing: antialiased;">
     @isset($preheader)
-    <!-- Bulletproof Hidden Preheader (Zero Layout Shift) -->
+    <!-- Bulletproof Hidden Preheader -->
     <div style="display: none !important; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0; max-height: 0; max-width: 0; overflow: hidden; mso-hide: all; font-size: 0px; line-height: 0px;">
         {{ $preheader }}
         &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy;
     </div>
     @endisset
 
-    <!-- Outer Wrapper (Firm Top Anchor, No vh Jump) -->
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fbfaf6; width: 100%; margin: 0; padding: 0; border-collapse: collapse;">
+    <!-- Outer Canvas Table (Paystack Style Soft Gray Background) -->
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f5f7; width: 100%; margin: 0; padding: 0; border-collapse: collapse;">
         <tr>
-            <td align="center" valign="top" class="mobile-shell" style="padding: 28px 12px 40px 12px; vertical-align: top;">
-                <!-- Main Container -->
+            <td align="center" valign="top" class="mobile-shell" style="padding: 36px 12px 48px 12px; vertical-align: top;">
+                <!-- Main Container (580px Standard) -->
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 580px; margin: 0 auto;" class="wrapper">
-                    <!-- Brand Masthead Header -->
+                    <!-- Clean Minimalist Header (Paystack Brand Mark) -->
                     <tr>
-                        <td align="center" valign="top" style="padding-bottom: 22px;">
+                        <td align="left" valign="top" style="padding-bottom: 20px; padding-left: 4px;">
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td align="center" valign="middle" style="padding-right: 12px;">
-                                        <div style="width: 38px; height: 38px; background-color: #064e3b; border-radius: 10px; text-align: center; line-height: 38px; color: #ffffff; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 15px; font-weight: 700; letter-spacing: -0.5px;">
+                                    <td align="left" valign="middle" style="padding-right: 12px;">
+                                        <div style="width: 34px; height: 34px; background-color: #059669; border-radius: 8px; text-align: center; line-height: 34px; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.5px;">
                                             FV
                                         </div>
                                     </td>
                                     <td align="left" valign="middle">
-                                        <div style="font-family: Georgia, Cambria, 'Times New Roman', Times, serif; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.5px; line-height: 1.1;">
+                                        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 700; color: #111827; letter-spacing: -0.3px; line-height: 1.2;">
                                             FanVault
                                         </div>
-                                        <div style="font-size: 11px; color: #64748b; font-weight: 500; margin-top: 2px;">
-                                            Creator Milestone Capsules & Fan Mail
+                                        <div style="font-size: 11px; color: #6b7280; font-weight: 500; margin-top: 1px;">
+                                            The Creator Time Capsule
                                         </div>
                                     </td>
                                 </tr>
@@ -57,12 +58,12 @@
                         </td>
                     </tr>
 
-                    <!-- Email Content Card -->
+                    <!-- Email Main Card (Paystack White Box with Crisp 8px Corners & Border) -->
                     <tr>
                         <td align="left" valign="top">
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="card" style="background-color: #ffffff; border: 1px solid #e7e5df; border-radius: 20px; padding: 36px 32px; box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);">
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="card" style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 36px 32px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
                                 <tr>
-                                    <td align="left" valign="top">
+                                    <td align="left" valign="top" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #374151;">
                                         {{ $slot }}
                                     </td>
                                 </tr>
@@ -70,26 +71,23 @@
                         </td>
                     </tr>
 
-                    <!-- Footer -->
+                    <!-- Minimalist Footer (Paystack Style Clean Lines) -->
                     <tr>
                         <td align="center" valign="top" style="padding-top: 24px; padding-bottom: 16px;">
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
-                                    <td align="center" valign="top" style="padding-bottom: 10px;">
-                                        <span style="display: inline-block; padding: 4px 12px; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 9999px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 600; color: #064e3b;">
-                                            ● Encrypted Time Capsule Protocol v2.4
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center" valign="top" style="font-size: 12px; color: #64748b; line-height: 1.6;">
-                                        FanVault · Permanent Community Keepsakes for Creators<br>
-                                        <a href="https://getfanvault.com" style="color: #047857; text-decoration: none; font-weight: 600;">getfanvault.com</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center" valign="top" style="padding-top: 10px; font-size: 11px; color: #94a3b8; font-family: ui-monospace, SFMono-Regular, monospace;">
-                                        Zero Physical Clutter · Direct Stripe Payouts · Stream Reveals
+                                    <td align="center" valign="top" style="font-size: 12px; color: #9ca3af; line-height: 1.6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                        <div style="font-weight: 600; color: #6b7280; margin-bottom: 4px;">
+                                            FanVault · Permanent Community Keepsakes for Creators
+                                        </div>
+                                        <div>
+                                            <a href="https://getfanvault.com" style="color: #059669; text-decoration: none; font-weight: 600;">getfanvault.com</a>
+                                            &nbsp;·&nbsp;
+                                            <a href="mailto:support@getfanvault.com" style="color: #6b7280; text-decoration: none;">support@getfanvault.com</a>
+                                        </div>
+                                        <div style="margin-top: 8px; font-size: 11px; color: #9ca3af;">
+                                            Zero Physical Clutter · Direct Stripe Payouts · Milestone Stream Reveals
+                                        </div>
                                     </td>
                                 </tr>
                             </table>

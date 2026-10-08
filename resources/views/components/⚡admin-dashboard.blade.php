@@ -2709,21 +2709,21 @@ class extends Component
                                 ></textarea>
                             </div>
                         </div>
-                        <!-- LIVE PREVIEW MODE -->
-                        <div class="max-w-2xl mx-auto rounded-2xl bg-[#090d16] text-[#f8fafc] border border-[#1e293b] p-6 sm:p-8 shadow-2xl space-y-6 font-sans">
+                        <!-- LIVE PREVIEW MODE (Paystack Email Template Design) -->
+                        <div class="max-w-2xl mx-auto rounded-xl bg-[#0b0f19] text-[#f8fafc] border border-[#1e293b] p-4 sm:p-6 shadow-2xl space-y-4 font-sans">
                             <!-- Simulated Email Envelope Header -->
-                            <div class="border-b border-[#1e293b] pb-4 space-y-2">
+                            <div class="border-b border-[#1e293b] pb-3 space-y-2">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 rounded-lg bg-[#10b981] flex items-center justify-center text-[#090d16] font-extrabold font-mono text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                                        <div class="w-7 h-7 rounded-lg bg-[#059669] flex items-center justify-center text-white font-bold text-xs shadow-sm">
                                             FV
                                         </div>
                                         <div>
-                                            <div class="font-bold text-sm text-white font-serif">FanVault</div>
-                                            <div class="text-[10px] text-[#64748b] font-mono">The Creator Time Capsule</div>
+                                            <div class="font-bold text-xs text-white">FanVault Mailer</div>
+                                            <div class="text-[10px] text-[#64748b]">Paystack-style Clean Template</div>
                                         </div>
                                     </div>
-                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#38bdf8]/15 text-[#38bdf8] font-bold border border-[#38bdf8]/30">
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#059669]/15 text-[#34d399] font-bold border border-[#059669]/30">
                                         ● LIVE EMAIL PREVIEW
                                     </span>
                                 </div>
@@ -2735,104 +2735,134 @@ class extends Component
                                 </div>
                             </div>
 
-                            <!-- Inner Email Canvas (Simulated Client View) -->
-                            <div class="bg-white rounded-2xl p-6 sm:p-7 text-[#0f172a] shadow-md space-y-5">
-                                <!-- Top Badge Row -->
-                                <div class="flex items-center justify-between flex-wrap gap-2">
-                                    <span class="px-2.5 py-1 rounded-full bg-[#ecfdf5] border border-[#a7f3d0] font-mono text-[10px] font-bold text-[#064e3b] uppercase tracking-wider">
-                                        ⚡ Exclusive Creator Concept
-                                    </span>
-                                    <span class="px-2 py-0.5 rounded-full bg-[#f1f5f9] border border-[#e2e8f0] font-mono text-[10px] font-semibold text-[#475569] uppercase">
-                                        {{ $outreachProspect->speciality }} · Priority {{ $outreachProspect->recommended_priority }}
-                                    </span>
+                            <!-- Paystack Soft Gray Email Canvas -->
+                            <div class="bg-[#f4f5f7] rounded-xl p-4 sm:p-6 text-[#111827]">
+                                <!-- Paystack Header -->
+                                <div class="flex items-center gap-2.5 pb-4 pl-1">
+                                    <div class="w-8 h-8 rounded-lg bg-[#059669] text-white font-bold text-sm flex items-center justify-center shadow-sm">
+                                        FV
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-sm text-[#111827]">FanVault</div>
+                                        <div class="text-[10px] text-[#6b7280]">The Creator Time Capsule</div>
+                                    </div>
                                 </div>
 
-                                <!-- Hero Headline -->
-                                <div>
-                                    <h2 class="text-xl sm:text-2xl font-serif font-bold text-[#0f172a] leading-tight">
-                                        Turn Your Next Milestone Into A Live Community Reveal Stream.
-                                    </h2>
-                                    <p class="text-xs sm:text-sm text-[#475569] mt-1.5 leading-relaxed">
-                                        Hi {{ explode(' ', $outreachProspect->creator)[0] }} — we designed an exclusive FanVault time capsule concept specifically for <strong>{{ $outreachProspect->creator }}</strong>.
-                                    </p>
-                                </div>
-
-                                <!-- THE TIME CAPSULE ARTIFACT BOX (Cool Cyber/Vault Card) -->
-                                <div class="rounded-xl bg-[#090d16] border border-[#1e293b] overflow-hidden text-white shadow-lg">
-                                    <div class="px-4 py-3 bg-[#0c121e] border-b border-[#1e293b] flex items-center justify-between">
-                                        <div>
-                                            <span class="text-[10px] font-mono font-bold text-[#34d399] tracking-wider block">
-                                                🔒 CAPSULE NO. #{{ sprintf('%03d', $outreachProspect->prospect_number) }}
-                                            </span>
-                                            <div class="text-xs font-bold text-white mt-0.5">
-                                                {{ $outreachProspect->creator }} Community Vault
-                                            </div>
-                                        </div>
-                                        <span class="px-2 py-0.5 rounded-full bg-[#10b981]/20 border border-[#10b981]/40 text-[9px] font-mono font-bold text-[#34d399] uppercase">
-                                            ● Ready To Activate
+                                <!-- Paystack White Card (Crisp 8px Radius & Border) -->
+                                <div class="bg-white rounded-lg p-6 sm:p-8 border border-[#e5e7eb] shadow-sm space-y-5">
+                                    <!-- Top Badge Row -->
+                                    <div class="flex items-center justify-between flex-wrap gap-2">
+                                        <span class="px-2.5 py-1 rounded bg-[#ecfdf5] text-[11px] font-bold text-[#059669] uppercase tracking-wider">
+                                            Creator Concept
+                                        </span>
+                                        <span class="text-xs text-[#6b7280] font-medium">
+                                            {{ $outreachProspect->speciality }}
                                         </span>
                                     </div>
 
-                                    <!-- 3-Step Interactive Visual Flow -->
-                                    <div class="p-4 grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
-                                        <div class="p-2 rounded-lg bg-[#111827]">
-                                            <div class="text-lg mb-1">✍️</div>
-                                            <div class="font-bold text-[#34d399]">1. Fans Seal Today</div>
-                                            <div class="text-[#94a3b8] text-[9px] mt-0.5">Predictions, photos & notes</div>
+                                    <!-- Headline -->
+                                    <div>
+                                        <h2 class="text-xl sm:text-2xl font-bold text-[#111827] leading-snug tracking-tight">
+                                            Turn Your Next Milestone Into A Live Community Reveal Stream
+                                        </h2>
+                                        <p class="text-xs sm:text-sm text-[#4b5563] mt-2 leading-relaxed">
+                                            Hi {{ explode(' ', $outreachProspect->creator)[0] }} — we put together a private FanVault time capsule concept specifically for <strong>{{ $outreachProspect->creator }}</strong>.
+                                        </p>
+                                    </div>
+
+                                    <!-- Paystack-style Capsule Summary Box -->
+                                    <div class="rounded-lg bg-[#f9fafb] border border-[#e5e7eb] overflow-hidden">
+                                        <div class="px-4 py-3 border-b border-[#f3f4f6] flex items-center justify-between">
+                                            <div>
+                                                <span class="text-[11px] font-bold text-[#059669] tracking-wider uppercase block">
+                                                    🔒 Capsule No. #{{ sprintf('%03d', $outreachProspect->prospect_number) }}
+                                                </span>
+                                                <div class="text-xs font-bold text-[#111827] mt-0.5">
+                                                    {{ $outreachProspect->creator }} Community Vault
+                                                </div>
+                                            </div>
+                                            <span class="px-2 py-0.5 rounded bg-[#ecfdf5] text-[10px] font-semibold text-[#059669] uppercase">
+                                                ● Ready to Activate
+                                            </span>
                                         </div>
-                                        <div class="p-2 rounded-lg bg-[#111827]">
-                                            <div class="text-lg mb-1">🔐</div>
-                                            <div class="font-bold text-[#38bdf8]">2. Stays Secret</div>
-                                            <div class="text-[#94a3b8] text-[9px] mt-0.5">Zero spoilers until unlock</div>
-                                        </div>
-                                        <div class="p-2 rounded-lg bg-[#111827]">
-                                            <div class="text-lg mb-1">🎬</div>
-                                            <div class="font-bold text-[#fbbf24]">3. Reveal On Stream</div>
-                                            <div class="text-[#94a3b8] text-[9px] mt-0.5">Unboxed live on stream</div>
+
+                                        <!-- 3-Step Flow in Clean Layout -->
+                                        <div class="p-4 grid grid-cols-3 gap-2 text-center text-[11px]">
+                                            <div class="p-2">
+                                                <div class="text-xl mb-1">✍️</div>
+                                                <div class="font-bold text-[#111827]">1. Fans Seal Today</div>
+                                                <div class="text-[#6b7280] text-[10px] mt-0.5 leading-tight">Predictions & notes</div>
+                                            </div>
+                                            <div class="p-2 border-l border-r border-[#f3f4f6]">
+                                                <div class="text-xl mb-1">🔐</div>
+                                                <div class="font-bold text-[#111827]">2. Stays Secret</div>
+                                                <div class="text-[#6b7280] text-[10px] mt-0.5 leading-tight">Zero spoilers until unlock</div>
+                                            </div>
+                                            <div class="p-2">
+                                                <div class="text-xl mb-1">🎬</div>
+                                                <div class="font-bold text-[#111827]">3. Reveal On Stream</div>
+                                                <div class="text-[#6b7280] text-[10px] mt-0.5 leading-tight">Unboxed live on stream</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Personalized Message Body -->
-                                <div class="text-xs sm:text-sm text-[#334155] leading-relaxed whitespace-pre-wrap font-sans">
+                                    <!-- Personalized Message Body -->
+                                    <div class="text-xs sm:text-sm text-[#374151] leading-relaxed whitespace-pre-wrap font-sans">
 {!! nl2br(e($outreachBody)) !!}
-                                </div>
-
-                                <!-- 3 Key Reasons Why Creators Love FanVault -->
-                                <div class="p-3.5 rounded-xl bg-[#f8fafc] border border-[#e2e8f0] text-xs space-y-1.5">
-                                    <div class="font-mono text-[10px] uppercase font-bold text-[#64748b]">
-                                        Why This Beats Another Generic Tweet / Merch Drop:
                                     </div>
-                                    <div class="space-y-1 text-[#334155] text-[11px] leading-relaxed">
-                                        <div>🎥 <strong class="text-[#0f172a]">1-2 Hours of Organic Stream Content:</strong> Live reactions reading fan letters and unboxing predictions.</div>
-                                        <div>💎 <strong class="text-[#0f172a]">Permanent Community Keepsake:</strong> Every letter is sealed and preserved as a lasting creator milestone.</div>
-                                        <div>⚡ <strong class="text-[#0f172a]">100% Free & Zero Tech Work:</strong> We handle the custom setup and hosting for you at zero cost.</div>
-                                    </div>
-                                </div>
 
-                                <!-- Action Button -->
-                                <div class="text-center pt-2">
-                                    <a 
-                                        href="https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}" 
-                                        target="_blank" 
-                                        class="inline-block px-6 py-3 rounded-xl bg-[#064e3b] text-white font-bold text-xs sm:text-sm shadow-md hover:bg-[#047857] transition-colors"
-                                    >
-                                        🚀 View {{ $outreachProspect->creator }}'s Time Capsule Concept ➔
-                                    </a>
-                                </div>
-
-                                <!-- Footer Signature -->
-                                <div class="pt-4 border-t border-gray-100 flex items-start gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-[#064e3b] text-[#34d399] font-mono font-bold text-xs flex items-center justify-center shrink-0">
-                                        OS
-                                    </div>
-                                    <div class="text-[11px] text-[#475569] leading-snug">
-                                        <div class="font-bold text-[#0f172a]">Oluwatobi Solomon</div>
-                                        <div class="text-[#64748b]">Founder, FanVault · The Creator Time Capsule</div>
-                                        <div class="mt-0.5"><a href="mailto:oluwatobi@getfanvault.com" class="text-[#047857] font-semibold underline">oluwatobi@getfanvault.com</a> · <a href="https://getfanvault.com" class="text-[#64748b] underline">getfanvault.com</a></div>
-                                        <div class="mt-2 p-2 rounded-lg bg-[#ecfdf5] border border-[#a7f3d0] text-[#064e3b] text-[10px]">
-                                            💡 <strong>Quick Note:</strong> Just hit <strong>Reply</strong> to this email! It goes straight to my personal inbox at <strong>oluwatobi@getfanvault.com</strong>.
+                                    <!-- Why Creators Love FanVault (Paystack Callout Style) -->
+                                    <div class="p-4 rounded-lg bg-[#f9fafb] border border-[#e5e7eb] text-xs space-y-2">
+                                        <div class="text-[11px] uppercase font-bold text-[#6b7280] tracking-wider">
+                                            Why This Beats Another Generic Tweet / Merch Drop:
                                         </div>
+                                        <div class="space-y-1.5 text-[#4b5563] text-[11px] leading-relaxed">
+                                            <div>🎥 <strong class="text-[#111827]">1–2 Hours of Stream Content:</strong> Live reactions reading fan letters and unboxing predictions on stream.</div>
+                                            <div>💎 <strong class="text-[#111827]">A Permanent Community Keepsake:</strong> Every letter is sealed and preserved as a lasting piece of your journey.</div>
+                                            <div>⚡ <strong class="text-[#111827]">100% Free & Zero Tech Work:</strong> We handle the custom setup, hosting, and design for you at zero cost.</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Paystack Primary Action Button -->
+                                    <div class="text-center pt-2">
+                                        <a 
+                                            href="https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}" 
+                                            target="_blank" 
+                                            class="inline-block px-7 py-3 rounded-md bg-[#059669] hover:bg-[#047857] text-white font-semibold text-xs sm:text-sm shadow-sm transition-colors text-center"
+                                        >
+                                            View {{ $outreachProspect->creator }}'s Time Capsule Concept ➔
+                                        </a>
+                                        <div class="mt-2 text-[11px] text-[#6b7280]">
+                                            Direct draft link: <a href="https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}" class="text-[#059669] underline">getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}</a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Paystack Signature & Reply Note -->
+                                    <div class="pt-4 border-t border-[#f3f4f6] text-xs text-[#4b5563] space-y-1">
+                                        <div>Warm regards,</div>
+                                        <div class="font-bold text-[#111827] text-sm">Oluwatobi Solomon</div>
+                                        <div class="text-[#6b7280] text-xs">Founder, FanVault</div>
+                                        <div class="pt-0.5">
+                                            <a href="mailto:oluwatobi@getfanvault.com" class="text-[#059669] font-medium underline">oluwatobi@getfanvault.com</a>
+                                            &nbsp;·&nbsp;
+                                            <a href="https://getfanvault.com" class="text-[#6b7280] underline">getfanvault.com</a>
+                                        </div>
+                                        <div class="mt-3 p-3 rounded-md bg-[#f0fdf4] border border-[#bbf7d0] text-[#166534] text-[11px] leading-relaxed">
+                                            💡 <strong>Quick Note:</strong> Just hit <strong>Reply</strong> to this email! It goes straight to my personal inbox at <strong>oluwatobi@getfanvault.com</strong> — happy to answer any questions or set up a test capsule for {{ $outreachProspect->creator }} in 5 minutes.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Paystack Minimalist Footer -->
+                                <div class="text-center pt-5 pb-2 text-[11px] text-[#9ca3af] space-y-1">
+                                    <div class="font-medium text-[#6b7280]">FanVault · Permanent Community Keepsakes for Creators</div>
+                                    <div>
+                                        <a href="https://getfanvault.com" class="text-[#059669] font-medium">getfanvault.com</a>
+                                        &nbsp;·&nbsp;
+                                        <a href="mailto:support@getfanvault.com" class="text-[#6b7280]">support@getfanvault.com</a>
+                                    </div>
+                                    <div class="text-[10px] text-[#9ca3af]">
+                                        Zero Physical Clutter · Direct Stripe Payouts · Milestone Stream Reveals
                                     </div>
                                 </div>
                             </div>

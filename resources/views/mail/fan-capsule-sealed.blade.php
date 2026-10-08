@@ -3,94 +3,79 @@
         Your fan letter No. {{ \App\Support\Capsule::formatNumber($postcard->number) }} is officially sealed in the vault!
     </x-slot:preheader>
 
-    <!-- Top Badge -->
-    <div style="margin-bottom: 16px;">
-        <span style="display: inline-block; padding: 4px 10px; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 9999px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 700; color: #064e3b; text-transform: uppercase; letter-spacing: 0.5px;">
-            📬 Sealed Fan Keepsake Pass
-        </span>
+    <!-- Paystack Centered Success Header -->
+    <div style="text-align: center; margin-bottom: 24px;">
+        <div style="width: 44px; height: 44px; background-color: #ecfdf5; border-radius: 50%; text-align: center; line-height: 44px; margin: 0 auto 12px auto; font-size: 20px; color: #059669;">
+            ✓
+        </div>
+        <h1 style="margin: 0 0 6px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 22px; line-height: 1.3; color: #111827; font-weight: 700;">
+            Your Letter is Officially Sealed!
+        </h1>
+        <p style="margin: 0; font-size: 14px; color: #4b5563; line-height: 1.5;">
+            Hi {{ $postcard->name }}, your words are permanently archived in the digital vault.
+        </p>
     </div>
 
-    <!-- Heading -->
-    <h1 style="margin: 0 0 10px 0; font-family: Georgia, Cambria, 'Times New Roman', serif; font-size: 26px; line-height: 1.25; color: #0f172a; font-weight: 700;">
-        Your Letter is Officially Sealed!
-    </h1>
-
-    <p style="margin: 0 0 24px 0; font-size: 15px; color: #475569; line-height: 1.6;">
-        Hi {{ $postcard->name }}, your words have been permanently archived in the digital time capsule. When the milestone is unlocked, the creator will open and read community letters live on stream.
-    </p>
-
-    <!-- Certificate / Capsule Box -->
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border: 2px dashed #a7f3d0; border-radius: 16px; margin-bottom: 28px;">
+    <!-- Paystack-style Receipt Box -->
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 24px;">
         <tr>
-            <td style="padding: 22px;">
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <td style="padding: 20px;">
+                <!-- Amount Banner -->
+                <div style="text-align: center; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                    <div style="font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+                        Amount Paid
+                    </div>
+                    <div style="font-size: 26px; font-weight: 800; color: #111827; margin-top: 4px;">
+                        ${{ number_format($amountCents / 100, 2) }} USD
+                    </div>
+                </div>
+
+                <!-- Structured Key-Value Details Table -->
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 12px;">
                     <tr>
-                        <td align="left" style="padding-bottom: 14px;">
-                            <span style="font-size: 11px; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; font-weight: 600;">
-                                Official Capsule Number
-                            </span>
-                            <div style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 22px; font-weight: 800; color: #064e3b; margin-top: 2px;">
-                                No. {{ \App\Support\Capsule::formatNumber($postcard->number) }}
-                            </div>
-                        </td>
-                        <td align="right" valign="top" style="padding-bottom: 14px;">
-                            <span style="display: inline-block; padding: 3px 8px; background-color: {{ $postcard->founding ? '#fefce8' : '#ecfdf5' }}; border: 1px solid {{ $postcard->founding ? '#fde047' : '#a7f3d0' }}; border-radius: 9999px; font-size: 11px; font-weight: 700; color: {{ $postcard->founding ? '#854d0e' : '#064e3b' }};">
-                                {{ $postcard->founding ? '🏛️ Founding Pass' : '🌿 Archival Seal' }}
-                            </span>
+                        <td align="left" style="padding: 8px 0; font-size: 13px; color: #6b7280;">Capsule Number</td>
+                        <td align="right" style="padding: 8px 0; font-size: 13px; font-weight: 700; color: #111827; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">
+                            No. {{ \App\Support\Capsule::formatNumber($postcard->number) }}
                         </td>
                     </tr>
-
+                    <tr>
+                        <td align="left" style="padding: 8px 0; font-size: 13px; color: #6b7280; border-top: 1px solid #f3f4f6;">Keepsake Tier</td>
+                        <td align="right" style="padding: 8px 0; font-size: 13px; font-weight: 600; color: #059669; border-top: 1px solid #f3f4f6;">
+                            {{ $postcard->founding ? '🏛️ Founding Pass' : '🌿 Archival Seal' }}
+                        </td>
+                    </tr>
                     @if($postcard->creator)
                     <tr>
-                        <td colspan="2" style="padding-top: 12px; border-top: 1px solid #e2e8f0;">
-                            <div style="font-size: 11px; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; font-weight: 600;">
-                                Creator Vault & Milestone
-                            </div>
-                            <div style="font-size: 15px; font-weight: 700; color: #0f172a; margin-top: 2px;">
-                                {{ $postcard->creator->name }} <span style="font-size: 13px; font-weight: 400; color: #64748b;">({{ $postcard->creator->handle }})</span>
-                            </div>
-                            <div style="font-size: 13px; color: #047857; font-weight: 600; margin-top: 2px;">
-                                🎯 {{ $postcard->milestone?->title ?? ($postcard->creator->milestone_title ?: 'Community Milestone Stream') }}
-                            </div>
-                            <div style="font-size: 12px; color: #64748b; margin-top: 2px;">
-                                Scheduled Reveal: <strong style="color: #0f172a;">{{ $postcard->milestone?->formattedUnlockDate() ?? $postcard->creator->formattedUnlockDate() }}</strong>
-                            </div>
+                        <td align="left" style="padding: 8px 0; font-size: 13px; color: #6b7280; border-top: 1px solid #f3f4f6;">Creator</td>
+                        <td align="right" style="padding: 8px 0; font-size: 13px; font-weight: 600; color: #111827; border-top: 1px solid #f3f4f6;">
+                            {{ $postcard->creator->name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="padding: 8px 0; font-size: 13px; color: #6b7280; border-top: 1px solid #f3f4f6;">Milestone</td>
+                        <td align="right" style="padding: 8px 0; font-size: 13px; font-weight: 600; color: #059669; border-top: 1px solid #f3f4f6;">
+                            {{ $postcard->milestone?->title ?? ($postcard->creator->milestone_title ?: 'Community Milestone Stream') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="padding: 8px 0; font-size: 13px; color: #6b7280; border-top: 1px solid #f3f4f6;">Scheduled Reveal</td>
+                        <td align="right" style="padding: 8px 0; font-size: 13px; font-weight: 600; color: #111827; border-top: 1px solid #f3f4f6;">
+                            {{ $postcard->milestone?->formattedUnlockDate() ?? $postcard->creator->formattedUnlockDate() }}
                         </td>
                     </tr>
                     @endif
-
                     @if(!empty($postcard->teaser))
                     <tr>
-                        <td colspan="2" style="padding-top: 12px; border-top: 1px solid #e2e8f0;">
-                            <div style="font-size: 11px; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; font-weight: 600;">
-                                Your Public Teaser
-                            </div>
-                            <div style="font-family: Georgia, serif; font-style: italic; font-size: 14px; color: #334155; margin-top: 4px; line-height: 1.5;">
-                                “{{ $postcard->teaser }}”
-                            </div>
+                        <td align="left" style="padding: 8px 0; font-size: 13px; color: #6b7280; border-top: 1px solid #f3f4f6;">Public Teaser</td>
+                        <td align="right" style="padding: 8px 0; font-size: 13px; font-style: italic; color: #374151; border-top: 1px solid #f3f4f6;">
+                            “{{ $postcard->teaser }}”
                         </td>
                     </tr>
                     @endif
-
                     <tr>
-                        <td colspan="2" style="padding-top: 12px; border-top: 1px solid #e2e8f0;">
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-                                <tr>
-                                    <td align="left">
-                                        <span style="font-size: 11px; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; font-weight: 600;">
-                                            Contribution Receipt
-                                        </span>
-                                        <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 2px;">
-                                            ${{ number_format($amountCents / 100, 2) }} USD
-                                        </div>
-                                    </td>
-                                    <td align="right" valign="bottom">
-                                        <span style="display: inline-block; font-size: 11px; color: #047857; font-weight: 600;">
-                                            ✓ Paid & Confirmed
-                                        </span>
-                                    </td>
-                                </tr>
-                            </table>
+                        <td align="left" style="padding: 8px 0; font-size: 13px; color: #6b7280; border-top: 1px solid #f3f4f6;">Status</td>
+                        <td align="right" style="padding: 8px 0; font-size: 13px; font-weight: 600; color: #059669; border-top: 1px solid #f3f4f6;">
+                            ✓ Paid & Sealed
                         </td>
                     </tr>
                 </table>
@@ -98,22 +83,22 @@
         </tr>
     </table>
 
-    <!-- Call to Action Button -->
+    <!-- Paystack Call to Action Button -->
     @php
         $passUrl = route('message', $postcard) . ($claimToken ? '?claim='.$claimToken : '');
     @endphp
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
         <tr>
             <td align="center">
-                <a href="{{ $passUrl }}" target="_blank" style="display: inline-block; background-color: #064e3b; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 700; padding: 14px 28px; border-radius: 12px; letter-spacing: -0.2px; text-align: center; box-shadow: 0 4px 12px rgba(6, 78, 59, 0.2);">
+                <a href="{{ $passUrl }}" target="_blank" style="display: inline-block; background-color: #059669; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 600; padding: 13px 28px; border-radius: 6px; text-align: center;">
                     View Your Sealed Fan Pass ➔
                 </a>
             </td>
         </tr>
     </table>
 
-    <!-- Security & Access Notice -->
-    <div style="background-color: #f1f5f9; border-radius: 12px; padding: 16px; font-size: 12px; color: #475569; line-height: 1.6;">
-        <strong style="color: #0f172a;">🔐 Private Access Note:</strong> This email contains your personal key to read your full letter and photo. Keep this email safe. Your letter is locked and cannot be tampered with until the milestone unlock date.
+    <!-- Access Notice (Paystack Subtle Card) -->
+    <div style="padding: 12px 16px; background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; font-size: 12px; color: #166534; line-height: 1.5;">
+        🔐 <strong>Private Access Note:</strong> This email contains your personal key to read your full letter and photo. Keep this email safe. Your letter is locked and cannot be tampered with until the milestone unlock date.
     </div>
 </x-mail.layout>
