@@ -89,32 +89,32 @@ class CreatorProspect extends Model
     public function specialityBadgeClass(): string
     {
         return match (strtolower((string) $this->speciality)) {
-            'gaming' => 'bg-purple-950/60 text-purple-300 border-purple-800/60',
-            'technology' => 'bg-blue-950/60 text-blue-300 border-blue-800/60',
-            'lifestyle' => 'bg-emerald-950/60 text-emerald-300 border-emerald-800/60',
-            'travel' => 'bg-amber-950/60 text-amber-300 border-amber-800/60',
-            default => 'bg-slate-900 text-slate-300 border-slate-700',
+            'gaming' => 'bg-purple-50 text-purple-700 border-purple-200',
+            'technology' => 'bg-blue-50 text-blue-700 border-blue-200',
+            'lifestyle' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+            'travel' => 'bg-amber-50 text-amber-800 border-amber-200',
+            default => 'bg-slate-100 text-slate-700 border-slate-200',
         };
     }
 
     public function priorityBadgeClass(): string
     {
         return match (strtoupper((string) $this->recommended_priority)) {
-            'A' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-            'B' => 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-            default => 'bg-slate-800 text-slate-400 border-slate-700',
+            'A' => 'bg-emerald-50 text-emerald-700 border-emerald-200 font-semibold',
+            'B' => 'bg-blue-50 text-blue-700 border-blue-200 font-semibold',
+            default => 'bg-slate-100 text-slate-600 border-slate-200 font-semibold',
         };
     }
 
     public function statusBadgeClass(): string
     {
         return match ($this->status) {
-            'Contacted' => 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-            'Replied' => 'bg-sky-500/10 text-sky-400 border-sky-500/30',
-            'In Discussion' => 'bg-purple-500/10 text-purple-400 border-purple-500/30',
-            'Onboarded' => 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
-            'Declined', 'Passed' => 'bg-rose-500/10 text-rose-400 border-rose-500/30',
-            default => 'bg-slate-800/80 text-slate-400 border-slate-700/80',
+            'Contacted' => 'bg-blue-50 text-blue-700 border-blue-200',
+            'Replied' => 'bg-sky-50 text-sky-700 border-sky-200',
+            'In Discussion' => 'bg-purple-50 text-purple-700 border-purple-200',
+            'Onboarded' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+            'Declined', 'Passed' => 'bg-rose-50 text-rose-700 border-rose-200',
+            default => 'bg-slate-100 text-slate-600 border-slate-200',
         };
     }
 
