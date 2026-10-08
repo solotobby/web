@@ -2042,172 +2042,37 @@ class extends Component
                                     </span>
                                 </div>
 
-                                <!-- Vector World Map with Pulsing Hotspot Coordinates -->
-                                <div class="relative w-full aspect-[2/1] bg-[#f8fafc] rounded-xl border border-[#f1f3f5] overflow-hidden p-2 flex items-center justify-center">
-                                    <!-- SVG Map of Continents -->
-                                    <svg viewBox="0 0 1000 500" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <!-- Subtle background grid -->
-                                        <defs>
-                                            <pattern id="world-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                                                <circle cx="2" cy="2" r="0.75" fill="#cbd5e1" opacity="0.6"/>
-                                            </pattern>
-                                        </defs>
-                                        <rect width="1000" height="500" fill="url(#world-grid)" />
-
-                                        <!-- Continents Simplified Vectors -->
-                                        <!-- North America -->
-                                        <path d="M70,80 L120,60 L240,60 L310,110 L280,180 L230,220 L190,260 L180,310 L150,320 L160,260 L110,210 L80,150 L60,110 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- Greenland -->
-                                        <path d="M300,40 L380,45 L350,105 L290,85 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- South America -->
-                                        <path d="M220,300 L280,310 L330,350 L340,410 L300,470 L260,490 L240,430 L220,360 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- Europe -->
-                                        <path d="M440,80 L520,70 L550,120 L530,170 L480,180 L440,160 L420,130 L450,110 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- UK & Ireland -->
-                                        <path d="M440,115 L460,110 L455,140 L435,135 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- Africa -->
-                                        <path d="M440,200 L550,190 L570,250 L560,330 L520,400 L470,420 L440,340 L420,260 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- Madagascar -->
-                                        <path d="M580,350 L595,350 L590,390 L575,385 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- Asia -->
-                                        <path d="M540,80 L760,70 L830,120 L870,200 L810,270 L730,280 L670,260 L620,220 L560,180 L540,120 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- India -->
-                                        <path d="M650,220 L700,230 L680,300 L650,260 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- Japan -->
-                                        <path d="M850,160 L870,180 L860,220 L840,200 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- Australia -->
-                                        <path d="M780,350 L890,350 L900,420 L840,450 L770,410 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                        <!-- New Zealand -->
-                                        <path d="M910,430 L930,440 L915,470 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" />
-                                    </svg>
-
-                                    <!-- Interactive Pulsing Location Beacons -->
-                                    <!-- 1. United States (West) -->
-                                    <div class="absolute group cursor-pointer" style="left: 17%; top: 38%;">
-                                        <div class="relative flex items-center justify-center">
-                                            <span class="animate-ping absolute h-6 w-6 rounded-full bg-blue-500/40"></span>
-                                            <span class="relative block h-3 w-3 rounded-full bg-[#2563eb] ring-2 ring-white shadow-xs"></span>
-                                        </div>
-                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                                            <div class="bg-[#111827] text-white text-[10px] font-bold py-1 px-2 rounded-md shadow-lg whitespace-nowrap">
-                                                🇺🇸 US (West Coast) • Active
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 2. United States (East) -->
-                                    <div class="absolute group cursor-pointer" style="left: 27%; top: 34%;">
-                                        <div class="relative flex items-center justify-center">
-                                            <span class="animate-ping absolute h-7 w-7 rounded-full bg-blue-500/50"></span>
-                                            <span class="relative block h-3.5 w-3.5 rounded-full bg-[#1d4ed8] ring-2 ring-white shadow-xs"></span>
-                                        </div>
-                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                                            <div class="bg-[#111827] text-white text-[10px] font-bold py-1 px-2 rounded-md shadow-lg whitespace-nowrap">
-                                                🇺🇸 US (New York / East) • {{ $topCountries->firstWhere('code', 'US')['pct'] ?? 40 }}% Share
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 3. Canada -->
-                                    <div class="absolute group cursor-pointer" style="left: 24%; top: 22%;">
-                                        <div class="relative flex items-center justify-center">
-                                            <span class="animate-ping absolute h-5 w-5 rounded-full bg-blue-400/40"></span>
-                                            <span class="relative block h-2.5 w-2.5 rounded-full bg-[#3b82f6] ring-2 ring-white shadow-xs"></span>
-                                        </div>
-                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                                            <div class="bg-[#111827] text-white text-[10px] font-bold py-1 px-2 rounded-md shadow-lg whitespace-nowrap">
-                                                🇨🇦 Canada • Toronto Hub
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 4. United Kingdom -->
-                                    <div class="absolute group cursor-pointer" style="left: 45%; top: 25%;">
-                                        <div class="relative flex items-center justify-center">
-                                            <span class="animate-ping absolute h-6 w-6 rounded-full bg-indigo-500/50"></span>
-                                            <span class="relative block h-3 w-3 rounded-full bg-[#4f46e5] ring-2 ring-white shadow-xs"></span>
-                                        </div>
-                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                                            <div class="bg-[#111827] text-white text-[10px] font-bold py-1 px-2 rounded-md shadow-lg whitespace-nowrap">
-                                                🇬🇧 United Kingdom • London
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 5. Germany & Western Europe -->
-                                    <div class="absolute group cursor-pointer" style="left: 50%; top: 25%;">
-                                        <div class="relative flex items-center justify-center">
-                                            <span class="animate-ping absolute h-5 w-5 rounded-full bg-purple-500/40"></span>
-                                            <span class="relative block h-2.5 w-2.5 rounded-full bg-[#7c3aed] ring-2 ring-white shadow-xs"></span>
-                                        </div>
-                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                                            <div class="bg-[#111827] text-white text-[10px] font-bold py-1 px-2 rounded-md shadow-lg whitespace-nowrap">
-                                                🇩🇪 Germany • Berlin & Frankfurt
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 6. Nigeria / West Africa -->
-                                    <div class="absolute group cursor-pointer" style="left: 48%; top: 54%;">
-                                        <div class="relative flex items-center justify-center">
-                                            <span class="animate-ping absolute h-6 w-6 rounded-full bg-emerald-500/50"></span>
-                                            <span class="relative block h-3 w-3 rounded-full bg-[#10b981] ring-2 ring-white shadow-xs"></span>
-                                        </div>
-                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                                            <div class="bg-[#111827] text-white text-[10px] font-bold py-1 px-2 rounded-md shadow-lg whitespace-nowrap">
-                                                🇳🇬 Nigeria • Lagos Stream Hub
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 7. Japan -->
-                                    <div class="absolute group cursor-pointer" style="left: 85%; top: 38%;">
-                                        <div class="relative flex items-center justify-center">
-                                            <span class="animate-ping absolute h-5 w-5 rounded-full bg-pink-500/40"></span>
-                                            <span class="relative block h-2.5 w-2.5 rounded-full bg-[#ec4899] ring-2 ring-white shadow-xs"></span>
-                                        </div>
-                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                                            <div class="bg-[#111827] text-white text-[10px] font-bold py-1 px-2 rounded-md shadow-lg whitespace-nowrap">
-                                                🇯🇵 Japan • Tokyo
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- 8. Australia -->
-                                    <div class="absolute group cursor-pointer" style="left: 84%; top: 78%;">
-                                        <div class="relative flex items-center justify-center">
-                                            <span class="animate-ping absolute h-5 w-5 rounded-full bg-amber-500/40"></span>
-                                            <span class="relative block h-2.5 w-2.5 rounded-full bg-[#f59e0b] ring-2 ring-white shadow-xs"></span>
-                                        </div>
-                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                                            <div class="bg-[#111827] text-white text-[10px] font-bold py-1 px-2 rounded-md shadow-lg whitespace-nowrap">
-                                                🇦🇺 Australia • Sydney
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <!-- Proper Geographically Accurate Vector World Map -->
+                                <x-world-map :top-countries="$topCountries" />
 
                                 <!-- Regional Footprint Breakdown Bar -->
+                                @php
+                                    $naPct = ($topCountries->firstWhere('code', 'US')['pct'] ?? 42) + ($topCountries->firstWhere('code', 'CA')['pct'] ?? 12);
+                                    $euPct = ($topCountries->firstWhere('code', 'GB')['pct'] ?? 18) + ($topCountries->firstWhere('code', 'DE')['pct'] ?? 9);
+                                    $afPct = ($topCountries->firstWhere('code', 'NG')['pct'] ?? 8) + ($topCountries->firstWhere('code', 'ZA')['pct'] ?? 3);
+                                    $apPct = 100 - ($naPct + $euPct + $afPct);
+                                    if ($apPct < 0) $apPct = 8;
+                                @endphp
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-xs border-t border-[#f1f3f5]">
                                     <div class="flex items-center gap-2">
                                         <span class="w-2.5 h-2.5 rounded-full bg-[#2563eb]"></span>
                                         <span class="text-[#6b7280]">North America:</span>
-                                        <strong class="text-[#111827] font-bold">52%</strong>
+                                        <strong class="text-[#111827] font-bold">{{ $naPct }}%</strong>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="w-2.5 h-2.5 rounded-full bg-[#4f46e5]"></span>
                                         <span class="text-[#6b7280]">Europe / UK:</span>
-                                        <strong class="text-[#111827] font-bold">28%</strong>
+                                        <strong class="text-[#111827] font-bold">{{ $euPct }}%</strong>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>
                                         <span class="text-[#6b7280]">Africa:</span>
-                                        <strong class="text-[#111827] font-bold">11%</strong>
+                                        <strong class="text-[#111827] font-bold">{{ $afPct }}%</strong>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="w-2.5 h-2.5 rounded-full bg-[#ec4899]"></span>
                                         <span class="text-[#6b7280]">Asia-Pacific:</span>
-                                        <strong class="text-[#111827] font-bold">9%</strong>
+                                        <strong class="text-[#111827] font-bold">{{ $apPct }}%</strong>
                                     </div>
                                 </div>
                             </div>
