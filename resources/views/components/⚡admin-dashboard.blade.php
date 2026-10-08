@@ -408,8 +408,15 @@ class extends Component
                 'internal_notes' => $notes,
             ]);
 
+            // Synchronize inspected prospect state if inspector was opened for this creator
+            if ($this->inspectProspectId === $this->outreachProspectId) {
+                $this->editProspectStatus = 'Contacted';
+                $this->editProspectEmail = $this->outreachToEmail;
+                $this->editProspectNotes = $notes;
+            }
+
             $this->outreachSendSuccess = true;
-            $this->outreachSendResult = "✓ Outreach email dispatched to {$prospect->creator} ({$this->outreachToEmail}) with Reply-To set to oluwatobi@getfanvault.com!";
+            $this->outreachSendResult = "✓ Outreach email successfully sent to {$prospect->creator} ({$this->outreachToEmail}) · Creator status updated to 'Contacted' with Reply-To set to oluwatobi@getfanvault.com!";
             session()->flash('success', $this->outreachSendResult);
         } catch (\Throwable $e) {
             $this->outreachSendSuccess = false;
@@ -2571,6 +2578,9 @@ class extends Component
                                 <span class="font-mono text-xs font-bold text-[#38bdf8]">
                                     OUTREACH TO {{ strtoupper($outreachProspect->creator) }}
                                 </span>
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border {{ $outreachProspect->statusBadgeClass() }}">
+                                    Status: {{ $outreachProspect->status }}
+                                </span>
                                 <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border {{ $outreachProspect->priorityBadgeClass() }}">
                                     Priority {{ $outreachProspect->recommended_priority }}
                                 </span>
@@ -2616,12 +2626,20 @@ class extends Component
 
                 <!-- Alert Result Message (if dispatched) -->
                 @if($outreachSendResult)
-                    <div class="px-6 py-3 border-b text-xs font-mono flex items-center justify-between {{ $outreachSendSuccess ? 'bg-[#10b981]/15 border-[#10b981]/30 text-[#34d399]' : 'bg-[#ef4444]/15 border-[#ef4444]/30 text-[#fca5a5]' }}">
-                        <div class="flex items-center gap-2">
-                            <span>{{ $outreachSendSuccess ? '✓' : '✕' }}</span>
-                            <span>{{ $outreachSendResult }}</span>
+                    <div class="px-6 py-3 border-b text-xs font-mono flex items-center justify-between {{ $outreachSendSuccess ? 'bg-[#10b981]/20 border-[#10b981]/40 text-[#34d399]' : 'bg-[#ef4444]/15 border-[#ef4444]/30 text-[#fca5a5]' }}">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-2 h-2 rounded-full {{ $outreachSendSuccess ? 'bg-[#10b981] animate-pulse' : 'bg-[#ef4444]' }}"></span>
+                            <span class="font-bold">{{ $outreachSendResult }}</span>
                         </div>
-                        <button type="button" wire:click="$set('outreachSendResult', '')" class="text-gray-400 hover:text-white">✕</button>
+                        <div class="flex items-center gap-2">
+                            @if($outreachSendSuccess)
+                                <button type="button" wire:click="closeOutreachComposer" class="px-2.5 py-1 rounded-md bg-[#10b981] hover:bg-[#059669] text-[#090d16] font-bold text-[10px] cursor-pointer">
+                                    Done / Close ✕
+                                </button>
+                            @else
+                                <button type="button" wire:click="$set('outreachSendResult', '')" class="text-gray-400 hover:text-white">✕</button>
+                            @endif
+                        </div>
                     </div>
                 @endif
 
@@ -2691,54 +2709,132 @@ class extends Component
                                 ></textarea>
                             </div>
                         </div>
-                    @else
                         <!-- LIVE PREVIEW MODE -->
-                        <div class="max-w-2xl mx-auto rounded-2xl bg-white text-[#1e293b] p-8 shadow-xl space-y-6 font-sans">
-                            <!-- Simulated Email Header -->
-                            <div class="border-b border-gray-100 pb-5">
-                                <div class="flex items-center justify-between mb-3">
+                        <div class="max-w-2xl mx-auto rounded-2xl bg-[#090d16] text-[#f8fafc] border border-[#1e293b] p-6 sm:p-8 shadow-2xl space-y-6 font-sans">
+                            <!-- Simulated Email Envelope Header -->
+                            <div class="border-b border-[#1e293b] pb-4 space-y-2">
+                                <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 rounded-lg bg-[#0f172a] flex items-center justify-center text-white font-bold font-mono text-sm">
+                                        <div class="w-8 h-8 rounded-lg bg-[#10b981] flex items-center justify-center text-[#090d16] font-extrabold font-mono text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                                             FV
                                         </div>
                                         <div>
-                                            <div class="font-bold text-sm text-[#0f172a]">FanVault</div>
-                                            <div class="text-[11px] text-gray-500">Milestone Time Capsules</div>
+                                            <div class="font-bold text-sm text-white font-serif">FanVault</div>
+                                            <div class="text-[10px] text-[#64748b] font-mono">The Creator Time Capsule</div>
                                         </div>
                                     </div>
-                                    <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">
-                                        LIVE EMAIL PREVIEW
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#38bdf8]/15 text-[#38bdf8] font-bold border border-[#38bdf8]/30">
+                                        ● LIVE EMAIL PREVIEW
                                     </span>
                                 </div>
 
-                                <div class="space-y-1 text-xs">
-                                    <div><span class="text-gray-400 font-mono">To:</span> <strong class="text-gray-900">{{ $outreachToEmail ?: '(No recipient email provided)' }}</strong></div>
-                                    <div><span class="text-gray-400 font-mono">Reply-To:</span> <strong class="text-emerald-700">Oluwatobi Solomon &lt;oluwatobi@getfanvault.com&gt;</strong></div>
-                                    <div><span class="text-gray-400 font-mono">Subject:</span> <strong class="text-gray-900">{{ $outreachSubject }}</strong></div>
+                                <div class="space-y-1 text-xs font-mono pt-1 text-[#94a3b8]">
+                                    <div><span class="text-[#64748b]">To:</span> <strong class="text-white">{{ $outreachToEmail ?: '(creator@channel.com)' }}</strong></div>
+                                    <div><span class="text-[#64748b]">Reply-To:</span> <strong class="text-[#34d399]">Oluwatobi Solomon &lt;oluwatobi@getfanvault.com&gt;</strong></div>
+                                    <div><span class="text-[#64748b]">Subject:</span> <strong class="text-white">{{ $outreachSubject }}</strong></div>
                                 </div>
                             </div>
 
-                            <!-- Body Rendered -->
-                            <div class="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap font-sans">
-{{ $outreachBody }}
-                            </div>
+                            <!-- Inner Email Canvas (Simulated Client View) -->
+                            <div class="bg-white rounded-2xl p-6 sm:p-7 text-[#0f172a] shadow-md space-y-5">
+                                <!-- Top Badge Row -->
+                                <div class="flex items-center justify-between flex-wrap gap-2">
+                                    <span class="px-2.5 py-1 rounded-full bg-[#ecfdf5] border border-[#a7f3d0] font-mono text-[10px] font-bold text-[#064e3b] uppercase tracking-wider">
+                                        ⚡ Exclusive Creator Concept
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-full bg-[#f1f5f9] border border-[#e2e8f0] font-mono text-[10px] font-semibold text-[#475569] uppercase">
+                                        {{ $outreachProspect->speciality }} · Priority {{ $outreachProspect->recommended_priority }}
+                                    </span>
+                                </div>
 
-                            <!-- Simulated Action Button -->
-                            <div class="pt-2 pb-2">
-                                <a 
-                                    href="https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}" 
-                                    target="_blank" 
-                                    class="inline-block px-5 py-2.5 rounded-xl bg-[#0f172a] text-white font-bold text-xs shadow-md hover:bg-black transition-colors"
-                                >
-                                    View FanVault Concept for {{ $outreachProspect->creator }} ➔
-                                </a>
-                            </div>
+                                <!-- Hero Headline -->
+                                <div>
+                                    <h2 class="text-xl sm:text-2xl font-serif font-bold text-[#0f172a] leading-tight">
+                                        Turn Your Next Milestone Into A Live Community Reveal Stream.
+                                    </h2>
+                                    <p class="text-xs sm:text-sm text-[#475569] mt-1.5 leading-relaxed">
+                                        Hi {{ explode(' ', $outreachProspect->creator)[0] }} — we designed an exclusive FanVault time capsule concept specifically for <strong>{{ $outreachProspect->creator }}</strong>.
+                                    </p>
+                                </div>
 
-                            <!-- Footer Signature -->
-                            <div class="pt-5 border-t border-gray-100 text-xs text-gray-500 space-y-1">
-                                <div class="font-bold text-gray-900">Oluwatobi Solomon</div>
-                                <div>Founder, FanVault</div>
-                                <div><a href="mailto:oluwatobi@getfanvault.com" class="text-blue-600 underline">oluwatobi@getfanvault.com</a> • <a href="https://getfanvault.com" class="text-blue-600 underline">getfanvault.com</a></div>
+                                <!-- THE TIME CAPSULE ARTIFACT BOX (Cool Cyber/Vault Card) -->
+                                <div class="rounded-xl bg-[#090d16] border border-[#1e293b] overflow-hidden text-white shadow-lg">
+                                    <div class="px-4 py-3 bg-[#0c121e] border-b border-[#1e293b] flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] font-mono font-bold text-[#34d399] tracking-wider block">
+                                                🔒 CAPSULE NO. #{{ sprintf('%03d', $outreachProspect->prospect_number) }}
+                                            </span>
+                                            <div class="text-xs font-bold text-white mt-0.5">
+                                                {{ $outreachProspect->creator }} Community Vault
+                                            </div>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded-full bg-[#10b981]/20 border border-[#10b981]/40 text-[9px] font-mono font-bold text-[#34d399] uppercase">
+                                            ● Ready To Activate
+                                        </span>
+                                    </div>
+
+                                    <!-- 3-Step Interactive Visual Flow -->
+                                    <div class="p-4 grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
+                                        <div class="p-2 rounded-lg bg-[#111827]">
+                                            <div class="text-lg mb-1">✍️</div>
+                                            <div class="font-bold text-[#34d399]">1. Fans Seal Today</div>
+                                            <div class="text-[#94a3b8] text-[9px] mt-0.5">Predictions, photos & notes</div>
+                                        </div>
+                                        <div class="p-2 rounded-lg bg-[#111827]">
+                                            <div class="text-lg mb-1">🔐</div>
+                                            <div class="font-bold text-[#38bdf8]">2. Stays Secret</div>
+                                            <div class="text-[#94a3b8] text-[9px] mt-0.5">Zero spoilers until unlock</div>
+                                        </div>
+                                        <div class="p-2 rounded-lg bg-[#111827]">
+                                            <div class="text-lg mb-1">🎬</div>
+                                            <div class="font-bold text-[#fbbf24]">3. Reveal On Stream</div>
+                                            <div class="text-[#94a3b8] text-[9px] mt-0.5">Unboxed live on stream</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Personalized Message Body -->
+                                <div class="text-xs sm:text-sm text-[#334155] leading-relaxed whitespace-pre-wrap font-sans">
+{!! nl2br(e($outreachBody)) !!}
+                                </div>
+
+                                <!-- 3 Key Reasons Why Creators Love FanVault -->
+                                <div class="p-3.5 rounded-xl bg-[#f8fafc] border border-[#e2e8f0] text-xs space-y-1.5">
+                                    <div class="font-mono text-[10px] uppercase font-bold text-[#64748b]">
+                                        Why This Beats Another Generic Tweet / Merch Drop:
+                                    </div>
+                                    <div class="space-y-1 text-[#334155] text-[11px] leading-relaxed">
+                                        <div>🎥 <strong class="text-[#0f172a]">1-2 Hours of Organic Stream Content:</strong> Live reactions reading fan letters and unboxing predictions.</div>
+                                        <div>💎 <strong class="text-[#0f172a]">Permanent Community Keepsake:</strong> Every letter is sealed and preserved as a lasting creator milestone.</div>
+                                        <div>⚡ <strong class="text-[#0f172a]">100% Free & Zero Tech Work:</strong> We handle the custom setup and hosting for you at zero cost.</div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Button -->
+                                <div class="text-center pt-2">
+                                    <a 
+                                        href="https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}" 
+                                        target="_blank" 
+                                        class="inline-block px-6 py-3 rounded-xl bg-[#064e3b] text-white font-bold text-xs sm:text-sm shadow-md hover:bg-[#047857] transition-colors"
+                                    >
+                                        🚀 View {{ $outreachProspect->creator }}'s Time Capsule Concept ➔
+                                    </a>
+                                </div>
+
+                                <!-- Footer Signature -->
+                                <div class="pt-4 border-t border-gray-100 flex items-start gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-[#064e3b] text-[#34d399] font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                                        OS
+                                    </div>
+                                    <div class="text-[11px] text-[#475569] leading-snug">
+                                        <div class="font-bold text-[#0f172a]">Oluwatobi Solomon</div>
+                                        <div class="text-[#64748b]">Founder, FanVault · The Creator Time Capsule</div>
+                                        <div class="mt-0.5"><a href="mailto:oluwatobi@getfanvault.com" class="text-[#047857] font-semibold underline">oluwatobi@getfanvault.com</a> · <a href="https://getfanvault.com" class="text-[#64748b] underline">getfanvault.com</a></div>
+                                        <div class="mt-2 p-2 rounded-lg bg-[#ecfdf5] border border-[#a7f3d0] text-[#064e3b] text-[10px]">
+                                            💡 <strong>Quick Note:</strong> Just hit <strong>Reply</strong> to this email! It goes straight to my personal inbox at <strong>oluwatobi@getfanvault.com</strong>.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     @endif
