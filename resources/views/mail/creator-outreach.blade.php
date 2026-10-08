@@ -34,7 +34,7 @@
         {!! nl2br(e($customBody)) !!}
     </div>
 
-    <!-- Why Creators Love FanVault (Paystack Callout Style) -->
+    <!-- Why Creators Love FanVault Callout -->
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 26px;">
         <tr>
             <td style="padding: 16px 20px;">
@@ -62,16 +62,26 @@
         </tr>
     </table>
 
-    <!-- Primary Action Button (Paystack Clean Button) -->
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 28px;">
+    <!-- Primary Action Button (Dribbble Clean Button & Fallback Box) -->
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
         <tr>
             <td align="center">
-                <a href="https://getfanvault.com/with/{{ Str::slug($prospect->creator) }}" target="_blank" style="display: inline-block; padding: 13px 28px; background-color: #059669; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 6px; text-align: center;">
+                <a href="https://getfanvault.com/with/{{ Str::slug($prospect->creator) }}" target="_blank" style="display: inline-block; padding: 14px 34px; background-color: #059669; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; border-radius: 8px; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25); letter-spacing: -0.2px; text-align: center;">
                     View {{ $prospect->creator }}'s Time Capsule Concept ➔
                 </a>
-                <div style="margin-top: 10px; font-size: 12px; color: #6b7280;">
-                    Direct draft link: <a href="https://getfanvault.com/with/{{ Str::slug($prospect->creator) }}" style="color: #059669; text-decoration: underline;">getfanvault.com/with/{{ Str::slug($prospect->creator) }}</a>
-                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Dribbble-style Fallback Link Box -->
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 26px;">
+        <tr>
+            <td style="padding: 12px 16px; font-size: 12px; color: #64748b; line-height: 1.55;">
+                <strong style="color: #0f172a; display: block; margin-bottom: 3px;">Having trouble with the button?</strong>
+                Copy and paste this private draft URL into your browser:<br>
+                <a href="https://getfanvault.com/with/{{ Str::slug($prospect->creator) }}" target="_blank" style="color: #059669; word-break: break-all; text-decoration: underline;">
+                    https://getfanvault.com/with/{{ Str::slug($prospect->creator) }}
+                </a>
             </td>
         </tr>
     </table>

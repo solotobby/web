@@ -10,17 +10,15 @@
         table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; }
         td { vertical-align: top; }
         img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
-        body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #f4f5f7 !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #111827; line-height: 1.6; }
+        body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #f8fafc !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #0f172a; line-height: 1.6; }
         @media only screen and (max-width: 620px) {
-            .mobile-shell { padding: 16px 10px 32px 10px !important; }
+            .mobile-shell { padding: 18px 12px 36px 12px !important; }
             .wrapper { width: 100% !important; max-width: 100% !important; }
-            .card { padding: 24px 20px !important; border-radius: 8px !important; }
-            .column-step { width: 100% !important; display: block !important; margin-bottom: 12px !important; }
-            .step-divider { display: none !important; }
+            .card { padding: 28px 20px !important; border-radius: 12px !important; }
         }
     </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f4f5f7; -webkit-font-smoothing: antialiased;">
+<body style="margin: 0; padding: 0; background-color: #f8fafc; -webkit-font-smoothing: antialiased;">
     @isset($preheader)
     <!-- Bulletproof Hidden Preheader -->
     <div style="display: none !important; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0; max-height: 0; max-width: 0; overflow: hidden; mso-hide: all; font-size: 0px; line-height: 0px;">
@@ -29,27 +27,27 @@
     </div>
     @endisset
 
-    <!-- Outer Canvas Table (Paystack Style Soft Gray Background) -->
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f5f7; width: 100%; margin: 0; padding: 0; border-collapse: collapse;">
+    <!-- Outer Canvas (Soft Modern Slate #f8fafc) -->
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; width: 100%; margin: 0; padding: 0; border-collapse: collapse;">
         <tr>
-            <td align="center" valign="top" class="mobile-shell" style="padding: 36px 12px 48px 12px; vertical-align: top;">
-                <!-- Main Container (580px Standard) -->
+            <td align="center" valign="top" class="mobile-shell" style="padding: 40px 16px 52px 16px; vertical-align: top;">
+                <!-- Main Container (580px) -->
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 580px; margin: 0 auto;" class="wrapper">
-                    <!-- Clean Minimalist Header (Paystack Brand Mark) -->
+                    <!-- Centered Brand Header (Dribbble Clean Brand Mark) -->
                     <tr>
-                        <td align="left" valign="top" style="padding-bottom: 20px; padding-left: 4px;">
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                        <td align="center" valign="top" style="padding-bottom: 24px;">
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                                 <tr>
-                                    <td align="left" valign="middle" style="padding-right: 12px;">
-                                        <div style="width: 34px; height: 34px; background-color: #059669; border-radius: 8px; text-align: center; line-height: 34px; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.5px;">
+                                    <td align="center" valign="middle" style="padding-right: 10px;">
+                                        <div style="width: 38px; height: 38px; background-color: #059669; border-radius: 10px; text-align: center; line-height: 38px; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 800; letter-spacing: -0.5px; box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);">
                                             FV
                                         </div>
                                     </td>
                                     <td align="left" valign="middle">
-                                        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 700; color: #111827; letter-spacing: -0.3px; line-height: 1.2;">
+                                        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px; line-height: 1.1;">
                                             FanVault
                                         </div>
-                                        <div style="font-size: 11px; color: #6b7280; font-weight: 500; margin-top: 1px;">
+                                        <div style="font-size: 11px; color: #64748b; font-weight: 600; letter-spacing: 0.2px; margin-top: 2px;">
                                             The Creator Time Capsule
                                         </div>
                                     </td>
@@ -58,12 +56,12 @@
                         </td>
                     </tr>
 
-                    <!-- Email Main Card (Paystack White Box with Crisp 8px Corners & Border) -->
+                    <!-- Email Card (Dribbble White Box with 16px Rounded Corners & Soft Shadow) -->
                     <tr>
                         <td align="left" valign="top">
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="card" style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 36px 32px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="card" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 40px 36px; box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);">
                                 <tr>
-                                    <td align="left" valign="top" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #374151;">
+                                    <td align="left" valign="top" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.65; color: #334155;">
                                         {{ $slot }}
                                     </td>
                                 </tr>
@@ -71,22 +69,24 @@
                         </td>
                     </tr>
 
-                    <!-- Minimalist Footer (Paystack Style Clean Lines) -->
+                    <!-- Clean Dribbble-style Footer -->
                     <tr>
-                        <td align="center" valign="top" style="padding-top: 24px; padding-bottom: 16px;">
+                        <td align="center" valign="top" style="padding-top: 28px; padding-bottom: 16px;">
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
-                                    <td align="center" valign="top" style="font-size: 12px; color: #9ca3af; line-height: 1.6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                                        <div style="font-weight: 600; color: #6b7280; margin-bottom: 4px;">
-                                            FanVault · Permanent Community Keepsakes for Creators
+                                    <td align="center" valign="top" style="font-size: 12px; color: #94a3b8; line-height: 1.65; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                        <div style="font-weight: 600; color: #64748b; margin-bottom: 6px;">
+                                            Have questions or need assistance? Reach out to <a href="mailto:support@getfanvault.com" style="color: #059669; text-decoration: none; font-weight: 600;">support@getfanvault.com</a>
                                         </div>
-                                        <div>
-                                            <a href="https://getfanvault.com" style="color: #059669; text-decoration: none; font-weight: 600;">getfanvault.com</a>
+                                        <div style="color: #94a3b8; font-size: 11px;">
+                                            <a href="https://getfanvault.com" style="color: #64748b; text-decoration: none; font-weight: 600;">FanVault</a>
                                             &nbsp;·&nbsp;
-                                            <a href="mailto:support@getfanvault.com" style="color: #6b7280; text-decoration: none;">support@getfanvault.com</a>
+                                            <a href="https://getfanvault.com" style="color: #94a3b8; text-decoration: underline;">Privacy Policy</a>
+                                            &nbsp;·&nbsp;
+                                            <a href="https://getfanvault.com" style="color: #94a3b8; text-decoration: underline;">Terms of Service</a>
                                         </div>
-                                        <div style="margin-top: 8px; font-size: 11px; color: #9ca3af;">
-                                            Zero Physical Clutter · Direct Stripe Payouts · Milestone Stream Reveals
+                                        <div style="margin-top: 10px; font-size: 11px; color: #cbd5e1;">
+                                            © {{ date('Y') }} FanVault Inc. All rights reserved.
                                         </div>
                                     </td>
                                 </tr>

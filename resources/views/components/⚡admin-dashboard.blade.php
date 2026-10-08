@@ -2709,7 +2709,7 @@ class extends Component
                                 ></textarea>
                             </div>
                         </div>
-                        <!-- LIVE PREVIEW MODE (Paystack Email Template Design) -->
+                        <!-- LIVE PREVIEW MODE (Dribbble Clean Email Template Design) -->
                         <div class="max-w-2xl mx-auto rounded-xl bg-[#0b0f19] text-[#f8fafc] border border-[#1e293b] p-4 sm:p-6 shadow-2xl space-y-4 font-sans">
                             <!-- Simulated Email Envelope Header -->
                             <div class="border-b border-[#1e293b] pb-3 space-y-2">
@@ -2720,7 +2720,7 @@ class extends Component
                                         </div>
                                         <div>
                                             <div class="font-bold text-xs text-white">FanVault Mailer</div>
-                                            <div class="text-[10px] text-[#64748b]">Paystack-style Clean Template</div>
+                                            <div class="text-[10px] text-[#64748b]">Dribbble-style Clean Template</div>
                                         </div>
                                     </div>
                                     <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#059669]/15 text-[#34d399] font-bold border border-[#059669]/30">
@@ -2735,99 +2735,108 @@ class extends Component
                                 </div>
                             </div>
 
-                            <!-- Paystack Soft Gray Email Canvas -->
-                            <div class="bg-[#f4f5f7] rounded-xl p-4 sm:p-6 text-[#111827]">
-                                <!-- Paystack Header -->
-                                <div class="flex items-center gap-2.5 pb-4 pl-1">
-                                    <div class="w-8 h-8 rounded-lg bg-[#059669] text-white font-bold text-sm flex items-center justify-center shadow-sm">
-                                        FV
-                                    </div>
-                                    <div>
-                                        <div class="font-bold text-sm text-[#111827]">FanVault</div>
-                                        <div class="text-[10px] text-[#6b7280]">The Creator Time Capsule</div>
+                            <!-- Dribbble Soft Slate Email Canvas -->
+                            <div class="bg-[#f8fafc] rounded-2xl p-4 sm:p-8 text-[#0f172a]">
+                                <!-- Centered Header Lockup -->
+                                <div class="flex flex-col items-center justify-center text-center pb-6">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-9 h-9 rounded-xl bg-[#059669] text-white font-extrabold text-sm flex items-center justify-center shadow-md shadow-emerald-500/20">
+                                            FV
+                                        </div>
+                                        <div class="text-left">
+                                            <div class="font-black text-lg text-[#0f172a] leading-none tracking-tight">FanVault</div>
+                                            <div class="text-[11px] text-[#64748b] font-semibold tracking-wide mt-0.5">The Creator Time Capsule</div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Paystack White Card (Crisp 8px Radius & Border) -->
-                                <div class="bg-white rounded-lg p-6 sm:p-8 border border-[#e5e7eb] shadow-sm space-y-5">
+                                <!-- Dribbble White Card (16px Radius, Crisp Slate Border, Soft Shadow) -->
+                                <div class="bg-white rounded-2xl p-6 sm:p-8 border border-[#e2e8f0] shadow-sm space-y-5">
                                     <!-- Top Badge Row -->
                                     <div class="flex items-center justify-between flex-wrap gap-2">
                                         <span class="px-2.5 py-1 rounded bg-[#ecfdf5] text-[11px] font-bold text-[#059669] uppercase tracking-wider">
                                             Creator Concept
                                         </span>
-                                        <span class="text-xs text-[#6b7280] font-medium">
+                                        <span class="text-xs text-[#64748b] font-medium">
                                             {{ $outreachProspect->speciality }}
                                         </span>
                                     </div>
 
                                     <!-- Headline -->
                                     <div>
-                                        <h2 class="text-xl sm:text-2xl font-bold text-[#111827] leading-snug tracking-tight">
+                                        <h2 class="text-xl sm:text-2xl font-bold text-[#0f172a] leading-snug tracking-tight">
                                             Turn Your Next Milestone Into A Live Community Reveal Stream
                                         </h2>
-                                        <p class="text-xs sm:text-sm text-[#4b5563] mt-2 leading-relaxed">
+                                        <p class="text-xs sm:text-sm text-[#475569] mt-2 leading-relaxed">
                                             Hi {{ explode(' ', $outreachProspect->creator)[0] }} — we put together a private FanVault time capsule concept specifically for <strong>{{ $outreachProspect->creator }}</strong>.
                                         </p>
                                     </div>
 
-
                                     <!-- Personalized Message Body -->
-                                    <div class="text-xs sm:text-sm text-[#374151] leading-relaxed whitespace-pre-wrap font-sans">
+                                    <div class="text-xs sm:text-sm text-[#334155] leading-relaxed whitespace-pre-wrap font-sans">
 {!! nl2br(e($outreachBody)) !!}
                                     </div>
 
-                                    <!-- Why Creators Love FanVault (Paystack Callout Style) -->
-                                    <div class="p-4 rounded-lg bg-[#f9fafb] border border-[#e5e7eb] text-xs space-y-2">
-                                        <div class="text-[11px] uppercase font-bold text-[#6b7280] tracking-wider">
+                                    <!-- Why Creators Love FanVault Callout Style -->
+                                    <div class="p-4 rounded-xl bg-[#f8fafc] border border-[#e2e8f0] text-xs space-y-2">
+                                        <div class="text-[11px] uppercase font-bold text-[#64748b] tracking-wider">
                                             Why This Beats Another Generic Tweet / Merch Drop:
                                         </div>
-                                        <div class="space-y-1.5 text-[#4b5563] text-[11px] leading-relaxed">
-                                            <div>🎥 <strong class="text-[#111827]">1–2 Hours of Stream Content:</strong> Live reactions reading fan letters and unboxing predictions on stream.</div>
-                                            <div>💎 <strong class="text-[#111827]">A Permanent Community Keepsake:</strong> Every letter is sealed and preserved as a lasting piece of your journey.</div>
-                                            <div>⚡ <strong class="text-[#111827]">100% Free & Zero Tech Work:</strong> We handle the custom setup, hosting, and design for you at zero cost.</div>
+                                        <div class="space-y-1.5 text-[#475569] text-[11px] leading-relaxed">
+                                            <div>🎥 <strong class="text-[#0f172a]">1–2 Hours of Stream Content:</strong> Live reactions reading fan letters and unboxing predictions on stream.</div>
+                                            <div>💎 <strong class="text-[#0f172a]">A Permanent Community Keepsake:</strong> Every letter is sealed and preserved as a lasting piece of your journey.</div>
+                                            <div>⚡ <strong class="text-[#0f172a]">100% Free & Zero Tech Work:</strong> We handle the custom setup, hosting, and design for you at zero cost.</div>
                                         </div>
                                     </div>
 
-                                    <!-- Paystack Primary Action Button -->
+                                    <!-- Primary Action Button (Dribbble Shadowed Emerald Button) -->
                                     <div class="text-center pt-2">
                                         <a 
                                             href="https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}" 
                                             target="_blank" 
-                                            class="inline-block px-7 py-3 rounded-md bg-[#059669] hover:bg-[#047857] text-white font-semibold text-xs sm:text-sm shadow-sm transition-colors text-center"
+                                            class="inline-block px-8 py-3.5 rounded-lg bg-[#059669] hover:bg-[#047857] text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/25 transition-all text-center"
                                         >
                                             View {{ $outreachProspect->creator }}'s Time Capsule Concept ➔
                                         </a>
-                                        <div class="mt-2 text-[11px] text-[#6b7280]">
-                                            Direct draft link: <a href="https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}" class="text-[#059669] underline">getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}</a>
-                                        </div>
                                     </div>
 
-                                    <!-- Paystack Signature & Reply Note -->
-                                    <div class="pt-4 border-t border-[#f3f4f6] text-xs text-[#4b5563] space-y-1">
+                                    <!-- Dribbble Signature Fallback URL Box -->
+                                    <div class="p-3.5 rounded-xl bg-[#f8fafc] border border-[#e2e8f0] text-left text-xs text-[#64748b] leading-relaxed">
+                                        <strong class="text-[#0f172a] block font-semibold mb-0.5">Having trouble with the button?</strong>
+                                        Copy and paste this private draft URL into your browser:<br>
+                                        <a href="https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}" target="_blank" class="text-[#059669] underline break-all font-medium">
+                                            https://getfanvault.com/with/{{ Str::slug($outreachProspect->creator) }}
+                                        </a>
+                                    </div>
+
+                                    <!-- Signature & Reply Note -->
+                                    <div class="pt-4 border-t border-[#f1f5f9] text-xs text-[#475569] space-y-1">
                                         <div>Warm regards,</div>
-                                        <div class="font-bold text-[#111827] text-sm">Oluwatobi Solomon</div>
-                                        <div class="text-[#6b7280] text-xs">Founder, FanVault</div>
+                                        <div class="font-bold text-[#0f172a] text-sm">Oluwatobi Solomon</div>
+                                        <div class="text-[#64748b] text-xs">Founder, FanVault</div>
                                         <div class="pt-0.5">
                                             <a href="mailto:oluwatobi@getfanvault.com" class="text-[#059669] font-medium underline">oluwatobi@getfanvault.com</a>
                                             &nbsp;·&nbsp;
-                                            <a href="https://getfanvault.com" class="text-[#6b7280] underline">getfanvault.com</a>
+                                            <a href="https://getfanvault.com" class="text-[#64748b] underline">getfanvault.com</a>
                                         </div>
-                                        <div class="mt-3 p-3 rounded-md bg-[#f0fdf4] border border-[#bbf7d0] text-[#166534] text-[11px] leading-relaxed">
-                                            💡 <strong>Quick Note:</strong> Just hit <strong>Reply</strong> to this email! It goes straight to my personal inbox at <strong>oluwatobi@getfanvault.com</strong> — happy to answer any questions or set up a test capsule for {{ $outreachProspect->creator }} in 5 minutes.
+                                        <div class="mt-3 p-3 rounded-lg bg-[#ecfdf5] border border-[#a7f3d0] text-[#065f46] text-[11px] leading-relaxed">
+                                            💡 <strong>Quick Note:</strong> Just hit <strong>Reply</strong> to this email! It goes straight to my personal inbox at <strong class="underline">oluwatobi@getfanvault.com</strong> — happy to answer any questions or set up a test capsule for {{ $outreachProspect->creator }} in 5 minutes.
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Paystack Minimalist Footer -->
-                                <div class="text-center pt-5 pb-2 text-[11px] text-[#9ca3af] space-y-1">
-                                    <div class="font-medium text-[#6b7280]">FanVault · Permanent Community Keepsakes for Creators</div>
+                                <!-- Dribbble Minimalist Footer -->
+                                <div class="text-center pt-5 pb-2 text-[11px] text-[#94a3b8] space-y-1">
+                                    <div class="font-medium text-[#64748b]">Have questions or need assistance? Reach out to <a href="mailto:support@getfanvault.com" class="text-[#059669] font-medium">support@getfanvault.com</a></div>
                                     <div>
-                                        <a href="https://getfanvault.com" class="text-[#059669] font-medium">getfanvault.com</a>
+                                        <a href="https://getfanvault.com" class="text-[#64748b] font-medium">FanVault</a>
                                         &nbsp;·&nbsp;
-                                        <a href="mailto:support@getfanvault.com" class="text-[#6b7280]">support@getfanvault.com</a>
+                                        <a href="https://getfanvault.com" class="text-[#94a3b8] underline">Privacy Policy</a>
+                                        &nbsp;·&nbsp;
+                                        <a href="https://getfanvault.com" class="text-[#94a3b8] underline">Terms of Service</a>
                                     </div>
-                                    <div class="text-[10px] text-[#9ca3af]">
-                                        Zero Physical Clutter · Direct Stripe Payouts · Milestone Stream Reveals
+                                    <div class="text-[10px] text-[#cbd5e1] pt-1">
+                                        © {{ date('Y') }} FanVault Inc. All rights reserved.
                                     </div>
                                 </div>
                             </div>
