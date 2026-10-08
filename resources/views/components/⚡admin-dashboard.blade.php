@@ -736,101 +736,502 @@ class extends Component
 };
 ?>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-    <!-- Executive Navigation Tabs Bar -->
-    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#1e293b] pb-4">
-        <nav class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            <button 
-                wire:click="setTab('overview')" 
-                class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-mono font-medium transition-all flex items-center gap-2 cursor-pointer {{ $tab === 'overview' ? 'bg-[#10b981] text-[#090d16] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-[#111827] text-[#94a3b8] hover:text-white hover:bg-[#161f30]' }}"
-            >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                <span>Command Center</span>
-            </button>
-
-            <button 
-                wire:click="setTab('creators')" 
-                class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-mono font-medium transition-all flex items-center gap-2 cursor-pointer {{ $tab === 'creators' ? 'bg-[#10b981] text-[#090d16] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-[#111827] text-[#94a3b8] hover:text-white hover:bg-[#161f30]' }}"
-            >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <span>Creators</span>
-                <span class="px-1.5 py-0.2 rounded-md {{ $tab === 'creators' ? 'bg-[#090d16]/30 text-[#090d16]' : 'bg-[#1e293b] text-[#cbd5e1]' }} text-[11px] font-bold">
-                    {{ $creators->count() }}
+<div x-data="{ mobileSidebarOpen: false }" class="min-h-screen bg-[#090d16] text-[#f8fafc] font-sans antialiased selection:bg-[#10b981] selection:text-[#090d16] flex flex-col lg:flex-row">
+    <!-- DESKTOP FIXED SIDEBAR -->
+    <aside class="hidden lg:flex lg:flex-col lg:w-64 xl:w-72 fixed inset-y-0 left-0 z-40 bg-[#0c121e] border-r border-[#1e293b]">
+        <!-- Brand / Console Header -->
+        <div class="h-16 px-5 border-b border-[#1e293b] flex items-center justify-between shrink-0 bg-[#090d16]/40">
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group">
+                <span class="w-9 h-9 rounded-xl bg-[#10b981] text-[#090d16] flex items-center justify-center font-mono font-extrabold text-sm tracking-tight shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-transform group-hover:scale-105">
+                    FV
                 </span>
-            </button>
-
-            <button 
-                wire:click="setTab('prospects')" 
-                class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-mono font-medium transition-all flex items-center gap-2 cursor-pointer {{ $tab === 'prospects' ? 'bg-[#10b981] text-[#090d16] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-[#111827] text-[#94a3b8] hover:text-white hover:bg-[#161f30]' }}"
-            >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                </svg>
-                <span>Outreach CRM</span>
-                <span class="px-1.5 py-0.2 rounded-md {{ $tab === 'prospects' ? 'bg-[#090d16]/30 text-[#090d16]' : 'bg-[#1e293b] text-[#cbd5e1]' }} text-[11px] font-bold">
-                    {{ $totalProspectsCount }}
-                </span>
-            </button>
-
-            <button 
-                wire:click="setTab('letters')" 
-                class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-mono font-medium transition-all flex items-center gap-2 cursor-pointer {{ $tab === 'letters' ? 'bg-[#10b981] text-[#090d16] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-[#111827] text-[#94a3b8] hover:text-white hover:bg-[#161f30]' }}"
-            >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <span>Fan Letters</span>
-                <span class="px-1.5 py-0.2 rounded-md {{ $tab === 'letters' ? 'bg-[#090d16]/30 text-[#090d16]' : 'bg-[#1e293b] text-[#cbd5e1]' }} text-[11px] font-bold">
-                    {{ $totalLetters }}
-                </span>
-            </button>
-
-            <button 
-                wire:click="setTab('payments')" 
-                class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-mono font-medium transition-all flex items-center gap-2 cursor-pointer {{ $tab === 'payments' ? 'bg-[#10b981] text-[#090d16] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-[#111827] text-[#94a3b8] hover:text-white hover:bg-[#161f30]' }}"
-            >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Ledger & Payouts</span>
-            </button>
-
-            <button 
-                wire:click="setTab('milestones')" 
-                class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-mono font-medium transition-all flex items-center gap-2 cursor-pointer {{ $tab === 'milestones' ? 'bg-[#10b981] text-[#090d16] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-[#111827] text-[#94a3b8] hover:text-white hover:bg-[#161f30]' }}"
-            >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-                </svg>
-                <span>Milestones</span>
-                <span class="px-1.5 py-0.2 rounded-md {{ $tab === 'milestones' ? 'bg-[#090d16]/30 text-[#090d16]' : 'bg-[#1e293b] text-[#cbd5e1]' }} text-[11px] font-bold">
-                    {{ $milestones->count() }}
-                </span>
-            </button>
-
-            <button 
-                wire:click="setTab('system')" 
-                class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-mono font-medium transition-all flex items-center gap-2 cursor-pointer {{ $tab === 'system' ? 'bg-[#10b981] text-[#090d16] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-[#111827] text-[#94a3b8] hover:text-white hover:bg-[#161f30]' }}"
-            >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>Diagnostics</span>
-            </button>
-        </nav>
-
-        <div class="flex items-center gap-3">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#10b981]/10 text-[#34d399] border border-[#10b981]/20 font-mono text-[11px] font-semibold">
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-serif font-bold text-base text-white tracking-tight">FanVault</span>
+                        <span class="px-1.5 py-0.5 rounded bg-[#1e293b] text-[#94a3b8] font-mono text-[9px] uppercase font-semibold">
+                            Admin
+                        </span>
+                    </div>
+                    <div class="text-[10px] text-[#64748b] font-mono flex items-center gap-1.5">
+                        <span>Executive Console</span>
+                    </div>
+                </div>
+            </a>
+            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#10b981]/10 border border-[#10b981]/25 text-[10px] font-mono text-[#34d399]" title="Protocol Online">
                 <span class="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse"></span>
-                <span>GMV ${{ number_format($totalGmvCents / 100, 2) }}</span>
-            </span>
+                <span>Live</span>
+            </div>
+        </div>
+
+        <!-- Navigation Scroll Area -->
+        <div class="flex-1 overflow-y-auto px-3.5 py-5 space-y-6">
+            <!-- Group 1: CORE / OVERVIEW -->
+            <div>
+                <div class="px-2.5 pb-2 text-[10px] font-mono uppercase tracking-wider text-[#64748b] font-semibold">
+                    Overview & Command
+                </div>
+                <nav class="space-y-1">
+                    <!-- Command Center -->
+                    <button 
+                        type="button"
+                        wire:click="setTab('overview')" 
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'overview' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold shadow-xs' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827] border border-transparent font-medium' }}"
+                    >
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 {{ $tab === 'overview' ? 'text-[#34d399]' : 'text-[#64748b]' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <span>Command Center</span>
+                        </div>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Group 2: CREATOR ECOSYSTEM -->
+            <div>
+                <div class="px-2.5 pb-2 text-[10px] font-mono uppercase tracking-wider text-[#64748b] font-semibold">
+                    Creator Ecosystem
+                </div>
+                <nav class="space-y-1">
+                    <!-- Outreach CRM (Marketing Acquisition) -->
+                    <button 
+                        type="button"
+                        wire:click="setTab('prospects')" 
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'prospects' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold shadow-xs' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827] border border-transparent font-medium' }}"
+                    >
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 {{ $tab === 'prospects' ? 'text-[#34d399]' : 'text-[#64748b]' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                            </svg>
+                            <span>Outreach CRM</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono {{ $tab === 'prospects' ? 'bg-[#10b981]/25 text-[#34d399]' : 'bg-[#1e293b] text-[#cbd5e1]' }}">
+                            {{ $totalProspectsCount }}
+                        </span>
+                    </button>
+
+                    <!-- Creators -->
+                    <button 
+                        type="button"
+                        wire:click="setTab('creators')" 
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'creators' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold shadow-xs' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827] border border-transparent font-medium' }}"
+                    >
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 {{ $tab === 'creators' ? 'text-[#34d399]' : 'text-[#64748b]' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span>Active Creators</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono {{ $tab === 'creators' ? 'bg-[#10b981]/25 text-[#34d399]' : 'bg-[#1e293b] text-[#cbd5e1]' }}">
+                            {{ $creators->count() }}
+                        </span>
+                    </button>
+
+                    <!-- Milestones -->
+                    <button 
+                        type="button"
+                        wire:click="setTab('milestones')" 
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'milestones' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold shadow-xs' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827] border border-transparent font-medium' }}"
+                    >
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 {{ $tab === 'milestones' ? 'text-[#34d399]' : 'text-[#64748b]' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                            </svg>
+                            <span>Milestones</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono {{ $tab === 'milestones' ? 'bg-[#10b981]/25 text-[#34d399]' : 'bg-[#1e293b] text-[#cbd5e1]' }}">
+                            {{ $milestones->count() }}
+                        </span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Group 3: VAULT & TREASURY -->
+            <div>
+                <div class="px-2.5 pb-2 text-[10px] font-mono uppercase tracking-wider text-[#64748b] font-semibold">
+                    Vault & Finance
+                </div>
+                <nav class="space-y-1">
+                    <!-- Fan Letters -->
+                    <button 
+                        type="button"
+                        wire:click="setTab('letters')" 
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'letters' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold shadow-xs' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827] border border-transparent font-medium' }}"
+                    >
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 {{ $tab === 'letters' ? 'text-[#34d399]' : 'text-[#64748b]' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span>Fan Letters</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono {{ $tab === 'letters' ? 'bg-[#10b981]/25 text-[#34d399]' : 'bg-[#1e293b] text-[#cbd5e1]' }}">
+                            {{ $totalLetters }}
+                        </span>
+                    </button>
+
+                    <!-- Ledger & Payouts -->
+                    <button 
+                        type="button"
+                        wire:click="setTab('payments')" 
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'payments' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold shadow-xs' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827] border border-transparent font-medium' }}"
+                    >
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 {{ $tab === 'payments' ? 'text-[#34d399]' : 'text-[#64748b]' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Ledger & Payouts</span>
+                        </div>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Group 4: SYSTEM & DIAGNOSTICS -->
+            <div>
+                <div class="px-2.5 pb-2 text-[10px] font-mono uppercase tracking-wider text-[#64748b] font-semibold">
+                    Diagnostics & System
+                </div>
+                <nav class="space-y-1">
+                    <button 
+                        type="button"
+                        wire:click="setTab('system')" 
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'system' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold shadow-xs' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827] border border-transparent font-medium' }}"
+                    >
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 {{ $tab === 'system' ? 'text-[#34d399]' : 'text-[#64748b]' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>Diagnostics</span>
+                        </div>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Sidebar Bottom Footer -->
+        <div class="p-3.5 border-t border-[#1e293b] space-y-2.5 bg-[#090d16]/30 shrink-0">
+            <!-- Public Site Link -->
+            <a 
+                href="{{ route('home') }}" 
+                target="_blank" 
+                class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono text-[#94a3b8] hover:text-white bg-[#090d16] hover:bg-[#111827] border border-[#1e293b] transition-colors"
+            >
+                <span class="flex items-center gap-2">
+                    <span class="text-xs">🌐</span>
+                    <span>View Public Site</span>
+                </span>
+                <span class="text-[10px] text-[#64748b]">↗</span>
+            </a>
+
+            <!-- Admin Session & Logout -->
+            <div class="p-2.5 rounded-xl bg-[#090d16] border border-[#1e293b] flex items-center justify-between">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-7 h-7 rounded-lg bg-[#10b981]/15 border border-[#10b981]/30 flex items-center justify-center text-xs font-mono font-bold text-[#34d399] shrink-0">
+                        ⚡
+                    </div>
+                    <div class="min-w-0 truncate">
+                        <div class="text-xs font-mono font-bold text-white truncate">Executive Admin</div>
+                        <div class="text-[10px] text-[#64748b] font-mono truncate">Authorized Session</div>
+                    </div>
+                </div>
+                <form method="POST" action="{{ route('admin.logout') }}" class="inline shrink-0">
+                    @csrf
+                    <button type="submit" title="Sign Out" class="p-1.5 rounded-lg bg-[#ef4444]/10 hover:bg-[#ef4444]/20 border border-[#ef4444]/20 text-[#f87171] hover:text-[#fca5a5] transition-colors cursor-pointer">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MOBILE OFF-CANVAS SLIDE-OVER SIDEBAR -->
+    <div 
+        x-show="mobileSidebarOpen" 
+        x-cloak
+        class="relative z-50 lg:hidden" 
+        role="dialog" 
+        aria-modal="true"
+    >
+        <!-- Backdrop overlay -->
+        <div 
+            x-show="mobileSidebarOpen"
+            x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            @click="mobileSidebarOpen = false"
+            class="fixed inset-0 bg-black/80 backdrop-blur-sm"
+        ></div>
+
+        <div class="fixed inset-0 flex">
+            <div 
+                x-show="mobileSidebarOpen"
+                x-transition:enter="transition ease-in-out duration-300 transform"
+                x-transition:enter-start="-translate-x-full"
+                x-transition:enter-end="translate-x-0"
+                x-transition:leave="transition ease-in-out duration-300 transform"
+                x-transition:leave-start="translate-x-0"
+                x-transition:leave-end="-translate-x-full"
+                class="relative mr-16 flex w-full max-w-xs flex-1 flex-col bg-[#0c121e] border-r border-[#1e293b]"
+            >
+                <!-- Close Button -->
+                <div class="absolute top-0 right-0 -mr-12 pt-4">
+                    <button 
+                        type="button" 
+                        @click="mobileSidebarOpen = false"
+                        class="ml-1 flex h-10 w-10 items-center justify-center rounded-full text-white hover:bg-white/10 cursor-pointer"
+                    >
+                        <span class="sr-only">Close sidebar</span>
+                        ✕
+                    </button>
+                </div>
+
+                <!-- Mobile Drawer Header -->
+                <div class="h-16 px-5 border-b border-[#1e293b] flex items-center justify-between shrink-0 bg-[#090d16]/40">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-[#10b981] text-[#090d16] flex items-center justify-center font-mono font-extrabold text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                            FV
+                        </span>
+                        <div>
+                            <div class="font-serif font-bold text-base text-white">FanVault</div>
+                            <div class="text-[10px] text-[#64748b] font-mono">Executive Console</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Nav Items -->
+                <div class="flex-1 overflow-y-auto px-3.5 py-5 space-y-6">
+                    <div>
+                        <div class="px-2.5 pb-2 text-[10px] font-mono uppercase tracking-wider text-[#64748b] font-semibold">
+                            Overview & Command
+                        </div>
+                        <nav class="space-y-1">
+                            <button 
+                                type="button"
+                                wire:click="setTab('overview'); mobileSidebarOpen = false;" 
+                                class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'overview' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827]' }}"
+                            >
+                                <span class="flex items-center gap-2.5">
+                                    <span>📊</span>
+                                    <span>Command Center</span>
+                                </span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div>
+                        <div class="px-2.5 pb-2 text-[10px] font-mono uppercase tracking-wider text-[#64748b] font-semibold">
+                            Creator Ecosystem
+                        </div>
+                        <nav class="space-y-1">
+                            <button 
+                                type="button"
+                                wire:click="setTab('prospects'); mobileSidebarOpen = false;" 
+                                class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'prospects' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827]' }}"
+                            >
+                                <span class="flex items-center gap-2.5">
+                                    <span>🎯</span>
+                                    <span>Outreach CRM</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono bg-[#10b981]/25 text-[#34d399]">
+                                    {{ $totalProspectsCount }}
+                                </span>
+                            </button>
+
+                            <button 
+                                type="button"
+                                wire:click="setTab('creators'); mobileSidebarOpen = false;" 
+                                class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'creators' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827]' }}"
+                            >
+                                <span class="flex items-center gap-2.5">
+                                    <span>👥</span>
+                                    <span>Active Creators</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono bg-[#1e293b] text-[#cbd5e1]">
+                                    {{ $creators->count() }}
+                                </span>
+                            </button>
+
+                            <button 
+                                type="button"
+                                wire:click="setTab('milestones'); mobileSidebarOpen = false;" 
+                                class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'milestones' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827]' }}"
+                            >
+                                <span class="flex items-center gap-2.5">
+                                    <span>🚩</span>
+                                    <span>Milestones</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono bg-[#1e293b] text-[#cbd5e1]">
+                                    {{ $milestones->count() }}
+                                </span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div>
+                        <div class="px-2.5 pb-2 text-[10px] font-mono uppercase tracking-wider text-[#64748b] font-semibold">
+                            Vault & Finance
+                        </div>
+                        <nav class="space-y-1">
+                            <button 
+                                type="button"
+                                wire:click="setTab('letters'); mobileSidebarOpen = false;" 
+                                class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'letters' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827]' }}"
+                            >
+                                <span class="flex items-center gap-2.5">
+                                    <span>✉️</span>
+                                    <span>Fan Letters</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono bg-[#1e293b] text-[#cbd5e1]">
+                                    {{ $totalLetters }}
+                                </span>
+                            </button>
+
+                            <button 
+                                type="button"
+                                wire:click="setTab('payments'); mobileSidebarOpen = false;" 
+                                class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'payments' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827]' }}"
+                            >
+                                <span class="flex items-center gap-2.5">
+                                    <span>💳</span>
+                                    <span>Ledger & Payouts</span>
+                                </span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div>
+                        <div class="px-2.5 pb-2 text-[10px] font-mono uppercase tracking-wider text-[#64748b] font-semibold">
+                            Diagnostics & System
+                        </div>
+                        <nav class="space-y-1">
+                            <button 
+                                type="button"
+                                wire:click="setTab('system'); mobileSidebarOpen = false;" 
+                                class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-mono text-xs transition-all cursor-pointer {{ $tab === 'system' ? 'bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/30 font-bold' : 'text-[#94a3b8] hover:text-white hover:bg-[#111827]' }}"
+                            >
+                                <span class="flex items-center gap-2.5">
+                                    <span>⚙️</span>
+                                    <span>Diagnostics</span>
+                                </span>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Mobile Drawer Bottom -->
+                <div class="p-3.5 border-t border-[#1e293b] space-y-2.5 bg-[#090d16]/30 shrink-0">
+                    <a href="{{ route('home') }}" target="_blank" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono text-[#94a3b8] hover:text-white bg-[#090d16] border border-[#1e293b]">
+                        <span>🌐 View Public Site</span>
+                        <span>↗</span>
+                    </a>
+                    <form method="POST" action="{{ route('admin.logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full px-3 py-2 rounded-xl bg-[#ef4444]/15 text-[#f87171] hover:bg-[#ef4444]/25 text-xs font-mono font-medium flex items-center justify-center gap-2 cursor-pointer">
+                            <span>Sign Out of Console</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- MAIN WORKSPACE CONTENT CONTAINER (pl-64 on desktop) -->
+    <div class="flex-1 lg:pl-64 xl:pl-72 flex flex-col min-h-screen w-full min-w-0">
+        <!-- TOP COMMAND BAR -->
+        <header class="sticky top-0 z-30 h-16 border-b border-[#1e293b] bg-[#0c121e]/90 backdrop-blur-xl px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            <!-- Left: Mobile Hamburger Toggle + Elegant Breadcrumbs -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <!-- Hamburger Button (Mobile Only) -->
+                <button 
+                    type="button" 
+                    @click="mobileSidebarOpen = true"
+                    class="lg:hidden p-2 rounded-xl bg-[#1e293b] text-[#94a3b8] hover:text-white hover:bg-[#334155] focus:outline-none transition-colors cursor-pointer"
+                    title="Open Navigation Menu"
+                >
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <!-- Elegant Breadcrumb -->
+                <div class="flex items-center gap-2 font-mono text-xs">
+                    <span class="text-[#64748b] hidden sm:inline">Executive Console</span>
+                    <span class="text-[#334155] hidden sm:inline">/</span>
+                    <span class="font-bold text-white capitalize flex items-center gap-2">
+                        @if($tab === 'overview')
+                            <span>Command Center</span>
+                        @elseif($tab === 'prospects')
+                            <span>Outreach CRM & Pipeline</span>
+                            <span class="px-2 py-0.5 rounded-full bg-[#10b981]/20 text-[#34d399] text-[10px] hidden sm:inline font-mono">500 Creators</span>
+                        @elseif($tab === 'creators')
+                            <span>Creator Vaults ({{ $creators->count() }})</span>
+                        @elseif($tab === 'letters')
+                            <span>Sealed Letters Ledger ({{ $totalLetters }})</span>
+                        @elseif($tab === 'payments')
+                            <span>Financial Ledger & Payouts</span>
+                        @elseif($tab === 'milestones')
+                            <span>Milestone Configurations ({{ $milestones->count() }})</span>
+                        @elseif($tab === 'system')
+                            <span>Diagnostics & Mailer</span>
+                        @endif
+                    </span>
+                </div>
+            </div>
+
+            <!-- Right: Quick Stat Chips & Public Site Link -->
+            <div class="flex items-center gap-2.5 sm:gap-3 font-mono text-xs">
+                <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#090d16] border border-[#1e293b]">
+                    <span class="text-[#64748b]">GMV:</span>
+                    <span class="text-[#10b981] font-bold">${{ number_format($totalGmvCents / 100, 2) }}</span>
+                </div>
+
+                <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#090d16] border border-[#1e293b] text-[#94a3b8]">
+                    <span class="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
+                    <span class="text-[11px]">System Online</span>
+                </div>
+
+                <a 
+                    href="{{ route('home') }}" 
+                    target="_blank" 
+                    class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#1e293b] bg-[#111827] text-xs font-mono font-medium text-[#cbd5e1] hover:text-white hover:border-[#334155] transition-all"
+                >
+                    <span>Live Site ↗</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- GLOBAL FLASH ALERTS -->
+        @if(session('success'))
+            <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4">
+                <div class="p-3.5 rounded-xl bg-[#064e3b]/30 border border-[#059669]/40 text-[#34d399] text-xs font-mono flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
+                        {{ session('success') }}
+                    </span>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-[#34d399]/70 hover:text-[#34d399] cursor-pointer">✕</button>
+                </div>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4">
+                <div class="p-3.5 rounded-xl bg-[#7f1d1d]/30 border border-[#dc2626]/40 text-[#fca5a5] text-xs font-mono flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#ef4444]"></span>
+                        {{ session('error') }}
+                    </span>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-[#fca5a5]/70 hover:text-[#fca5a5] cursor-pointer">✕</button>
+                </div>
+            </div>
+        @endif
+
+        <!-- MAIN SCROLLABLE CONTENT BODY -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
 
     <!-- Generated Studio Login Toast -->
     @if($generatedLoginUrl)
@@ -1958,6 +2359,24 @@ class extends Component
             </div>
         </div>
     @endif
+    </main>
+
+    <!-- EXECUTIVE FOOTER -->
+    <footer class="mt-auto border-t border-[#1e293b] bg-[#0c121e]/50 py-5 px-4 sm:px-6 lg:px-8 text-xs text-[#64748b]">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-[11px]">
+            <div class="flex items-center gap-2">
+                <span class="text-[#34d399] font-semibold">FanVault Core</span>
+                <span>·</span>
+                <span>Executive Console v2.4</span>
+                <span>·</span>
+                <span>Multi-Million Dollar Capsule Infrastructure</span>
+            </div>
+            <div class="text-[#475569]">
+                Confidential · Authorized Executive Access Only
+            </div>
+        </div>
+    </footer>
+</div>
 
     <!-- INSPECT & OUTREACH PROSPECT MODAL -->
     @if($inspectedProspect)

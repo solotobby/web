@@ -99,6 +99,11 @@ class AdminPanelTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Executive Console');
+        $response->assertSee('Overview & Command', false);
+        $response->assertSee('Creator Ecosystem');
+        $response->assertSee('Vault & Finance', false);
+        $response->assertSee('Diagnostics & System', false);
+        $response->assertSee('View Public Site');
         $response->assertSee('GROSS VOLUME (GMV)');
         $response->assertSee('PLATFORM NET (20%)');
         $response->assertSee('CREATOR SHARE (80%)');
