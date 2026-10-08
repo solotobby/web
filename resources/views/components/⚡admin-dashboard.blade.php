@@ -265,10 +265,27 @@ class extends Component
     public function clearSystemCache(): void
     {
         try {
+            // 1. Flush application cache
             \Illuminate\Support\Facades\Cache::flush();
-            if (! app()->runningUnitTests()) {
-                \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+            \Illuminate\Support\Facades\Artisan::call('cache:clear');
+
+            // 2. Clear route & config cache
+            \Illuminate\Support\Facades\Artisan::call('route:clear');
+            \Illuminate\Support\Facades\Artisan::call('config:clear');
+
+            // 3. Clear compiled blade templates while strictly preserving Livewire's runtime view definitions
+            $viewPath = config('view.compiled', storage_path('framework/views'));
+            if ($viewPath && is_dir($viewPath)) {
+                $compiledViews = glob($viewPath . '/*.php');
+                if ($compiledViews) {
+                    foreach ($compiledViews as $compiledView) {
+                        if (is_file($compiledView)) {
+                            @unlink($compiledView);
+                        }
+                    }
+                }
             }
+
             $this->systemOpSuccess = true;
             $this->systemOpMessage = "✓ System application cache, route cache, config cache, and compiled views cleared successfully.";
             session()->flash('success', $this->systemOpMessage);
