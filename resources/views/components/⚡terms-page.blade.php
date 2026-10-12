@@ -40,7 +40,7 @@ class extends Component
       Terms of Service
     </h1>
     <p class="text-base sm:text-lg text-[#475569] leading-relaxed max-w-3xl">
-      These Terms of Service (“Terms”) constitute a legally binding agreement between you (“User”, “Creator”, or “Fan”) and FanVault (“FanVault”, “we”, “our”, or “us”). By visiting, registering for, or sealing a letter on FanVault, you agree to these Terms.
+      These Terms of Service (“Terms”) constitute a legally binding agreement between you (“User”, “Creator”, or “Fan”) and FanVault, operated by Pawl Technologies (“FanVault”, “we”, “our”, or “us”). By visiting, registering for, or sealing a letter on FanVault, you agree to these Terms.
     </p>
   </header>
 
@@ -194,8 +194,13 @@ class extends Component
       <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed mb-4">
         These Terms are governed by and construed in accordance with the laws of the State of Delaware, without regard to conflict of law principles. Any legal claim or dispute shall be resolved through binding arbitration or state/federal courts of competent jurisdiction.
       </p>
-      <div class="text-xs font-mono bg-white/10 px-3.5 py-2 rounded-xl backdrop-blur-xs w-fit">
-        Legal Contact: <a href="mailto:legal@getfanvault.com" class="text-white font-bold underline">legal@getfanvault.com</a>
+      <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
+        <div class="bg-white/10 px-3.5 py-2 rounded-xl backdrop-blur-xs">
+          Legal Contact: <a href="mailto:legal@getfanvault.com" class="text-white font-bold underline">legal@getfanvault.com</a>
+        </div>
+        <div class="bg-white/10 px-3.5 py-2 rounded-xl backdrop-blur-xs">
+          Registered Address: <span class="text-white font-medium">71-75 Shelton Street, Covent Garden, London, United Kingdom, WC2H 9JQ</span>
+        </div>
       </div>
     </section>
 

@@ -40,7 +40,7 @@ class extends Component
       Privacy Policy
     </h1>
     <p class="text-base sm:text-lg text-[#475569] leading-relaxed max-w-3xl">
-      FanVault is operated by Solotob Technologies LTD (“we”, “our”, or “us”), providing digital milestone time capsules and permanent community archives for online creators and their communities. We believe your memories, letters, and identity should remain private, encrypted, and handled with institutional rigor.
+      FanVault is operated by Pawl Technologies (“we”, “our”, or “us”), providing digital milestone time capsules and permanent community archives for online creators and their communities. We believe your memories, letters, and identity should remain private, encrypted, and handled with institutional rigor.
     </p>
   </header>
 
@@ -234,6 +234,9 @@ class extends Component
         </div>
         <div class="bg-white/10 px-3.5 py-2 rounded-xl backdrop-blur-xs">
           Legal: <a href="mailto:legal@getfanvault.com" class="text-white font-bold underline">legal@getfanvault.com</a>
+        </div>
+        <div class="bg-white/10 px-3.5 py-2 rounded-xl backdrop-blur-xs">
+          Registered Address: <span class="text-white font-medium">71-75 Shelton Street, Covent Garden, London, United Kingdom, WC2H 9JQ</span>
         </div>
       </div>
     </section>
