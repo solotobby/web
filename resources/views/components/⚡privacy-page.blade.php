@@ -29,7 +29,7 @@ class extends Component
       <span class="text-xs text-[#cbd5e1]">/</span>
       <span class="text-xs font-mono text-[#047857] font-semibold">Privacy Policy</span>
     </div>
-    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
+    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
       🛡️ GDPR & CCPA Compliant · Last Updated October 2026
     </span>
   </div>
@@ -45,7 +45,7 @@ class extends Component
   </header>
 
   <!-- Quick Policy Navigator -->
-  <nav class="bg-[#f5f4ee] border border-[#e7e5df] rounded-2xl p-5 mb-12" aria-label="Privacy sections">
+  <nav class="bg-[#f5f4ee] border border-[#e7e5df] rounded-xl p-5 mb-12" aria-label="Privacy sections">
     <div class="text-xs font-mono uppercase tracking-wider text-[#64748b] font-bold mb-3">Quick Navigation</div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs">
       <a href="#info-we-collect" class="text-[#047857] hover:underline">1. Information We Collect</a>
@@ -61,7 +61,7 @@ class extends Component
   <article class="prose prose-slate max-w-none space-y-10 text-sm sm:text-base text-[#334155] leading-relaxed">
     
     <!-- Section 1 -->
-    <section id="info-we-collect" class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section id="info-we-collect" class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4 flex items-center gap-2">
         <span>1. Information We Collect</span>
       </h2>
@@ -102,7 +102,7 @@ class extends Component
     </section>
 
     <!-- Section 2 -->
-    <section id="how-we-use" class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section id="how-we-use" class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         2. How We Use Your Data & Legal Basis
       </h2>
@@ -135,7 +135,7 @@ class extends Component
     </section>
 
     <!-- Section 3 -->
-    <section id="payment-data" class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section id="payment-data" class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         3. Payment Processing & Stripe Tokenization
       </h2>
@@ -151,7 +151,7 @@ class extends Component
     </section>
 
     <!-- Section 4 -->
-    <section id="subprocessors" class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section id="subprocessors" class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         4. Sub-processors & Infrastructure Partners
       </h2>
@@ -179,7 +179,7 @@ class extends Component
     </section>
 
     <!-- Section 5 -->
-    <section id="your-rights" class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section id="your-rights" class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         5. Your Rights (GDPR & CCPA/CPRA Compliance)
       </h2>
@@ -210,7 +210,7 @@ class extends Component
     </section>
 
     <!-- Section 6 -->
-    <section id="security-retention" class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section id="security-retention" class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         6. Security Architecture & Retention
       </h2>
@@ -223,7 +223,7 @@ class extends Component
     </section>
 
     <!-- Contact & Legal Authority -->
-    <section class="bg-gradient-to-br from-[#064e3b] to-[#047857] text-white rounded-3xl p-6 sm:p-9 shadow-md">
+    <section class="bg-gradient-to-br from-[#064e3b] to-[#047857] text-white rounded-xl p-6 sm:p-9 shadow-md">
       <h3 class="font-serif text-xl sm:text-2xl font-bold mb-2">Questions or Concerns?</h3>
       <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed mb-4">
         If you have questions regarding this Privacy Policy or wish to lodge a formal data inquiry, please contact our Legal & Compliance Team:

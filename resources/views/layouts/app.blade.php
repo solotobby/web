@@ -53,39 +53,38 @@
         Skip to content
     </a>
 
-    <!-- Sticky Elegant Navigation Header -->
-    <header x-data="{ open: false }" class="sticky top-2 sm:top-4 z-50 w-[calc(100%-1.25rem)] sm:w-[calc(100%-2rem)] max-w-5xl mx-auto my-1.5 sm:my-2">
-        <!-- Main Floating Navigation Bar -->
-        <div class="relative px-3 sm:px-5 py-2 sm:py-2.5 bg-white/95 backdrop-blur-md border border-[#e7e5df] rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex items-center justify-between gap-2 sm:gap-4 transition-all">
+    <!-- Sleek Architectural Flat Header -->
+    <header x-data="{ open: false }" class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-[#e7e5df]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
             <!-- Brand Logo -->
             <a class="flex items-center gap-2.5 font-bold text-base sm:text-lg text-[#0f172a] shrink-0 group" href="{{ route('home') }}">
-                <span class="inline-flex items-center justify-center w-8 sm:w-8.5 h-8 sm:h-8.5 bg-[#064e3b] text-white rounded-xl text-xs font-mono font-bold tracking-tight transition-transform group-hover:scale-105 shadow-xs" aria-hidden="true">
+                <span class="inline-flex items-center justify-center w-8.5 h-8.5 bg-[#064e3b] text-white rounded-lg text-xs font-mono font-bold tracking-tight transition-transform group-hover:scale-105 shadow-xs" aria-hidden="true">
                     FV
                 </span>
-                <span class="tracking-tight font-serif text-lg font-bold flex items-center">
+                <span class="tracking-tight font-serif text-lg sm:text-xl font-bold flex items-center">
                     FanVault
-                    <span class="font-sans font-medium text-[10px] uppercase tracking-wider text-[#047857] hidden xs:inline ml-2 bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]/70">Creator Edition</span>
+                    <span class="font-sans font-medium text-[10px] uppercase tracking-wider text-[#047857] hidden xs:inline ml-2.5 bg-[#ecfdf5] px-2 py-0.5 rounded border border-[#a7f3d0]">Creator Edition</span>
                 </span>
             </a>
 
             <!-- Desktop Links (md: screens and larger) -->
             <nav class="hidden md:flex items-center gap-1">
                 <a href="{{ route('creators') }}" @class([
-                    'px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all',
+                    'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors',
                     'text-[#064e3b] bg-[#ecfdf5] font-semibold' => request()->routeIs('creators') && !request()->routeIs('creators.join') && !request()->routeIs('creators.studio'),
                     'text-[#475569] hover:text-[#0f172a] hover:bg-[#f7f6f0]' => !request()->routeIs('creators'),
                 ])>
                     Time Capsules
                 </a>
                 <a href="{{ route('explore') }}" @class([
-                    'px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all',
+                    'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors',
                     'text-[#064e3b] bg-[#ecfdf5] font-semibold' => request()->routeIs('explore'),
                     'text-[#475569] hover:text-[#0f172a] hover:bg-[#f7f6f0]' => !request()->routeIs('explore'),
                 ])>
                     Community Archive
                 </a>
                 <a href="{{ route('nominate') }}" @class([
-                    'px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all',
+                    'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors',
                     'text-[#064e3b] bg-[#ecfdf5] font-semibold' => request()->routeIs('nominate'),
                     'text-[#475569] hover:text-[#0f172a] hover:bg-[#f7f6f0]' => !request()->routeIs('nominate'),
                 ])>
@@ -94,13 +93,13 @@
             </nav>
 
             <!-- Actions: Creator CTA + Mobile Menu Button -->
-            <div class="flex items-center gap-1.5 sm:gap-2">
+            <div class="flex items-center gap-2">
                 @if(session('creator_id'))
-                    <a href="{{ route('creators.studio') }}" class="inline-flex items-center gap-1.5 bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-semibold text-xs sm:text-sm px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full transition-all shadow-xs">
+                    <a href="{{ route('creators.studio') }}" class="inline-flex items-center gap-1.5 bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-semibold text-xs sm:text-sm px-4 py-2 rounded-lg transition-all shadow-xs">
                         <span>Studio</span>
                     </a>
                 @else
-                    <a href="{{ route('creators.join') }}" class="inline-flex items-center gap-1.5 bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-xs sm:text-sm px-4 sm:px-4.5 py-1.5 sm:py-2 rounded-full shadow-[0_2px_10px_rgba(6,78,59,0.2)] hover:shadow-[0_4px_14px_rgba(6,78,59,0.3)] transition-all shrink-0">
+                    <a href="{{ route('creators.join') }}" class="inline-flex items-center gap-1.5 bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-xs sm:text-sm px-4 sm:px-5 py-2 rounded-lg shadow-xs hover:shadow-md transition-all shrink-0">
                         <span class="hidden sm:inline">Create Time Capsule</span>
                         <span class="sm:hidden">Create Capsule</span>
                     </a>
@@ -110,7 +109,7 @@
                 <button 
                     type="button" 
                     @click="open = !open" 
-                    class="md:hidden inline-flex items-center justify-center w-8.5 h-8.5 rounded-full bg-[#faf9f5] hover:bg-[#f5f4ee] border border-[#e7e5df] text-[#0f172a] transition-all focus:outline-none focus:ring-2 focus:ring-[#047857]/20"
+                    class="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[#faf9f5] hover:bg-[#f5f4ee] border border-[#e7e5df] text-[#0f172a] transition-all"
                     :aria-expanded="open"
                     aria-label="Toggle navigation menu"
                 >
@@ -126,43 +125,43 @@
             </div>
         </div>
 
-        <!-- Mobile Dropdown Navigation Menu -->
+        <!-- Mobile Flat Dropdown Navigation Menu -->
         <div 
             x-show="open" 
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0 -translate-y-2 scale-98"
-            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            x-transition:leave="transition ease-in duration-150"
-            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-            x-transition:leave-end="opacity-0 -translate-y-2 scale-98"
+            x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 -translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-100"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 -translate-y-1"
             @click.outside="open = false"
             @keydown.escape.window="open = false"
-            class="md:hidden mt-2 p-3 bg-white/98 backdrop-blur-xl border border-[#e7e5df] rounded-2xl shadow-xl space-y-1"
+            class="md:hidden border-t border-[#e7e5df] bg-white px-4 py-3 space-y-1 shadow-lg"
             style="display:none;"
         >
             <div class="grid grid-cols-1 gap-1">
-                <a href="{{ route('creators') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('creators') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
+                <a href="{{ route('creators') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('creators') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
                     <div>
                         <div class="font-semibold text-sm">Time Capsules</div>
                         <div class="text-xs text-[#64748b]">Explore active creator time capsules</div>
                     </div>
                 </a>
 
-                <a href="{{ route('explore') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('explore') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
+                <a href="{{ route('explore') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('explore') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
                     <div>
                         <div class="font-semibold text-sm">Community Archive</div>
                         <div class="text-xs text-[#64748b]">Read teasers sealed for future milestones</div>
                     </div>
                 </a>
 
-                <a href="{{ route('nominate') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('nominate') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
+                <a href="{{ route('nominate') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('nominate') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
                     <div>
                         <div class="font-semibold text-sm">Nominate a Creator</div>
                         <div class="text-xs text-[#64748b]">Suggest a creator who deserves a time capsule</div>
                     </div>
                 </a>
 
-                <a href="{{ route('creators.join') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('creators.join') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
+                <a href="{{ route('creators.join') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('creators.join') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
                     <div>
                         <div class="font-semibold text-sm">Create Your Capsule</div>
                         <div class="text-xs text-[#64748b]">Launch your creator time capsule in 60s</div>
@@ -171,7 +170,7 @@
             </div>
 
             <div class="pt-2 border-t border-[#e7e5df]">
-                <a href="{{ route('creators.join') }}" @click="open = false" class="w-full flex items-center justify-center p-2.5 rounded-xl bg-[#064e3b] text-white font-semibold text-sm shadow-sm transition-all">
+                <a href="{{ route('creators.join') }}" @click="open = false" class="w-full flex items-center justify-center p-2.5 rounded-lg bg-[#064e3b] text-white font-semibold text-sm shadow-sm transition-all">
                     Create Time Capsule
                 </a>
             </div>

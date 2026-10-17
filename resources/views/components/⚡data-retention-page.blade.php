@@ -29,7 +29,7 @@ class extends Component
       <span class="text-xs text-[#cbd5e1]">/</span>
       <span class="text-xs font-mono text-[#047857] font-semibold">Data Retention Policy</span>
     </div>
-    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
+    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
       🗄️ Retention Schedules · Effective October 2026
     </span>
   </div>
@@ -45,7 +45,7 @@ class extends Component
   </header>
 
   <!-- Summary Table of Retention Periods -->
-  <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-8 shadow-xs mb-10 overflow-x-auto">
+  <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-8 shadow-xs mb-10 overflow-x-auto">
     <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
       Data Retention Matrix
     </h2>
@@ -103,7 +103,7 @@ class extends Component
   <article class="prose prose-slate max-w-none space-y-10 text-sm sm:text-base text-[#334155] leading-relaxed">
 
     <!-- Section 1 -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         1. Purpose & Guiding Principles
       </h2>
@@ -111,15 +111,15 @@ class extends Component
         FanVault adheres to the principle of <strong>Data Minimization</strong>. We retain personal data only for as long as necessary to fulfill the purpose for which it was originally collected, or as strictly mandated by legal, accounting, and regulatory statutes.
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
-        <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df]">
+        <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df]">
           <strong class="block text-[#047857] font-bold mb-1">Minimization</strong>
           <span class="text-[#64748b]">We never collect extraneous demographic or tracking data.</span>
         </div>
-        <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df]">
+        <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df]">
           <strong class="block text-[#047857] font-bold mb-1">Security at Rest</strong>
           <span class="text-[#64748b]">All retained data is safeguarded with 256-bit AES encryption.</span>
         </div>
-        <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df]">
+        <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df]">
           <strong class="block text-[#047857] font-bold mb-1">User Control</strong>
           <span class="text-[#64748b]">Users retain rights to request accelerated deletion anytime.</span>
         </div>
@@ -127,7 +127,7 @@ class extends Component
     </section>
 
     <!-- Section 2 -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         2. Fan Letter & Keepsake Lifecycle
       </h2>
@@ -143,20 +143,20 @@ class extends Component
     </section>
 
     <!-- Section 3 -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         3. Financial Records & Statutory Legal Holds
       </h2>
       <p class="mb-4">
         To comply with United States Internal Revenue Service (IRS), European Union Value-Added Tax (VAT), and global Anti-Money Laundering (AML) laws, FanVault is legally obligated to retain transactional accounting records for <strong>seven (7) years</strong> from the date of transaction.
       </p>
-      <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 text-xs sm:text-sm text-amber-900">
+      <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200 text-xs sm:text-sm text-amber-900">
         <strong>Privacy Isolation:</strong> While financial ledger records (transaction ID, currency, timestamp, amount) must be retained for 7 years, any associated fan personal letters or messages can still be scrubbed or anonymized upon request without violating tax record requirements.
       </div>
     </section>
 
     <!-- Section 4 -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         4. Cryptographic Sanitization & Deletion
       </h2>
@@ -171,7 +171,7 @@ class extends Component
     </section>
 
     <!-- Contact Box -->
-    <section class="bg-gradient-to-br from-[#064e3b] to-[#047857] text-white rounded-3xl p-6 sm:p-9 shadow-md">
+    <section class="bg-gradient-to-br from-[#064e3b] to-[#047857] text-white rounded-xl p-6 sm:p-9 shadow-md">
       <h3 class="font-serif text-xl sm:text-2xl font-bold mb-2">Data Retention Questions</h3>
       <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed mb-4">
         For inquiries regarding our storage schedules or to request a retention audit for your data, please contact:

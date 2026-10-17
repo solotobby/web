@@ -217,18 +217,18 @@ class extends Component
 };
 ?>
 
-<section class="max-w-xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
-  <div class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+<section class="max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
+  <div class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
     <!-- Stepper indicator -->
     <div class="flex items-center justify-between gap-2 pb-4 mb-6 border-b border-[#e7e5df]">
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
-        🎙️ Creator Vault Setup · Step 0{{ $step }} / 03
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-mono font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
+        Creator Vault Setup · Step 0{{ $step }} / 03
       </span>
-      <span class="text-xs text-[#64748b] font-medium">Free forever · Set your own seal amount</span>
+      <span class="text-xs text-[#64748b] font-medium font-mono">Free · Custom pricing</span>
     </div>
 
     @if($error)
-      <div class="mb-5 p-3.5 rounded-2xl bg-red-50 text-red-600 text-xs font-bold border border-red-200">
+      <div class="mb-5 p-3.5 rounded-lg bg-red-50 text-red-600 text-xs font-bold border border-red-200">
         ⚠️ {{ $error }}
       </div>
     @endif
@@ -245,7 +245,7 @@ class extends Component
         <label for="creator-name" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Creator or Channel Name
         </label>
-        <input id="creator-name" wire:model="name" autocomplete="name" placeholder="e.g. MKBHD, Lex Fridman, Amara Okoye" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
+        <input id="creator-name" wire:model="name" autocomplete="name" placeholder="e.g. MKBHD, Lex Fridman, Amara Okoye" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 text-sm text-[#0f172a] placeholder-[#94a3b8] focus:ring-1 focus:ring-[#047857] transition-all outline-none">
         @error('name') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
       </div>
 
@@ -253,8 +253,8 @@ class extends Component
         <label for="creator-handle" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Channel Handle / Username
         </label>
-        <input id="creator-handle" wire:model.live="handle" autocomplete="username" placeholder="e.g. mkbhd or techreview" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
-        <div class="text-xs text-[#64748b] mt-1">
+        <input id="creator-handle" wire:model.live="handle" autocomplete="username" placeholder="e.g. mkbhd or techreview" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 text-sm text-[#0f172a] placeholder-[#94a3b8] focus:ring-1 focus:ring-[#047857] transition-all outline-none font-mono">
+        <div class="text-xs text-[#64748b] mt-1 font-mono">
           Your vault link · <strong class="text-[#047857]">/with/{{ $this->slugPreview() }}</strong>
         </div>
         @error('handle') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
@@ -267,7 +267,7 @@ class extends Component
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
           @foreach(['YouTube' => '📺', 'Twitch' => '👾', 'TikTok' => '🎵', 'Kick' => '⚡', 'Podcast' => '🎙️', 'Instagram' => '📸', 'X / Twitter' => '𝕏', 'Substack' => '✍️'] as $p => $icon)
             <button type="button" 
-              class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 {{ in_array($p, $platforms, true) ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-[#f5f4ee] text-[#475569] hover:bg-white' }}" 
+              class="py-2.5 px-3 rounded-lg font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 {{ in_array($p, $platforms, true) ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] font-semibold' : 'border border-[#e7e5df] bg-[#f5f4ee] text-[#475569] hover:bg-white' }}" 
               wire:click="togglePlatform('{{ $p }}')">
               <span>{{ $icon }}</span>
               <span>{{ $p }}</span>
@@ -278,11 +278,11 @@ class extends Component
       </div>
 
       <div class="pt-2">
-        <button class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-sm sm:text-base shadow-[0_4px_16px_rgba(6,78,59,0.3)] hover:shadow-[0_6px_20px_rgba(6,78,59,0.4)] hover:-translate-y-0.5 transition-all" type="button" wire:click="next">
+        <button class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white font-semibold text-sm transition-all shadow-xs" type="button" wire:click="next">
           Next: Set Your Milestone →
         </button>
       </div>
-      <p class="text-xs text-[#64748b] mt-4">Already have a vault? <a href="{{ route('creators.access') }}" class="text-[#047857] font-semibold hover:underline">Log in with email</a></p>
+      <p class="text-xs text-[#64748b] mt-4 font-mono">Already have a vault? <a href="{{ route('creators.access') }}" class="text-[#047857] font-semibold hover:underline">Log in with email</a></p>
 
     @elseif($step === 2)
       <h1 class="font-serif text-2xl sm:text-3xl font-bold text-[#0f172a] mb-1">
@@ -298,28 +298,28 @@ class extends Component
           Time Capsule Templates
         </label>
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          <button type="button" wire:click="applyTemplate('milestone')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'milestone' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
-            <span class="text-sm block mb-0.5">🎉 100K / 1M Subs</span>
+          <button type="button" wire:click="applyTemplate('milestone')" class="p-2.5 rounded-lg border text-left transition-all {{ $selected_template === 'milestone' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b] font-semibold' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+            <span class="text-xs font-bold block mb-0.5">🎉 100K / 1M Subs</span>
             <span class="text-[10px] text-[#64748b] block">Subscriber milestone</span>
           </button>
-          <button type="button" wire:click="applyTemplate('birthday')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'birthday' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
-            <span class="text-sm block mb-0.5">🎂 Birthday</span>
+          <button type="button" wire:click="applyTemplate('birthday')" class="p-2.5 rounded-lg border text-left transition-all {{ $selected_template === 'birthday' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b] font-semibold' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+            <span class="text-xs font-bold block mb-0.5">🎂 Birthday</span>
             <span class="text-[10px] text-[#64748b] block">Messages for future self</span>
           </button>
-          <button type="button" wire:click="applyTemplate('anniversary')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'anniversary' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
-            <span class="text-sm block mb-0.5">❤️ Anniversary</span>
+          <button type="button" wire:click="applyTemplate('anniversary')" class="p-2.5 rounded-lg border text-left transition-all {{ $selected_template === 'anniversary' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b] font-semibold' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+            <span class="text-xs font-bold block mb-0.5">❤️ Anniversary</span>
             <span class="text-[10px] text-[#64748b] block">Community memories</span>
           </button>
-          <button type="button" wire:click="applyTemplate('prediction')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'prediction' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
-            <span class="text-sm block mb-0.5">🔮 Predictions</span>
+          <button type="button" wire:click="applyTemplate('prediction')" class="p-2.5 rounded-lg border text-left transition-all {{ $selected_template === 'prediction' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b] font-semibold' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+            <span class="text-xs font-bold block mb-0.5">🔮 Predictions</span>
             <span class="text-[10px] text-[#64748b] block">Where will we be in 3y?</span>
           </button>
-          <button type="button" wire:click="applyTemplate('career')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'career' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
-            <span class="text-sm block mb-0.5">🏆 Career Milestone</span>
+          <button type="button" wire:click="applyTemplate('career')" class="p-2.5 rounded-lg border text-left transition-all {{ $selected_template === 'career' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b] font-semibold' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+            <span class="text-xs font-bold block mb-0.5">🏆 Career Milestone</span>
             <span class="text-[10px] text-[#64748b] block">Book, album or launch</span>
           </button>
-          <button type="button" wire:click="applyTemplate('custom')" class="p-2.5 rounded-xl border text-left transition-all {{ $selected_template === 'custom' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b]' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
-            <span class="text-sm block mb-0.5">✨ Custom</span>
+          <button type="button" wire:click="applyTemplate('custom')" class="p-2.5 rounded-lg border text-left transition-all {{ $selected_template === 'custom' ? 'bg-[#ecfdf5] border-2 border-[#047857] text-[#064e3b] font-semibold' : 'bg-[#faf9f5] hover:bg-white border-[#e7e5df] text-[#0f172a]' }}">
+            <span class="text-xs font-bold block mb-0.5">✨ Custom</span>
             <span class="text-[10px] text-[#64748b] block">Anything memorable</span>
           </button>
         </div>
@@ -329,7 +329,7 @@ class extends Component
         <label for="milestone-title" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Milestone Event Title
         </label>
-        <input id="milestone-title" wire:model="milestone_title" placeholder="e.g. 5-Year Channel Anniversary, 100k Subs Special, Episode 500" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
+        <input id="milestone-title" wire:model="milestone_title" placeholder="e.g. 5-Year Channel Anniversary, 100k Subs Special" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 text-sm text-[#0f172a] placeholder-[#94a3b8] focus:ring-1 focus:ring-[#047857] transition-all outline-none">
         @error('milestone_title') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
       </div>
 
@@ -337,8 +337,8 @@ class extends Component
         <label for="unlock-date" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Target Reveal / Stream Date
         </label>
-        <input id="unlock-date" type="date" wire:model="unlock_date" min="{{ now()->addDays(7)->toDateString() }}" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 text-base text-[#0f172a] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
-        <div class="text-xs text-[#64748b] mt-1">
+        <input id="unlock-date" type="date" wire:model="unlock_date" min="{{ now()->addDays(7)->toDateString() }}" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 text-sm text-[#0f172a] focus:ring-1 focus:ring-[#047857] transition-all outline-none font-mono">
+        <div class="text-xs text-[#64748b] mt-1 font-mono">
           Pick the target date you plan to unseal the vault. Fans’ letters will count down to this day.
         </div>
         @error('unlock_date') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
@@ -348,13 +348,13 @@ class extends Component
         <label for="creator-bio" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Prompt for Your Fans (Bio)
         </label>
-        <textarea id="creator-bio" wire:model="bio" rows="3" placeholder="Leave a letter, prediction, or memory for our milestone stream. I will read my favorites live on video!" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none resize-none"></textarea>
+        <textarea id="creator-bio" wire:model="bio" rows="3" placeholder="Leave a letter, prediction, or memory for our milestone stream. I will read my favorites live on video!" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 text-sm text-[#0f172a] placeholder-[#94a3b8] focus:ring-1 focus:ring-[#047857] transition-all outline-none resize-none"></textarea>
         @error('bio') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
       </div>
 
       <div class="flex items-center justify-between gap-3 pt-2">
-        <button class="px-6 py-3 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-bold text-sm transition-all" type="button" wire:click="back">← Back</button>
-        <button class="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-sm sm:text-base shadow-[0_4px_16px_rgba(6,78,59,0.3)] hover:shadow-[0_6px_20px_rgba(6,78,59,0.4)] hover:-translate-y-0.5 transition-all" type="button" wire:click="next">
+        <button class="px-5 py-2.5 rounded-lg bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-semibold text-sm transition-all" type="button" wire:click="back">← Back</button>
+        <button class="px-7 py-2.5 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white font-semibold text-sm transition-all shadow-xs" type="button" wire:click="next">
           Next: Email Access →
         </button>
       </div>
@@ -367,29 +367,29 @@ class extends Component
         No password to remember. Use this email whenever you need to open your Creator Studio — check letters, read submissions, and claim your payouts.
       </p>
 
-      <div class="bg-[#f5f4ee] border border-[#e7e5df] rounded-2xl p-4 mb-5 text-center" aria-hidden="true">
-        <span class="block text-xs text-[#64748b] uppercase tracking-wider font-semibold">{{ $name ?: 'Your Name' }}</span>
+      <div class="bg-[#f5f4ee] border border-[#e7e5df] rounded-lg p-4 mb-5 text-center" aria-hidden="true">
+        <span class="block text-xs text-[#64748b] uppercase tracking-wider font-semibold font-mono">{{ $name ?: 'Your Name' }}</span>
         <strong class="block font-mono text-base text-[#047857] my-1">/with/{{ $this->slugPreview() }}</strong>
-        <em class="block text-xs not-italic text-[#475569]">{{ $milestone_title ?: 'Community Milestone' }} · {{ implode(', ', $platforms) }}</em>
+        <em class="block text-xs not-italic text-[#475569] font-mono">{{ $milestone_title ?: 'Community Milestone' }} · {{ implode(', ', $platforms) }}</em>
       </div>
 
       <div class="mb-6">
         <label for="creator-email" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">Email address</label>
-        <input id="creator-email" type="email" wire:model="email" autocomplete="email" placeholder="you@example.com" wire:keydown.enter="join" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
-        <div class="text-xs text-[#64748b] mt-1">
+        <input id="creator-email" type="email" wire:model="email" autocomplete="email" placeholder="you@example.com" wire:keydown.enter="join" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 text-sm text-[#0f172a] placeholder-[#94a3b8] focus:ring-1 focus:ring-[#047857] transition-all outline-none">
+        <div class="text-xs text-[#64748b] mt-1 font-mono">
           We will send your studio magic links to this inbox.
         </div>
         @error('email') <div class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</div> @enderror
       </div>
 
       <div class="flex items-center justify-between gap-3 pt-2">
-        <button class="px-6 py-3 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-bold text-sm transition-all" type="button" wire:click="back">← Back</button>
-        <button class="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-sm sm:text-base shadow-[0_4px_16px_rgba(6,78,59,0.3)] hover:shadow-[0_6px_20px_rgba(6,78,59,0.4)] hover:-translate-y-0.5 transition-all" type="button" wire:click="join" wire:loading.attr="disabled">
+        <button class="px-5 py-2.5 rounded-lg bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-semibold text-sm transition-all" type="button" wire:click="back">← Back</button>
+        <button class="px-7 py-2.5 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white font-semibold text-sm transition-all shadow-xs" type="button" wire:click="join" wire:loading.attr="disabled">
           <span wire:loading.remove wire:target="join">Launch My Vault 📬</span>
           <span wire:loading wire:target="join">Launching…</span>
         </button>
       </div>
-      <p class="text-xs text-[#64748b] text-center mt-6">You set your own seal amount instead of a fixed $5 fee. Fans contribute at your chosen level or add superfan booster tips.</p>
+      <p class="text-xs text-[#64748b] text-center mt-6 font-mono">You set your own seal amount instead of a fixed fee. Fans contribute at your chosen level with direct Stripe payouts.</p>
     @endif
   </div>
 </section>

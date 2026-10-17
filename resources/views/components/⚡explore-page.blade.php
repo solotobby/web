@@ -34,40 +34,60 @@ class extends Component
 };
 ?>
 
-<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
-  <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-    <div class="inline-flex flex-wrap items-center justify-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ecfdf5] border border-[#a7f3d0]/80 text-[#064e3b] text-xs font-medium mb-3">
-      <span class="w-1.5 h-1.5 rounded-full bg-[#047857] animate-pulse"></span>
-      <span class="font-bold">🔒 {{ number_format($count) }} Contributions Sealed</span>
-      <span class="text-[#64748b]">·</span>
-      <span>👥 {{ number_format($uniquePeople) }} people have left something behind</span>
+<div>
+  <!-- 1. FLAT ARCHITECTURAL HERO -->
+  <section class="relative w-full bg-[#03261d] text-white border-b border-emerald-900/60 overflow-hidden py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+    
+    <div class="max-w-4xl mx-auto text-center space-y-5 relative z-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded text-xs font-mono text-emerald-300">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <span class="font-semibold uppercase tracking-wider text-[11px]">Archive / Public Teaser Wall</span>
+      </div>
+
+      <h1 class="font-serif text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+        Voices from the Time Capsules
+      </h1>
+
+      <p class="text-sm sm:text-base md:text-lg text-emerald-100/80 leading-relaxed max-w-2xl mx-auto font-light">
+        Every card below is a preview teaser from a message, prediction, or memory sealed for a future creator milestone. The full letter and attachments remain strictly encrypted until the creator unseals the capsule live on stream.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs font-mono">
+        <span class="bg-white/10 px-3 py-1.5 rounded border border-white/15 text-emerald-200">
+          🔒 <strong>{{ number_format($count) }}</strong> Contributions Sealed
+        </span>
+        <span class="bg-white/10 px-3 py-1.5 rounded border border-white/15 text-emerald-200">
+          👥 <strong>{{ number_format($uniquePeople) }}</strong> People Participating
+        </span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3">
+        <a href="{{ route('creators') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-[#03261d] font-bold text-sm transition-all shadow-sm">
+          Explore Time Capsules
+        </a>
+        <a href="{{ route('seal') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-white font-medium text-sm transition-all">
+          Seal a Contribution
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. ARCHIVE CARDS GRID -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div class="mb-8 flex items-center justify-between pb-3 border-b border-[#e7e5df]">
+      <div class="text-xs font-mono uppercase tracking-wider text-[#64748b]">
+        Latest Vault Passes
+      </div>
+      <div class="text-xs font-mono text-[#047857]">
+        Live Protocol Feed
+      </div>
     </div>
 
-    <!-- Point 11: Teaser Trailer Intentional Framing -->
-    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#faf9f5] border border-[#e7e5df] text-[#475569] text-[11px] font-mono mb-4">
-      <span>🔒</span>
-      <span><strong>You can see the teaser. You can't see the message.</strong> Full letters locked until reveal.</span>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      @foreach($messages as $msg)
+        <x-voice-card :msg="$msg" />
+      @endforeach
     </div>
-
-    <h1 class="font-serif text-3xl sm:text-5xl font-normal tracking-tight text-[#0f172a] mb-3">
-      Voices from the <em class="italic text-[#047857]">time capsules</em>.
-    </h1>
-    <p class="text-sm sm:text-base md:text-lg text-[#64748b] leading-relaxed">
-      Every card below is a preview teaser from a message, prediction, or memory sealed for a future creator milestone. The full letter and attachments remain strictly encrypted until the creator unseals the capsule live on stream.
-    </p>
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
-      <a href="{{ route('creators') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 active:translate-y-0 transition-all">
-        Explore Time Capsules
-      </a>
-      <a href="{{ route('seal') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-medium text-sm sm:text-base hover:-translate-y-0.5 transition-all shadow-xs">
-        Seal a Contribution
-      </a>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-    @foreach($messages as $msg)
-      <x-voice-card :msg="$msg" />
-    @endforeach
-  </div>
-</section>
+  </section>
+</div>

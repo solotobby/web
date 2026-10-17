@@ -41,6 +41,7 @@ class extends Component
             'schemaJson' => \App\Support\Seo::toJson($schema),
         ]);
     }
+
     public function with(): array
     {
         $count = (int) (Stat::query()->value('sealed_count') ?? Postcard::query()->count());
@@ -69,93 +70,177 @@ class extends Component
 };
 ?>
 
-<div class="space-y-20 sm:space-y-28 pb-12">
-  <!-- 1. HERO SECTION: Sleek, Giftpose-style dark emerald gradient hero -->
-  <section class="relative -mt-6 sm:-mt-10 pt-16 sm:pt-24 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#064e3b] via-[#043d2f] to-[#02241b] text-white rounded-3xl sm:rounded-[2.5rem] shadow-xl overflow-hidden">
-    <!-- Ambient radial glow behind title -->
-    <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_65%_15%,rgba(52,211,153,0.18)_0%,transparent_60%)]" aria-hidden="true"></div>
+<div class="space-y-16 sm:space-y-24 pb-16">
+  <!-- 1. FLAT ARCHITECTURAL HERO (No curves, edge-to-edge flat dark emerald canvas) -->
+  <section class="relative w-full bg-[#03261d] text-white border-b border-emerald-900/60 overflow-hidden">
+    <!-- Subtle architectural grid lines (Linear/Stripe style) -->
+    <div class="absolute inset-0 opacity-[0.04] pointer-events-none bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+    
+    <!-- Delicate stationary light gradient, static & elegant -->
+    <div class="absolute top-0 right-1/4 w-[600px] h-[300px] bg-emerald-500/10 blur-[120px] pointer-events-none"></div>
 
-    <div class="max-w-4xl mx-auto text-center relative z-10 space-y-6">
-      <!-- Eyebrow Pill -->
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-emerald-300 text-xs font-mono uppercase tracking-wider shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>The Time Capsule for Creators</span>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-16 sm:pb-24 relative z-10">
+      <div class="max-w-3xl mx-auto text-center space-y-6">
+        <!-- Eyebrow Badge (Flat, crisp, understated) -->
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded text-xs font-mono text-emerald-300">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span class="font-semibold uppercase tracking-wider text-[11px]">The Time Capsule for Creators</span>
+          <span class="text-white/20">/</span>
+          <span class="text-white/70">FanVault Protocol</span>
+        </div>
+
+        <!-- Headline: Sharp, high-contrast, editorial Fraunces font -->
+        <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.12]">
+          Turn Community Moments into Sealed Keepsakes
+        </h1>
+
+        <!-- Subtitle: Crisp and clear -->
+        <p class="text-base sm:text-lg text-emerald-100/80 leading-relaxed max-w-2xl mx-auto font-sans font-light">
+          A permanent digital archive for creator milestones. Fans leave letters, memories, and predictions today — unsealed live on stream when the moment arrives.
+        </p>
+
+        <!-- Flat Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <a href="{{ route('creators.join') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-[#03261d] font-bold text-sm transition-all shadow-sm">
+            <span>Create Your Time Capsule (Free)</span>
+            <span>→</span>
+          </a>
+          <a href="{{ route('creators') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-white font-medium text-sm transition-all">
+            Explore Active Capsules
+          </a>
+        </div>
       </div>
 
-      <!-- Main Headline: Punchy, modern, non-wordy -->
-      <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.15] max-w-3xl mx-auto">
-        Turn Community Moments into Sealed Keepsakes
-      </h1>
-
-      <!-- Succinct Subtitle -->
-      <p class="text-base sm:text-lg md:text-xl text-emerald-100/90 leading-relaxed max-w-2xl mx-auto font-sans">
-        Give your fans a place to leave letters, memories, and predictions for the future. Sealed today, unboxed live on stream when your milestone arrives.
-      </p>
-
-      <!-- Primary Action Buttons (Pill buttons with hover lift) -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-        <a href="{{ route('creators.join') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 sm:py-4 rounded-full bg-emerald-400 hover:bg-emerald-300 text-[#064e3b] font-bold text-sm sm:text-base shadow-[0_4px_20px_rgba(52,211,153,0.35)] hover:-translate-y-0.5 transition-all">
-          <span>Create Your Time Capsule (Free)</span>
-          <span>→</span>
-        </a>
-        <a href="{{ route('creators') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 sm:py-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 text-white font-semibold text-sm sm:text-base hover:-translate-y-0.5 transition-all">
-          Explore Active Capsules
-        </a>
-      </div>
-
-      <!-- Hero Visual Showcase: Floating Interactive Pass Card -->
-      <div class="pt-8 sm:pt-12 max-w-2xl mx-auto">
-        <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.4)] text-left space-y-4">
-          <div class="flex items-center justify-between text-xs font-mono text-emerald-200">
-            <span class="inline-flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full border border-white/15">
-              <span>🔒</span> Vault Status: Sealed & Encrypted
-            </span>
-            <span class="text-emerald-300 font-bold">● Active Ceremony</span>
+      <!-- Hero Visual Showcase: Flat, High-Tech Interactive Ledger Deck -->
+      <div x-data="{ tab: 'sealed', sec: 42, init() { setInterval(() => { this.sec = this.sec > 0 ? this.sec - 1 : 59 }, 1000) } }" class="mt-12 sm:mt-16 max-w-3xl mx-auto">
+        <!-- Outer Flat Frame -->
+        <div class="border border-emerald-900/80 bg-[#021c15] rounded-xl shadow-2xl overflow-hidden">
+          
+          <!-- Frame Top Bar: Tabs & Live System Status -->
+          <div class="flex flex-wrap items-center justify-between border-b border-emerald-900/60 bg-[#01140f] px-4 py-2.5 gap-2 text-xs font-mono">
+            <div class="flex items-center gap-2">
+              <button @click="tab = 'sealed'" :class="tab === 'sealed' ? 'bg-white/10 text-emerald-300 border-white/20' : 'text-slate-400 hover:text-white border-transparent'" class="px-3 py-1 rounded border transition-colors flex items-center gap-1.5 text-xs font-semibold">
+                <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span>01 / SEALED VAULT</span>
+              </button>
+              <button @click="tab = 'stream'" :class="tab === 'stream' ? 'bg-white/10 text-emerald-300 border-white/20' : 'text-slate-400 hover:text-white border-transparent'" class="px-3 py-1 rounded border transition-colors flex items-center gap-1.5 text-xs font-semibold">
+                <svg class="w-3.5 h-3.5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span>02 / OBS STREAM REVEAL</span>
+              </button>
+            </div>
+            <div class="flex items-center gap-2 text-[11px] text-emerald-400">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span class="tracking-widest">END-TO-END ENCRYPTED</span>
+            </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-            <div class="bg-white/95 text-[#0f172a] rounded-2xl p-4 shadow-sm space-y-1">
-              <span class="text-[11px] font-mono uppercase tracking-wider text-[#047857] font-bold">🔮 Sealed Prediction</span>
-              <p class="font-serif italic text-sm text-[#0f172a] line-clamp-2">
-                “When you open this at 100k subs, you'll be streaming full-time from Tokyo!”
-              </p>
-              <div class="flex items-center justify-between text-[10px] text-[#64748b] pt-1">
-                <span>By @alex_m</span>
-                <span class="text-amber-600 font-bold">⭐ Starred</span>
+          <!-- TAB 1: SEALED VAULT PASS -->
+          <div x-show="tab === 'sealed'" class="p-6 sm:p-8 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-emerald-900/40 text-xs font-mono">
+              <div class="text-slate-400">
+                LEDGER PASS: <span class="text-emerald-300 font-bold">#00010482</span>
+              </div>
+              <div class="text-slate-400 flex items-center gap-2">
+                <span>HASH:</span>
+                <span class="text-slate-300 bg-white/5 px-2 py-0.5 rounded border border-white/10 text-[11px]">SHA-256: 8f4e2...e9a1</span>
               </div>
             </div>
 
-            <div class="bg-white/95 text-[#0f172a] rounded-2xl p-4 shadow-sm space-y-1">
-              <span class="text-[11px] font-mono uppercase tracking-wider text-[#047857] font-bold">💌 Community Letter</span>
-              <p class="font-serif italic text-sm text-[#0f172a] line-clamp-2">
-                “Been here since stream #3. Thank you for making lonely nights brighter.”
-              </p>
-              <div class="flex items-center justify-between text-[10px] text-[#64748b] pt-1">
-                <span>By @sarah_k</span>
-                <span class="text-emerald-700 font-semibold">🔒 Encrypted</span>
+            <!-- Authentic Sealed Postcard Layout -->
+            <div class="bg-[#faf9f5] text-[#0f172a] rounded-lg p-5 sm:p-6 space-y-4 border border-[#e7e5df]">
+              <div class="flex items-center justify-between text-xs font-mono text-[#64748b]">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#ecfdf5] text-[#064e3b] font-bold rounded border border-[#a7f3d0]">
+                  COMMUNITY PREDICTION
+                </span>
+                <span>DESTINATION: 100K STREAM</span>
+              </div>
+
+              <blockquote class="font-serif italic text-base sm:text-xl text-[#0f172a] leading-relaxed">
+                “When you open this at 100k subs, you'll be streaming full-time from your new Tokyo studio!”
+              </blockquote>
+
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 text-xs text-[#64748b]">
+                <div class="font-mono">
+                  Sealed by <strong class="text-[#0f172a]">@alex_m</strong> · Kyoto, Japan
+                </div>
+                <div class="font-mono text-[#047857] font-semibold flex items-center gap-1">
+                  <span>🔒 Sealed & Encrypted</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ticking Countdown Module -->
+            <div class="flex flex-wrap items-center justify-between gap-4 pt-2 text-xs font-mono">
+              <div class="text-slate-400">
+                UNSEAL COUNTDOWN:
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="bg-white/5 px-2.5 py-1 rounded border border-white/10 text-emerald-300 font-bold">048 DAYS</span>
+                <span class="text-slate-600">:</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded border border-white/10 text-emerald-300 font-bold">14 HOURS</span>
+                <span class="text-slate-600">:</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded border border-white/10 text-emerald-300 font-bold">22 MINS</span>
+                <span class="text-slate-600">:</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded border border-white/10 text-amber-300 font-bold" x-text="(sec < 10 ? '0' : '') + sec + ' SECS'">42 SECS</span>
               </div>
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs text-emerald-100 border-t border-white/15">
-            <div class="flex items-center gap-4 font-mono text-[11px]">
-              <span><strong>{{ number_format($count) }}</strong> Letters Sealed</span>
-              <span>•</span>
-              <span><strong>{{ number_format($uniquePeople) }}</strong> Fans Participated</span>
+          <!-- TAB 2: OBS STREAM REVEAL -->
+          <div x-show="tab === 'stream'" x-cloak class="p-6 sm:p-8 space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-emerald-900/40 text-xs font-mono">
+              <div class="flex items-center gap-2 text-rose-400 font-bold">
+                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                <span>OBS STUDIO DOCK · 1080p60 PRESENTATION</span>
+              </div>
+              <span class="text-slate-400">CUE CARD 42 / 100</span>
             </div>
-            <div class="text-[11px] text-emerald-200">
-              Unboxes live on YouTube & Twitch
+
+            <div class="bg-slate-900 text-white rounded-lg p-5 sm:p-6 space-y-3 border border-emerald-500/30">
+              <div class="flex items-center justify-between text-xs font-mono text-emerald-400">
+                <span>REVEALED LIVE ON CAMERA</span>
+                <span class="text-amber-400 font-bold">★ STARRED ENTRY</span>
+              </div>
+              <p class="font-serif italic text-lg sm:text-2xl text-emerald-50 leading-relaxed">
+                “Been here since stream #3 when only 8 people watched. Thank you for making lonely nights brighter.”
+              </p>
+              <div class="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-800 font-mono">
+                <span>Written 2 years ago by @sarah_k</span>
+                <span class="text-emerald-400">Stripe Payout Settled</span>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-slate-400 pt-2">
+              <span>Hotkeys: [Space] Reveal · [→] Next Letter</span>
+              <span class="text-emerald-300 font-semibold">Zero Spoilers Before Stream Broadcast</span>
             </div>
           </div>
+
+          <!-- Bottom Ledger Metrics Bar -->
+          <div class="border-t border-emerald-900/60 bg-[#01140f] px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-emerald-200">
+            <div class="flex items-center gap-4">
+              <span><strong class="text-white">{{ number_format($count) }}</strong> Letters Sealed</span>
+              <span class="text-emerald-800">/</span>
+              <span><strong class="text-white">{{ number_format($uniquePeople) }}</strong> Fans Joined</span>
+            </div>
+            <div class="text-slate-400">
+              Automatic Stripe Direct Transfers (80/20)
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 2. THREE KEY VALUE PROPS: Transparent Feature Cards (Giftpose .feat-card style) -->
+  <!-- 2. THREE KEY VALUE PROPS: Flat Architectural Cards with Crisp Borders -->
   <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-xl mx-auto mb-10 sm:mb-14">
-      <h2 class="font-serif text-2xl sm:text-4xl font-bold text-[#0f172a] mb-3">
+    <div class="text-center max-w-xl mx-auto mb-10 sm:mb-12 space-y-2">
+      <h2 class="font-serif text-2xl sm:text-4xl font-bold text-[#0f172a] tracking-tight">
         Why Creators & Fans Love FanVault
       </h2>
       <p class="text-sm sm:text-base text-[#64748b]">
@@ -164,133 +249,124 @@ class extends Component
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-      <!-- Card 1 -->
-      <div class="bg-white hover:bg-[#faf9f5] border border-[#e7e5df] hover:border-[#047857]/40 rounded-3xl p-6 sm:p-8 shadow-xs hover:shadow-md hover:-translate-y-1.5 transition-all duration-200 text-center flex flex-col items-center">
-        <div class="w-14 h-14 rounded-2xl bg-[#ecfdf5] border border-[#a7f3d0] flex items-center justify-center text-2xl mb-5 shadow-2xs">
-          🔐
+      <!-- Feature 1 -->
+      <div class="bg-white border border-[#e7e5df] hover:border-[#047857] rounded-xl p-6 sm:p-8 transition-colors flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="w-12 h-12 rounded-lg bg-[#ecfdf5] border border-[#a7f3d0] flex items-center justify-center text-[#047857]">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a]">
+            Zero Spoilers Until Reveal
+          </h3>
+          <p class="text-xs sm:text-sm text-[#64748b] leading-relaxed">
+            Every submission stays cryptographically sealed. Nobody — not even the creator — can peek early until the milestone stream unboxing.
+          </p>
         </div>
-        <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a] mb-2.5">
-          Zero Spoilers Until Reveal
-        </h3>
-        <p class="text-xs sm:text-sm text-[#64748b] leading-relaxed">
-          Every submission stays cryptographically sealed. Nobody — not even the creator — can peek early until the milestone stream.
-        </p>
+        <div class="mt-6 pt-4 border-t border-[#f1f0eb] font-mono text-[11px] text-[#047857] font-semibold">
+          Cryptographically Vaulted
+        </div>
       </div>
 
-      <!-- Card 2 -->
-      <div class="bg-white hover:bg-[#faf9f5] border border-[#e7e5df] hover:border-[#047857]/40 rounded-3xl p-6 sm:p-8 shadow-xs hover:shadow-md hover:-translate-y-1.5 transition-all duration-200 text-center flex flex-col items-center">
-        <div class="w-14 h-14 rounded-2xl bg-[#ecfdf5] border border-[#a7f3d0] flex items-center justify-center text-2xl mb-5 shadow-2xs">
-          🎬
+      <!-- Feature 2 -->
+      <div class="bg-white border border-[#e7e5df] hover:border-[#047857] rounded-xl p-6 sm:p-8 transition-colors flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="w-12 h-12 rounded-lg bg-[#ecfdf5] border border-[#a7f3d0] flex items-center justify-center text-[#047857]">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a]">
+            Unboxed Live on Stream
+          </h3>
+          <p class="text-xs sm:text-sm text-[#64748b] leading-relaxed">
+            Broadcast Stream Mode gives you high-contrast cue cards in OBS to reveal letters, react to wild predictions, and celebrate on camera.
+          </p>
         </div>
-        <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a] mb-2.5">
-          Unboxed Live on Stream
-        </h3>
-        <p class="text-xs sm:text-sm text-[#64748b] leading-relaxed">
-          Broadcast Stream Mode gives you high-contrast cue cards in OBS to reveal letters, react to wild predictions, and celebrate on camera.
-        </p>
+        <div class="mt-6 pt-4 border-t border-[#f1f0eb] font-mono text-[11px] text-[#047857] font-semibold">
+          OBS Studio Compatible
+        </div>
       </div>
 
-      <!-- Card 3 -->
-      <div class="bg-white hover:bg-[#faf9f5] border border-[#e7e5df] hover:border-[#047857]/40 rounded-3xl p-6 sm:p-8 shadow-xs hover:shadow-md hover:-translate-y-1.5 transition-all duration-200 text-center flex flex-col items-center">
-        <div class="w-14 h-14 rounded-2xl bg-[#ecfdf5] border border-[#a7f3d0] flex items-center justify-center text-2xl mb-5 shadow-2xs">
-          📬
+      <!-- Feature 3 -->
+      <div class="bg-white border border-[#e7e5df] hover:border-[#047857] rounded-xl p-6 sm:p-8 transition-colors flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="w-12 h-12 rounded-lg bg-[#ecfdf5] border border-[#a7f3d0] flex items-center justify-center text-[#047857]">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+          </div>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a]">
+            Zero Clutter, Direct Payouts
+          </h3>
+          <p class="text-xs sm:text-sm text-[#64748b] leading-relaxed">
+            Replaces physical PO Box hassle. International fans join with zero shipping friction, supporting at your chosen price with Stripe payouts.
+          </p>
         </div>
-        <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a] mb-2.5">
-          Zero Clutter, Direct Payouts
-        </h3>
-        <p class="text-xs sm:text-sm text-[#64748b] leading-relaxed">
-          Replaces physical PO Box hassle. International fans join with zero shipping friction, supporting at your chosen price with Stripe payouts.
-        </p>
+        <div class="mt-6 pt-4 border-t border-[#f1f0eb] font-mono text-[11px] text-[#047857] font-semibold">
+          Direct Stripe Integration
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 3. HOW IT WORKS: Numbered Steps (Giftpose .how-sec style) -->
+  <!-- 3. HOW THE TIME CAPSULE WORKS: Clean Flat 3-Step Ceremony -->
   <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-[#f5fbf5] border border-[#d5ecd5] rounded-3xl sm:rounded-[2.5rem] p-6 sm:p-12 lg:p-14">
-      <div class="text-center max-w-xl mx-auto mb-10 sm:mb-14">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#a7f3d0] text-[#064e3b] text-xs font-mono uppercase tracking-wider mb-2">
-          Simple 3-Step Ceremony
-        </div>
-        <h2 class="font-serif text-2xl sm:text-4xl font-bold text-[#0f172a]">
+    <div class="bg-[#f7f6f0] border border-[#e7e5df] rounded-xl p-6 sm:p-10 lg:p-12">
+      <div class="text-center max-w-xl mx-auto mb-10 sm:mb-12 space-y-2">
+        <h2 class="font-serif text-2xl sm:text-4xl font-bold text-[#0f172a] tracking-tight">
           How the Time Capsule Works
         </h2>
+        <p class="text-xs sm:text-sm text-[#64748b]">
+          A straightforward three-step protocol from creation to broadcast.
+        </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        <!-- Steps List (Left 7 Cols) -->
-        <div class="lg:col-span-7 space-y-6 sm:space-y-8">
-          <!-- Step 1 -->
-          <div class="flex items-start gap-4 sm:gap-5">
-            <div class="w-10 h-10 rounded-full bg-[#047857] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-md">
-              1
-            </div>
-            <div>
-              <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a] mb-1">
-                Set Your Milestone Target
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
-                Choose an upcoming milestone: a 100K sub stream, channel birthday, or anniversary. Share your personal vault link with your community.
-              </p>
-            </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <!-- Step 1 -->
+        <div class="bg-white border border-[#e7e5df] rounded-lg p-6 space-y-3">
+          <div class="font-mono text-xs font-bold text-[#047857] tracking-wider uppercase">
+            01 / SET MILESTONE
           </div>
-
-          <!-- Step 2 -->
-          <div class="flex items-start gap-4 sm:gap-5">
-            <div class="w-10 h-10 rounded-full bg-[#047857] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-md">
-              2
-            </div>
-            <div>
-              <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a] mb-1">
-                Fans Leave Notes & Predictions
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
-                Fans write personal messages, memories, and future predictions. Every entry is encrypted and safely stored in the vault.
-              </p>
-            </div>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="flex items-start gap-4 sm:gap-5">
-            <div class="w-10 h-10 rounded-full bg-[#047857] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-md">
-              3
-            </div>
-            <div>
-              <h3 class="font-serif text-lg sm:text-xl font-bold text-[#0f172a] mb-1">
-                Unseal Live on Stream
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
-                When the moment arrives, launch Stream Mode in OBS. Reveal the letters live on camera and react to predictions with your chat.
-              </p>
-            </div>
-          </div>
+          <h3 class="font-serif text-lg font-bold text-[#0f172a]">
+            Define Your Target
+          </h3>
+          <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
+            Choose an upcoming milestone: a 100K sub stream, channel birthday, or anniversary. Set your seal price and get your personal link.
+          </p>
         </div>
 
-        <!-- Preview Card (Right 5 Cols) -->
-        <div class="lg:col-span-5 bg-white border border-[#e7e5df] rounded-2xl sm:rounded-3xl p-6 shadow-sm space-y-4">
-          <div class="flex items-center justify-between text-xs font-mono text-[#047857] pb-2 border-b border-[#f1f0eb]">
-            <span class="font-bold">LIVE STREAM PRESENTER</span>
-            <span>CARD #042</span>
+        <!-- Step 2 -->
+        <div class="bg-white border border-[#e7e5df] rounded-lg p-6 space-y-3">
+          <div class="font-mono text-xs font-bold text-[#047857] tracking-wider uppercase">
+            02 / VAULT ENTRIES
           </div>
-          <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-xl p-4 space-y-2">
-            <div class="flex items-center justify-between text-[11px] font-mono text-[#64748b]">
-              <span class="text-[#047857] font-bold">🔮 PREDICTION CARD</span>
-              <span>Lagos, Nigeria</span>
-            </div>
-            <p class="font-serif italic text-base text-[#0f172a]">
-              “I predict by episode 500, we'll have a global live meetup!”
-            </p>
+          <h3 class="font-serif text-lg font-bold text-[#0f172a]">
+            Fans Leave Messages
+          </h3>
+          <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
+            Fans write personal memories and future predictions. Every entry is encrypted and securely locked inside the vault until reveal day.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-white border border-[#e7e5df] rounded-lg p-6 space-y-3">
+          <div class="font-mono text-xs font-bold text-[#047857] tracking-wider uppercase">
+            03 / BROADCAST
           </div>
-          <div class="flex items-center justify-between text-xs text-[#64748b] pt-1">
-            <span>Controls: [← Prev] [Next →]</span>
-            <span class="text-amber-600 font-bold">⭐ Starred</span>
-          </div>
+          <h3 class="font-serif text-lg font-bold text-[#0f172a]">
+            Unseal Live on Stream
+          </h3>
+          <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
+            When the milestone arrives, launch OBS Stream Mode. Reveal the letters live on camera and react to predictions with your chat.
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 4. ACTIVE TIME CAPSULES (Creator Showcase) -->
+  <!-- 4. ACTIVE CREATOR TIME CAPSULES -->
   <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div>
@@ -301,7 +377,7 @@ class extends Component
           Milestones waiting to be opened. Seal your message before the vault locks.
         </p>
       </div>
-      <a href="{{ route('creators') }}" class="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-white hover:bg-[#faf9f5] border border-[#e7e5df] text-[#0f172a] font-medium text-xs sm:text-sm shadow-xs transition-all">
+      <a href="{{ route('creators') }}" class="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-white hover:bg-[#faf9f5] border border-[#e7e5df] text-[#0f172a] font-medium text-xs sm:text-sm transition-colors">
         Browse All ({{ $creatorsCount }}) →
       </a>
     </div>
@@ -312,11 +388,11 @@ class extends Component
           $daysLeft = $c->daysUntilUnlock();
           $progress = $c->unlockProgress();
         @endphp
-        <div class="bg-white border border-[#e7e5df] hover:border-[#047857]/40 rounded-3xl p-6 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between">
+        <div class="bg-white border border-[#e7e5df] hover:border-[#047857] rounded-xl p-6 transition-colors flex flex-col justify-between">
           <div>
             <div class="flex items-start justify-between gap-3 mb-4">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-[#064e3b] text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+                <div class="w-10 h-10 rounded-lg bg-[#064e3b] text-white flex items-center justify-center font-bold text-sm shadow-2xs">
                   {{ strtoupper(substr($c->name, 0, 1)) }}
                 </div>
                 <div>
@@ -325,19 +401,19 @@ class extends Component
                   </h3>
                   <div class="flex items-center gap-2 mt-0.5">
                     <span class="text-xs text-[#64748b] font-mono">{{ $c->handle }}</span>
-                    <span class="text-[10px] font-medium uppercase px-2 py-0.5 rounded-full bg-[#f1f5f9] text-[#475569]">
+                    <span class="text-[10px] font-medium uppercase px-2 py-0.5 rounded bg-[#f1f5f9] text-[#475569]">
                       {{ $c->platform }}
                     </span>
                   </div>
                 </div>
               </div>
-              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#ecfdf5] text-[#064e3b] text-xs font-mono font-medium rounded-full border border-[#a7f3d0]">
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#ecfdf5] text-[#064e3b] text-xs font-mono font-medium rounded border border-[#a7f3d0]">
                 🔒 {{ $c->postcards_count }} sealed
               </span>
             </div>
 
             <!-- Milestone Goal -->
-            <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-3.5 mb-4">
+            <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-lg p-3.5 mb-4">
               <div class="text-[11px] font-mono uppercase font-semibold text-[#64748b]">Destination</div>
               <div class="text-sm font-semibold text-[#0f172a] mt-0.5">
                 {{ $c->milestone_title ?: 'Community Milestone' }}
@@ -352,12 +428,12 @@ class extends Component
               <strong class="text-[#047857] font-semibold">
                 {{ $c->formattedUnlockDate() }}
                 @if($daysLeft !== null)
-                  <span class="text-[10px] font-mono text-[#064e3b] bg-[#ecfdf5] px-1.5 py-0.5 rounded-full border border-[#a7f3d0]">({{ $daysLeft }}d)</span>
+                  <span class="text-[10px] font-mono text-[#064e3b] bg-[#ecfdf5] px-1.5 py-0.5 rounded border border-[#a7f3d0]">({{ $daysLeft }}d)</span>
                 @endif
               </strong>
             </div>
 
-            <a href="{{ route('with', $c->slug) }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-full bg-[#ecfdf5] hover:bg-[#064e3b] text-[#064e3b] hover:text-white font-medium text-xs sm:text-sm border border-[#a7f3d0] hover:border-[#064e3b] transition-all">
+            <a href="{{ route('with', $c->slug) }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-[#ecfdf5] hover:bg-[#064e3b] text-[#064e3b] hover:text-white font-medium text-xs sm:text-sm border border-[#a7f3d0] hover:border-[#064e3b] transition-colors">
               Leave a Message for {{ explode(' ', $c->name)[0] }} →
             </a>
           </div>
@@ -384,33 +460,28 @@ class extends Component
     </div>
 
     <div class="text-center pt-2">
-      <a href="{{ route('explore') }}" class="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full bg-white hover:bg-[#faf9f5] border border-[#e7e5df] text-[#0f172a] font-medium text-xs sm:text-sm transition-all shadow-xs">
+      <a href="{{ route('explore') }}" class="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-lg bg-white hover:bg-[#faf9f5] border border-[#e7e5df] text-[#0f172a] font-medium text-xs sm:text-sm transition-colors">
         Browse all {{ number_format($count) }} sealed contributions on the Archive Wall →
       </a>
     </div>
   </section>
 
-  <!-- 6. BOTTOM CALL TO ACTION (Giftpose .dl-sec style) -->
-  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-gradient-to-br from-[#064e3b] via-[#043d2f] to-[#011a12] text-white rounded-3xl sm:rounded-[2.5rem] p-8 sm:p-14 text-center shadow-xl relative overflow-hidden">
-      <!-- Glow -->
-      <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(52,211,153,0.15)_0%,transparent_70%)]"></div>
-
-      <div class="relative z-10 max-w-2xl mx-auto space-y-4">
-        <h2 class="font-serif text-2xl sm:text-4xl font-bold leading-tight">
-          Preserve your community's journey.
-        </h2>
-        <p class="text-sm sm:text-base text-emerald-100/80 leading-relaxed max-w-lg mx-auto">
-          Launch your Creator Time Capsule in 60 seconds. Free to set up, permanent archival, and built for stream reveals.
-        </p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3">
-          <a href="{{ route('creators.join') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-emerald-400 hover:bg-emerald-300 text-[#064e3b] font-bold text-sm sm:text-base shadow-md hover:-translate-y-0.5 transition-all">
-            Create Your Time Capsule (Free)
-          </a>
-          <a href="{{ route('creators') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-semibold text-sm sm:text-base hover:-translate-y-0.5 transition-all">
-            Browse Active Capsules
-          </a>
-        </div>
+  <!-- 6. FLAT BOTTOM CALL TO ACTION -->
+  <section class="w-full bg-[#03261d] text-white border-t border-b border-emerald-900/60 py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto text-center space-y-5">
+      <h2 class="font-serif text-2xl sm:text-4xl font-bold leading-tight">
+        Preserve your community's journey.
+      </h2>
+      <p class="text-sm sm:text-base text-emerald-100/80 leading-relaxed max-w-xl mx-auto font-light">
+        Launch your Creator Time Capsule in 60 seconds. Free to set up, permanent archival, and built for stream reveals.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+        <a href="{{ route('creators.join') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-[#03261d] font-bold text-sm sm:text-base transition-colors shadow-sm">
+          Create Your Time Capsule (Free)
+        </a>
+        <a href="{{ route('creators') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-white font-semibold text-sm sm:text-base transition-colors">
+          Browse Active Capsules
+        </a>
       </div>
     </div>
   </section>

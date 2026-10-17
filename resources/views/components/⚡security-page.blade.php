@@ -29,7 +29,7 @@ class extends Component
       <span class="text-xs text-[#cbd5e1]">/</span>
       <span class="text-xs font-mono text-[#047857] font-semibold">Security & Disclosure</span>
     </div>
-    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
+    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
       🛡️ 256-Bit Encrypted Vault Protocol · Responsible Disclosure
     </span>
   </div>
@@ -45,12 +45,12 @@ class extends Component
   </header>
 
   <!-- Security Pillars Grid -->
-  <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs mb-10">
+  <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs mb-10">
     <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-6">
       Core Security Controls
     </h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-      <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
+      <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
         <div class="text-2xl">🔒</div>
         <strong class="block text-sm font-bold text-[#0f172a]">256-Bit Encryption</strong>
         <p class="text-xs text-[#64748b] leading-relaxed">
@@ -58,7 +58,7 @@ class extends Component
         </p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
+      <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
         <div class="text-2xl">💳</div>
         <strong class="block text-sm font-bold text-[#0f172a]">PCI-DSS Level 1 via Stripe</strong>
         <p class="text-xs text-[#64748b] leading-relaxed">
@@ -66,7 +66,7 @@ class extends Component
         </p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
+      <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
         <div class="text-2xl">🔑</div>
         <strong class="block text-sm font-bold text-[#0f172a]">Passwordless Magic Links</strong>
         <p class="text-xs text-[#64748b] leading-relaxed">
@@ -74,7 +74,7 @@ class extends Component
         </p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
+      <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
         <div class="text-2xl">🎫</div>
         <strong class="block text-sm font-bold text-[#0f172a]">SHA-256 Token Hashing</strong>
         <p class="text-xs text-[#64748b] leading-relaxed">
@@ -82,7 +82,7 @@ class extends Component
         </p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
+      <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
         <div class="text-2xl">🛡️</div>
         <strong class="block text-sm font-bold text-[#0f172a]">Defense-in-Depth</strong>
         <p class="text-xs text-[#64748b] leading-relaxed">
@@ -90,7 +90,7 @@ class extends Component
         </p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
+      <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
         <div class="text-2xl">☁️</div>
         <strong class="block text-sm font-bold text-[#0f172a]">Isolated Cloud Infrastructure</strong>
         <p class="text-xs text-[#64748b] leading-relaxed">
@@ -104,7 +104,7 @@ class extends Component
   <article class="prose prose-slate max-w-none space-y-10 text-sm sm:text-base text-[#334155] leading-relaxed">
 
     <!-- Section 1: Policy Overview -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         Responsible Vulnerability Disclosure Program (VDP)
       </h2>
@@ -123,12 +123,12 @@ class extends Component
     </section>
 
     <!-- Scope -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         Scope & Boundaries
       </h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-        <div class="border border-emerald-200 bg-emerald-50/40 rounded-2xl p-4">
+        <div class="border border-emerald-200 bg-emerald-50/40 rounded-xl p-4">
           <strong class="text-[#064e3b] font-bold block mb-2">✓ In Scope:</strong>
           <ul class="list-disc list-inside space-y-1 text-[#334155]">
             <li><code>getfanvault.com</code> and primary web application</li>
@@ -140,7 +140,7 @@ class extends Component
           </ul>
         </div>
 
-        <div class="border border-red-200 bg-red-50/40 rounded-2xl p-4">
+        <div class="border border-red-200 bg-red-50/40 rounded-xl p-4">
           <strong class="text-red-800 font-bold block mb-2">✕ Out of Scope:</strong>
           <ul class="list-disc list-inside space-y-1 text-[#475569]">
             <li>Volumetric Denial of Service (DDoS) attacks</li>
@@ -154,7 +154,7 @@ class extends Component
     </section>
 
     <!-- How to Report -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         How to Submit a Security Report
       </h2>
@@ -187,7 +187,7 @@ class extends Component
     </section>
 
     <!-- Researcher Hall of Fame -->
-    <section class="bg-gradient-to-br from-[#064e3b] to-[#047857] text-white rounded-3xl p-6 sm:p-9 shadow-md">
+    <section class="bg-gradient-to-br from-[#064e3b] to-[#047857] text-white rounded-xl p-6 sm:p-9 shadow-md">
       <h3 class="font-serif text-xl sm:text-2xl font-bold mb-2">Researcher Hall of Fame</h3>
       <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed mb-4">
         We publicly acknowledge researchers who responsibly disclose verified security vulnerabilities:

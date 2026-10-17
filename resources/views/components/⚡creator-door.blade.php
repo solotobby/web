@@ -203,7 +203,7 @@ class extends Component
 
 @if(! $creator)
   <section class="max-w-2xl mx-auto px-4 py-16 text-center">
-    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] mb-3">
+    <span class="inline-flex items-center px-3 py-1 rounded text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] mb-3">
       📬 Creator Vault
     </span>
     <h1 class="font-serif text-3xl sm:text-4xl font-bold text-[#0f172a] mb-3">
@@ -212,41 +212,28 @@ class extends Component
     <p class="text-[#475569] mb-6">
       This creator hasn’t launched a community time vault yet, or the link has changed.
     </p>
-    <a href="{{ route('creators') }}" class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-sm shadow-[0_4px_16px_rgba(6,78,59,0.3)] transition-all">
+    <a href="{{ route('creators') }}" class="inline-flex items-center px-6 py-2.5 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white font-bold text-sm shadow-xs transition-all">
       Browse Active Creator Vaults
     </a>
   </section>
 @else
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10" x-data="{ copied: false, copy() { navigator.clipboard.writeText(window.location.href); this.copied = true; setTimeout(() => this.copied = false, 2500); } }">
-    <!-- Hero Profile Box -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-10 relative overflow-hidden">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12" x-data="{ copied: false, copy() { navigator.clipboard.writeText(window.location.href); this.copied = true; setTimeout(() => this.copied = false, 2500); } }">
+    <!-- Hero Profile Box (Flat Architectural Layout) -->
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-10 shadow-xs mb-10 relative overflow-hidden">
       <!-- Top Badges -->
       <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div class="flex items-center gap-2">
           @foreach($creator->platformsList() as $plt)
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
-              <span>
-                @switch($plt)
-                  @case('YouTube') 📺 @break
-                  @case('Twitch') 👾 @break
-                  @case('Podcast') 🎙️ @break
-                  @case('TikTok') 🎵 @break
-                  @case('Kick') ⚡ @break
-                  @case('Instagram') 📸 @break
-                  @case('X / Twitter') 𝕏 @break
-                  @case('Substack') ✍️ @break
-                  @default 🌐
-                @endswitch
-              </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
               {{ $plt }}
             </span>
           @endforeach
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#f5f4ee] text-[#334155] border border-[#e7e5df]">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-mono font-medium bg-[#f5f4ee] text-[#334155] border border-[#e7e5df]">
             {{ $creator->handle }}
           </span>
         </div>
 
-        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-[#fefce8] text-[#854d0e] border border-[#fde047]">
+        <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded text-xs font-bold bg-[#fefce8] text-[#854d0e] border border-[#fde047]">
           🏆 {{ $activeMilestone?->title ?? $creator->milestone_title ?? 'Community Milestone' }}
         </span>
       </div>
@@ -254,14 +241,14 @@ class extends Component
       <!-- Main Headline & Bio -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-8 space-y-4">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ecfdf5] border border-[#a7f3d0] text-[#064e3b] text-xs font-mono font-medium">
-            <span class="w-2 h-2 rounded-full bg-[#047857] animate-pulse"></span>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#ecfdf5] border border-[#a7f3d0] text-[#064e3b] text-xs font-mono font-medium">
+            <span class="w-2 h-2 rounded-full bg-[#047857]"></span>
             <span>🔒 SEALED · Unsealed live when {{ $creator->name }} reaches {{ $activeMilestone?->title ?? $creator->milestone_title ?? 'Milestone' }}</span>
           </div>
 
-          <h1 class="font-serif text-3xl sm:text-5xl font-normal text-[#0f172a] leading-tight">
+          <h1 class="font-serif text-3xl sm:text-5xl font-bold text-[#0f172a] leading-tight">
             {{ $creator->name }}’s <br class="hidden sm:inline">
-            <span class="italic text-[#047857]">{{ $activeMilestone?->title ?? $creator->milestone_title ?? 'Community' }} Time Capsule</span>.
+            <span class="italic text-[#047857]">{{ $activeMilestone?->title ?? $creator->milestone_title ?? 'Community' }} Time Capsule</span>
           </h1>
 
           <p class="font-serif italic text-base sm:text-lg text-[#334155] leading-relaxed bg-[#faf9f5] border-l-2 border-[#047857] p-4 rounded-r-2xl">
@@ -269,7 +256,7 @@ class extends Component
           </p>
 
           <!-- Milestone Anticipation & Progress Engine -->
-          <div class="p-5 rounded-3xl bg-[#faf9f5] border border-[#e7e5df] my-4 shadow-2xs space-y-3.5">
+          <div class="p-5 rounded-xl bg-[#faf9f5] border border-[#e7e5df] my-4 shadow-xs space-y-3.5">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <span class="text-xs font-mono uppercase tracking-wider font-bold text-[#047857] block">
@@ -281,8 +268,8 @@ class extends Component
               </div>
               <div class="text-left sm:text-right">
                 @if($daysUntil !== null)
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#047857] animate-pulse"></span>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-mono font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span>
                     <span>⏳ {{ $daysUntil }} days until the vault opens</span>
                   </span>
                 @else
@@ -297,8 +284,8 @@ class extends Component
                 <span>Today</span>
                 <span class="text-[#047857] font-semibold">Unsealing Ceremony: {{ $activeMilestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate() }}</span>
               </div>
-              <div class="h-2 w-full bg-[#e2e8f0] rounded-full overflow-hidden p-0.5">
-                <div class="h-full bg-gradient-to-r from-[#047857] to-[#10b981] rounded-full transition-all duration-500" style="width: {{ $unlockProgress }}%"></div>
+              <div class="h-2 w-full bg-[#e2e8f0] rounded overflow-hidden p-0.5">
+                <div class="h-full bg-gradient-to-r from-[#047857] to-[#10b981] rounded transition-all duration-500" style="width: {{ $unlockProgress }}%"></div>
               </div>
             </div>
 
@@ -317,7 +304,7 @@ class extends Component
 
           <!-- Multiple Topics & Milestones Selection Ribbon (if creator has multiple) -->
           @if($milestones->count() > 1)
-            <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] my-3">
+            <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] my-3">
               <span class="block text-xs font-bold uppercase tracking-wider text-[#047857] mb-2 font-mono">
                 🎯 Active Topics & Milestones ({{ $milestones->count() }}) — Choose a Topic to Answer:
               </span>
@@ -326,7 +313,7 @@ class extends Component
                   <button 
                     type="button" 
                     wire:click="selectMilestone('{{ $m->id }}')" 
-                    class="p-2.5 rounded-xl text-left transition-all border {{ ($activeMilestone && $activeMilestone->id === $m->id) ? 'bg-white border-2 border-[#047857] shadow-xs' : 'bg-white/60 hover:bg-white border-[#e7e5df]' }}"
+                    class="p-2.5 rounded-lg text-left transition-all border {{ ($activeMilestone && $activeMilestone->id === $m->id) ? 'bg-white border-2 border-[#047857] shadow-xs' : 'bg-white/60 hover:bg-white border-[#e7e5df]' }}"
                   >
                     <div class="flex items-center justify-between text-xs font-bold mb-0.5">
                       <span class="{{ ($activeMilestone && $activeMilestone->id === $m->id) ? 'text-[#064e3b]' : 'text-[#0f172a]' }} truncate">
@@ -354,22 +341,22 @@ class extends Component
               What would you like to leave for {{ explode(' ', $creator->name)[0] }}?
             </span>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <button type="button" wire:click="selectType('message')" class="p-3 rounded-2xl border text-left transition-all {{ $selectedType === 'message' ? 'bg-[#ecfdf5] border-2 border-[#047857] shadow-xs' : 'bg-white border-[#e7e5df] hover:bg-[#faf9f5]' }}">
+              <button type="button" wire:click="selectType('message')" class="p-3 rounded-lg border text-left transition-all {{ $selectedType === 'message' ? 'bg-[#ecfdf5] border-2 border-[#047857] shadow-xs' : 'bg-white border-[#e7e5df] hover:bg-[#faf9f5]' }}">
                 <span class="text-base block mb-0.5">💌</span>
                 <strong class="text-xs block text-[#0f172a]">A Message</strong>
                 <span class="text-[10px] text-[#64748b] block mt-0.5">Gratitude & advice</span>
               </button>
-              <button type="button" wire:click="selectType('prediction')" class="p-3 rounded-2xl border text-left transition-all {{ $selectedType === 'prediction' ? 'bg-[#ecfdf5] border-2 border-[#047857] shadow-xs' : 'bg-white border-[#e7e5df] hover:bg-[#faf9f5]' }}">
+              <button type="button" wire:click="selectType('prediction')" class="p-3 rounded-lg border text-left transition-all {{ $selectedType === 'prediction' ? 'bg-[#ecfdf5] border-2 border-[#047857] shadow-xs' : 'bg-white border-[#e7e5df] hover:bg-[#faf9f5]' }}">
                 <span class="text-base block mb-0.5">🔮</span>
                 <strong class="text-xs block text-[#0f172a]">A Prediction</strong>
                 <span class="text-[10px] text-[#64748b] block mt-0.5">Channel forecast</span>
               </button>
-              <button type="button" wire:click="selectType('memory')" class="p-3 rounded-2xl border text-left transition-all {{ $selectedType === 'memory' ? 'bg-[#ecfdf5] border-2 border-[#047857] shadow-xs' : 'bg-white border-[#e7e5df] hover:bg-[#faf9f5]' }}">
+              <button type="button" wire:click="selectType('memory')" class="p-3 rounded-lg border text-left transition-all {{ $selectedType === 'memory' ? 'bg-[#ecfdf5] border-2 border-[#047857] shadow-xs' : 'bg-white border-[#e7e5df] hover:bg-[#faf9f5]' }}">
                 <span class="text-base block mb-0.5">❤️</span>
                 <strong class="text-xs block text-[#0f172a]">A Memory</strong>
                 <span class="text-[10px] text-[#64748b] block mt-0.5">Favorite moment</span>
               </button>
-              <button type="button" wire:click="selectType('photo')" class="p-3 rounded-2xl border text-left transition-all {{ $selectedType === 'photo' ? 'bg-[#ecfdf5] border-2 border-[#047857] shadow-xs' : 'bg-white border-[#e7e5df] hover:bg-[#faf9f5]' }}">
+              <button type="button" wire:click="selectType('photo')" class="p-3 rounded-lg border text-left transition-all {{ $selectedType === 'photo' ? 'bg-[#ecfdf5] border-2 border-[#047857] shadow-xs' : 'bg-white border-[#e7e5df] hover:bg-[#faf9f5]' }}">
                 <span class="text-base block mb-0.5">📸</span>
                 <strong class="text-xs block text-[#0f172a]">Photo / Note</strong>
                 <span class="text-[10px] text-[#64748b] block mt-0.5">Fan art or relic</span>
@@ -378,7 +365,7 @@ class extends Component
           </div>
 
           <!-- Seal Contribution (Toned down, clean & focused) -->
-          <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-4 sm:p-5 my-3 shadow-2xs">
+          <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-xl p-4 sm:p-5 my-3 shadow-xs">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
               <div>
                 <span class="block text-xs font-bold uppercase tracking-wider text-[#047857] font-mono">
@@ -388,7 +375,7 @@ class extends Component
                   Spam-free contribution set by {{ $creator->name }} · 80% paid directly to creator
                 </p>
               </div>
-              <span class="text-xs font-mono font-bold text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0] px-3 py-1 rounded-full self-start sm:self-auto">
+              <span class="text-xs font-mono font-bold text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0] px-3 py-1 rounded self-start sm:self-auto">
                 ${{ number_format($selectedAmount, 2) }}
               </span>
             </div>
@@ -398,7 +385,7 @@ class extends Component
               <button 
                 type="button" 
                 wire:click="setAmount({{ $minDollars }})" 
-                class="p-2.5 rounded-xl border text-center transition-all duration-200 {{ $selectedAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+                class="p-2.5 rounded-lg border text-center transition-all duration-200 {{ $selectedAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
               >
                 <span class="block text-[10px] uppercase font-mono opacity-80">Standard</span>
                 <strong class="text-sm font-mono font-bold">${{ $minDollars }}</strong>
@@ -409,7 +396,7 @@ class extends Component
                 <button 
                   type="button" 
                   wire:click="setAmount(10)" 
-                  class="p-2.5 rounded-xl border text-center transition-all duration-200 {{ $selectedAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+                  class="p-2.5 rounded-lg border text-center transition-all duration-200 {{ $selectedAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
                 >
                   <span class="block text-[10px] uppercase font-mono opacity-80">Supporter</span>
                   <strong class="text-sm font-mono font-bold">$10</strong>
@@ -420,7 +407,7 @@ class extends Component
               <button 
                 type="button" 
                 wire:click="setAmount(25)" 
-                class="p-2.5 rounded-xl border text-center transition-all duration-200 {{ $selectedAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df]' }}"
+                class="p-2.5 rounded-lg border text-center transition-all duration-200 {{ $selectedAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df]' }}"
               >
                 <span class="block text-[10px] uppercase font-mono opacity-80 text-amber-500 {{ $selectedAmount === 25 && ! $customAmount ? 'text-amber-200' : '' }}">Superfan</span>
                 <strong class="text-sm font-mono font-bold">$25</strong>
@@ -430,7 +417,7 @@ class extends Component
               <button 
                 type="button" 
                 wire:click="setAmount(50)" 
-                class="p-2.5 rounded-xl border text-center transition-all duration-200 {{ $selectedAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df]' }}"
+                class="p-2.5 rounded-lg border text-center transition-all duration-200 {{ $selectedAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs font-bold' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df]' }}"
               >
                 <span class="block text-[10px] uppercase font-mono opacity-80 text-purple-500 {{ $selectedAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">VIP Patron</span>
                 <strong class="text-sm font-mono font-bold">$50</strong>
@@ -453,17 +440,17 @@ class extends Component
                     max="1000" 
                     placeholder="{{ $minDollars }}+" 
                     wire:model.live.debounce.300ms="customAmount"
-                    class="w-full pl-5 pr-1 py-1 bg-white border border-[#e7e5df] focus:border-[#047857] rounded-xl text-xs font-mono outline-none"
+                    class="w-full pl-5 pr-1 py-1 bg-white border border-[#e7e5df] focus:border-[#047857] rounded text-xs font-mono outline-none"
                   >
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Follow Capsule / Notify Me When It Opens Widget (Point 10) -->
-          <div class="bg-gradient-to-br from-[#ecfdf5] to-[#f0fdf4] border border-[#a7f3d0] rounded-2xl p-4 sm:p-5 my-4">
+          <!-- Follow Capsule Widget -->
+          <div class="bg-gradient-to-br from-[#ecfdf5] to-[#f0fdf4] border border-[#a7f3d0] rounded-xl p-4 sm:p-5 my-4">
             <div class="flex items-start gap-3">
-              <div class="w-9 h-9 rounded-xl bg-white border border-[#a7f3d0] flex items-center justify-center text-base shrink-0 shadow-2xs">
+              <div class="w-9 h-9 rounded-lg bg-white border border-[#a7f3d0] flex items-center justify-center text-base shrink-0 shadow-2xs">
                 🔔
               </div>
               <div class="flex-1">
@@ -475,7 +462,7 @@ class extends Component
                 </p>
 
                 @if($followSuccess)
-                  <div class="mt-2.5 text-xs font-semibold text-[#047857] bg-white px-3.5 py-2 rounded-xl border border-[#a7f3d0] flex items-center gap-1.5">
+                  <div class="mt-2.5 text-xs font-semibold text-[#047857] bg-white px-3.5 py-2 rounded border border-[#a7f3d0] flex items-center gap-1.5">
                     <span>✓</span>
                     <span>You are following this Time Capsule! We'll alert you the moment {{ $creator->name }} unseals it.</span>
                   </div>
@@ -486,11 +473,11 @@ class extends Component
                       wire:model="followerEmail" 
                       placeholder="Enter your email for opening alerts..." 
                       required 
-                      class="w-full sm:w-64 px-3.5 py-2 rounded-xl bg-white border border-[#a7f3d0] text-xs text-[#0f172a] placeholder-[#94a3b8] outline-none focus:border-[#047857]"
+                      class="w-full sm:w-64 px-3.5 py-2 rounded-lg bg-white border border-[#a7f3d0] text-xs text-[#0f172a] placeholder-[#94a3b8] outline-none focus:border-[#047857]"
                     >
                     <button 
                       type="submit" 
-                      class="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#064e3b] hover:bg-[#047857] text-white text-xs font-bold transition-all shadow-xs shrink-0"
+                      class="w-full sm:w-auto px-4 py-2 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white text-xs font-bold transition-all shadow-xs shrink-0"
                     >
                       Notify Me When It Opens
                     </button>
@@ -504,33 +491,33 @@ class extends Component
           <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
             <a 
               href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id, 'amount' => $selectedAmount, 'type' => $selectedType])) }}" 
-              class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 active:translate-y-0 transition-all"
+              class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-xs hover:shadow-md transition-all"
             >
               Leave {{ match($selectedType) { 'prediction' => 'a Prediction', 'memory' => 'a Memory', 'photo' => 'a Photo', default => 'a Message' } }} (${{ $selectedAmount }})
             </a>
-            <button type="button" @click="copy()" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 sm:py-4 rounded-full bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-medium text-sm hover:-translate-y-0.5 transition-all shadow-xs">
+            <button type="button" @click="copy()" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-white hover:bg-[#f7f6f0] border border-[#e7e5df] text-[#0f172a] font-medium text-sm transition-all shadow-xs">
               <span x-show="!copied">Share Capsule Link</span>
               <span x-show="copied" style="display:none;">✓ Copied to Clipboard!</span>
             </button>
           </div>
         </div>
 
-        <!-- Right Side Stat Summary Card -->
-        <aside class="lg:col-span-4 bg-white border border-[#e7e5df] rounded-3xl p-6 text-center shadow-xs space-y-4">
+        <!-- Right Side Stat Summary Card (Flat Architectural Layout) -->
+        <aside class="lg:col-span-4 bg-white border border-[#e7e5df] rounded-xl p-6 text-center shadow-xs space-y-4">
           <div>
             <span class="block text-xs font-mono uppercase tracking-wider text-[#64748b] mb-1">
               {{ $activeMilestone ? $activeMilestone->title : 'Time Capsule Archive' }}
             </span>
-            <strong class="font-serif text-4xl sm:text-5xl font-normal text-[#047857] block my-1">
+            <strong class="font-serif text-4xl sm:text-5xl font-bold text-[#047857] block my-1">
               {{ $contributionsCount }}
             </strong>
-            <span class="text-xs font-medium text-[#64748b] block">
+            <span class="text-xs font-medium text-[#64748b] block font-mono">
               contributions sealed · <strong>{{ $uniquePeopleCount }}</strong> {{ $uniquePeopleCount === 1 ? 'person' : 'people' }}
             </span>
             <div class="flex items-center justify-center gap-1.5 text-[10px] font-mono text-[#064e3b] mt-2">
-              <span class="bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">💌 Messages</span>
-              <span class="bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">🔮 Predictions</span>
-              <span class="bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-[#a7f3d0]">❤️ Memories</span>
+              <span class="bg-[#ecfdf5] px-2 py-0.5 rounded border border-[#a7f3d0]">Messages</span>
+              <span class="bg-[#ecfdf5] px-2 py-0.5 rounded border border-[#a7f3d0]">Predictions</span>
+              <span class="bg-[#ecfdf5] px-2 py-0.5 rounded border border-[#a7f3d0]">Memories</span>
             </div>
           </div>
 
@@ -540,7 +527,7 @@ class extends Component
               {{ $activeMilestone ? $activeMilestone->formattedUnlockDate() : $creator->formattedUnlockDate() }}
             </strong>
             @if($daysUntil !== null)
-              <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]/70 font-mono">
+              <span class="inline-block mt-1 px-2.5 py-0.5 rounded text-xs font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] font-mono">
                 ⏳ {{ $daysUntil }} days remaining
               </span>
             @endif
@@ -549,8 +536,8 @@ class extends Component
             </div>
           </div>
 
-          <div class="pt-3 border-t border-[#e7e5df] text-[11px] text-[#64748b]">
-            Spam-free ${{ $creator->minPriceDollars() }} floor · Direct creator payouts · AES-256 encrypted
+          <div class="pt-3 border-t border-[#e7e5df] text-[11px] text-[#64748b] font-mono">
+            Spam-free ${{ $creator->minPriceDollars() }} floor · Direct creator payouts
           </div>
         </aside>
       </div>
@@ -560,11 +547,11 @@ class extends Component
     <section class="space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-[#e7e5df] pb-4">
         <div>
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]/70 mb-2">
+          <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded text-xs font-semibold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] mb-2 font-mono">
             <span>🔒</span>
             <span>Public Teasers Preview</span>
           </div>
-          <h2 class="font-serif text-2xl sm:text-3xl font-normal text-[#0f172a]">
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#0f172a]">
             Inside {{ $creator->name }}’s Time Capsule
           </h2>
           <p class="text-xs sm:text-sm text-[#64748b] mt-1">
@@ -572,30 +559,30 @@ class extends Component
           </p>
         </div>
 
-        <a href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id])) }}" class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-[#047857] hover:underline shrink-0">
+        <a href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id])) }}" class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-[#047857] hover:underline shrink-0 font-mono">
           Leave something →
         </a>
       </div>
 
       @if($letters->isEmpty())
-        <div class="bg-white border border-[#e7e5df] rounded-3xl p-8 sm:p-12 text-center my-6 shadow-2xs">
-          <h3 class="font-serif text-xl sm:text-2xl font-normal text-[#0f172a] mb-2">
+        <div class="bg-white border border-[#e7e5df] rounded-xl p-8 sm:p-12 text-center my-6 shadow-xs">
+          <h3 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-2">
             This Time Capsule is waiting for its first contribution.
           </h3>
           <p class="text-xs sm:text-sm text-[#64748b] max-w-md mx-auto mb-6">
             Be the founding community member to seal a message for {{ $creator->name }}’s {{ $activeMilestone ? $activeMilestone->title : 'milestone' }}.
           </p>
-          <a href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id, 'amount' => $selectedAmount])) }}" class="inline-flex items-center px-6 py-3 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm shadow-[0_2px_10px_rgba(6,78,59,0.25)] transition-all">
+          <a href="{{ route('seal', array_filter(['ref' => $creator->slug, 'milestone' => $activeMilestone?->id, 'amount' => $selectedAmount])) }}" class="inline-flex items-center px-6 py-3 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm shadow-xs transition-all">
             Leave the First Contribution (${{ $selectedAmount }})
           </a>
         </div>
       @else
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           @foreach($letters as $msg)
-            <article class="bg-white border border-[#e7e5df] hover:border-[#047857]/30 rounded-3xl p-5 sm:p-6 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col justify-between">
+            <article class="bg-white border border-[#e7e5df] hover:border-[#047857] rounded-xl p-5 sm:p-6 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
               <div>
                 <div class="flex items-center justify-between gap-2 mb-3">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]/70">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
                     No. {{ \App\Support\Capsule::formatNumber($msg->number) }}
                   </span>
                   <span class="text-[11px] font-mono text-[#64748b]">
@@ -613,7 +600,7 @@ class extends Component
                   <span class="font-semibold text-[#0f172a] block">{{ $msg->name }}</span>
                   <span class="text-[#64748b]">{{ $msg->location }}</span>
                 </div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#faf9f5] text-[#064e3b] border border-[#e7e5df]">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-[#faf9f5] text-[#064e3b] border border-[#e7e5df]">
                   Sealed
                 </span>
               </div>

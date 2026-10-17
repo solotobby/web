@@ -29,7 +29,7 @@ class extends Component
       <span class="text-xs text-[#cbd5e1]">/</span>
       <span class="text-xs font-mono text-[#047857] font-semibold">Deletion Procedure</span>
     </div>
-    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
+    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono font-medium bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0]">
       🗑️ GDPR Art. 17 & CCPA Erasure Procedure
     </span>
   </div>
@@ -45,29 +45,29 @@ class extends Component
   </header>
 
   <!-- 3-Step Overview Box -->
-  <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs mb-10">
+  <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs mb-10">
     <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-6">
       How the Deletion Process Works
     </h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
-        <div class="w-8 h-8 rounded-full bg-[#064e3b] text-white flex items-center justify-center font-bold text-sm font-mono">1</div>
+      <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
+        <div class="w-8 h-8 rounded-md bg-[#064e3b] text-white flex items-center justify-center font-bold text-sm font-mono">1</div>
         <strong class="block text-sm font-bold text-[#0f172a]">Submit Request</strong>
         <p class="text-xs text-[#64748b] leading-relaxed">
           Send an erasure request via email to <code>privacy@getfanvault.com</code> or follow the direct procedures below.
         </p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
-        <div class="w-8 h-8 rounded-full bg-[#064e3b] text-white flex items-center justify-center font-bold text-sm font-mono">2</div>
+      <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
+        <div class="w-8 h-8 rounded-md bg-[#064e3b] text-white flex items-center justify-center font-bold text-sm font-mono">2</div>
         <strong class="block text-sm font-bold text-[#0f172a]">Security Verification</strong>
         <p class="text-xs text-[#64748b] leading-relaxed">
           We send a one-click confirmation link to the email associated with the letter or vault to prevent unauthorized deletion.
         </p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
-        <div class="w-8 h-8 rounded-full bg-[#064e3b] text-white flex items-center justify-center font-bold text-sm font-mono">3</div>
+      <div class="p-4 rounded-xl bg-[#faf9f5] border border-[#e7e5df] space-y-2">
+        <div class="w-8 h-8 rounded-md bg-[#064e3b] text-white flex items-center justify-center font-bold text-sm font-mono">3</div>
         <strong class="block text-sm font-bold text-[#0f172a]">Permanent Purging</strong>
         <p class="text-xs text-[#64748b] leading-relaxed">
           Within 30 days, your records are permanently purged from all production tables and secondary caches.
@@ -80,7 +80,7 @@ class extends Component
   <article class="prose prose-slate max-w-none space-y-10 text-sm sm:text-base text-[#334155] leading-relaxed">
 
     <!-- Procedure for Fans -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4 flex items-center gap-2">
         <span>A. Procedure for Fans (Letter Authors)</span>
       </h2>
@@ -88,7 +88,7 @@ class extends Component
         If you previously sealed a letter or prediction into a creator’s vault and wish to remove it:
       </p>
       
-      <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-5 mb-5 space-y-3 text-xs sm:text-sm text-[#475569]">
+      <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-xl p-5 mb-5 space-y-3 text-xs sm:text-sm text-[#475569]">
         <strong class="text-[#0f172a] block text-sm font-bold">Options Available to Fans:</strong>
         <ul class="list-disc list-inside space-y-1.5">
           <li><strong>Full Letter Purging:</strong> Permanently removes the text of your letter, email address, author name, and commemorative pass from the creator’s vault.</li>
@@ -96,7 +96,7 @@ class extends Component
         </ul>
       </div>
 
-      <div class="p-5 rounded-2xl bg-[#f5f4ee] border border-[#e7e5df]">
+      <div class="p-5 rounded-xl bg-[#f5f4ee] border border-[#e7e5df]">
         <strong class="text-[#0f172a] block text-sm font-bold mb-2">How to Submit:</strong>
         <p class="text-xs sm:text-sm text-[#475569] mb-3">
           Send an email to <a href="mailto:privacy@getfanvault.com" class="text-[#047857] font-bold hover:underline">privacy@getfanvault.com</a> with the following details:
@@ -112,7 +112,7 @@ Body:
     </section>
 
     <!-- Procedure for Creators -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4 flex items-center gap-2">
         <span>B. Procedure for Creators</span>
       </h2>
@@ -136,7 +136,7 @@ Body:
     </section>
 
     <!-- SLAs and Exceptions -->
-    <section class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-xs">
+    <section class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-9 shadow-xs">
       <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#0f172a] mb-4">
         C. Timelines & Statutory Exceptions
       </h2>
@@ -156,7 +156,7 @@ Body:
     </section>
 
     <!-- Support Box -->
-    <section class="bg-gradient-to-br from-[#064e3b] to-[#047857] text-white rounded-3xl p-6 sm:p-9 shadow-md">
+    <section class="bg-gradient-to-br from-[#064e3b] to-[#047857] text-white rounded-xl p-6 sm:p-9 shadow-md">
       <h3 class="font-serif text-xl sm:text-2xl font-bold mb-2">Need Immediate Assistance?</h3>
       <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed mb-4">
         Our dedicated compliance officers are available to assist with data erasure inquiries or questions regarding our procedures:

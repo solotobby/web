@@ -356,7 +356,7 @@ class extends Component
 
 @if(! $creator)
   <section class="max-w-md mx-auto px-4 py-16 text-center">
-    <div class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    <div class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
       <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] mb-3 font-mono">
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
@@ -923,7 +923,7 @@ class extends Component
           <!-- 4 KPI Metrics Cards -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <!-- 1. Total Letters -->
-            <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 shadow-xs">
+            <div class="bg-white border border-[#e7e5df] rounded-xl p-5 shadow-xs">
               <span class="text-xs font-bold uppercase tracking-wider text-[#64748b] block mb-1">Letters in Vault</span>
               <div class="font-serif text-2xl sm:text-3xl font-bold text-[#0f172a]">
                 {{ $totalLetters }}
@@ -937,7 +937,7 @@ class extends Component
             </div>
 
             <!-- 2. Active Topics & Milestones -->
-            <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 shadow-xs">
+            <div class="bg-white border border-[#e7e5df] rounded-xl p-5 shadow-xs">
               <span class="text-xs font-bold uppercase tracking-wider text-[#64748b] block mb-1">Topics & Milestones</span>
               <div class="font-serif text-2xl sm:text-3xl font-bold text-[#0f172a]">
                 {{ $milestones->count() }}
@@ -951,7 +951,7 @@ class extends Component
             </div>
 
             <!-- 3. Accrued Payout -->
-            <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 shadow-xs">
+            <div class="bg-white border border-[#e7e5df] rounded-xl p-5 shadow-xs">
               <span class="text-xs font-bold uppercase tracking-wider text-[#64748b] block mb-1">Accrued Payout</span>
               <div class="font-serif text-2xl sm:text-3xl font-bold text-[#047857]">
                 ${{ number_format($paid + $pending, 2) }}
@@ -965,7 +965,7 @@ class extends Component
             </div>
 
             <!-- 4. Next Reveal Target -->
-            <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 shadow-xs">
+            <div class="bg-white border border-[#e7e5df] rounded-xl p-5 shadow-xs">
               <span class="text-xs font-bold uppercase tracking-wider text-[#64748b] block mb-1">Next Reveal Target</span>
               <div class="text-sm sm:text-base font-bold text-[#0f172a] truncate">
                 {{ $activeMilestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate() }}
@@ -985,7 +985,7 @@ class extends Component
           </div>
 
           <!-- YouTube Bio Snippet Quick-Copy Card -->
-          <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 sm:p-6 shadow-xs">
+          <div class="bg-white border border-[#e7e5df] rounded-xl p-5 sm:p-6 shadow-xs">
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center gap-2.5">
                 <span class="w-8 h-8 rounded-xl bg-[#ecfdf5] border border-[#a7f3d0] text-[#064e3b] flex items-center justify-center">
@@ -1032,7 +1032,7 @@ class extends Component
 
           <!-- Featured Milestone Spotlight -->
           @if($activeMilestone)
-            <div class="bg-gradient-to-r from-[#f0fdf4] to-[#ecfdf5] border border-[#a7f3d0] rounded-3xl p-5 sm:p-6 shadow-xs">
+            <div class="bg-gradient-to-r from-[#f0fdf4] to-[#ecfdf5] border border-[#a7f3d0] rounded-xl p-5 sm:p-6 shadow-xs">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                 <div class="flex items-center gap-2.5">
                   <span class="w-8 h-8 rounded-xl bg-white border border-[#a7f3d0] flex items-center justify-center text-[#064e3b] shadow-2xs">
@@ -1066,7 +1066,7 @@ class extends Component
           @endif
 
           <!-- Recent Fan Letters Preview -->
-          <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 sm:p-6 shadow-xs">
+          <div class="bg-white border border-[#e7e5df] rounded-xl p-5 sm:p-6 shadow-xs">
             <div class="flex items-center justify-between mb-4">
               <div>
                 <h3 class="font-serif text-lg font-bold text-[#0f172a]">Recent Fan Messages</h3>
@@ -1125,7 +1125,7 @@ class extends Component
           <!-- Milestones Cards List -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @foreach($milestones as $m)
-              <div class="bg-white border {{ $m->is_active ? 'border-2 border-[#047857] shadow-sm' : 'border-[#e7e5df]' }} rounded-3xl p-5 sm:p-6 flex flex-col justify-between">
+              <div class="bg-white border {{ $m->is_active ? 'border-2 border-[#047857] shadow-sm' : 'border-[#e7e5df]' }} rounded-xl p-5 sm:p-6 flex flex-col justify-between">
                 <div>
                   <div class="flex items-start justify-between gap-2 mb-2">
                     <div>
@@ -1187,7 +1187,7 @@ class extends Component
           </div>
 
           <!-- Add New Milestone Form Card -->
-          <div class="bg-gradient-to-b from-white to-[#faf9f5] border border-[#e7e5df] rounded-3xl p-6 sm:p-7 shadow-xs">
+          <div class="bg-gradient-to-b from-white to-[#faf9f5] border border-[#e7e5df] rounded-xl p-6 sm:p-7 shadow-xs">
             <div class="flex items-center gap-2.5 mb-4">
               <span class="w-8 h-8 rounded-xl bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] flex items-center justify-center font-bold text-sm">
                 <svg class="w-4 h-4 text-[#064e3b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1330,7 +1330,7 @@ class extends Component
 
           <!-- Letters List -->
           @if($inboxLetters->count() === 0)
-            <div class="bg-white border-2 border-dashed border-[#e7e5df] rounded-3xl p-10 text-center text-[#64748b] flex flex-col items-center justify-center">
+            <div class="bg-white border-2 border-dashed border-[#e7e5df] rounded-xl p-10 text-center text-[#64748b] flex flex-col items-center justify-center">
               <span class="w-10 h-10 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] flex items-center justify-center text-[#64748b] mb-3">
                 <svg class="w-5 h-5 text-[#64748b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
@@ -1342,7 +1342,7 @@ class extends Component
           @else
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               @foreach($inboxLetters as $letter)
-                <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 shadow-xs flex flex-col justify-between">
+                <div class="bg-white border border-[#e7e5df] rounded-xl p-5 shadow-xs flex flex-col justify-between">
                   <div>
                     <div class="flex items-start justify-between gap-2 mb-2">
                       <div>
@@ -1532,7 +1532,7 @@ class extends Component
           </div>
 
           <!-- Normal Studio Stream Tab View (Header & Unsealing Trigger) -->
-          <div class="bg-gradient-to-br from-[#064e3b] via-[#047857] to-[#022c22] rounded-3xl p-6 sm:p-10 text-white shadow-lg space-y-4">
+          <div class="bg-gradient-to-br from-[#064e3b] via-[#047857] to-[#022c22] rounded-xl p-6 sm:p-10 text-white shadow-lg space-y-4">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-xs font-mono font-bold uppercase tracking-wider text-emerald-200">
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span>The Opening Ceremony</span>
@@ -1581,7 +1581,7 @@ class extends Component
           <!-- Cards Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @if($ledger->count() === 0)
-              <div class="col-span-2 bg-white border-2 border-dashed border-[#e7e5df] rounded-3xl p-10 text-center text-[#64748b]">
+              <div class="col-span-2 bg-white border-2 border-dashed border-[#e7e5df] rounded-xl p-10 text-center text-[#64748b]">
                 No contributions to display for this milestone yet. Share your capsule link to start collecting!
               </div>
             @else
@@ -1589,7 +1589,7 @@ class extends Component
                 @php
                   $type = $row->envelope?->predictions['type'] ?? 'message';
                 @endphp
-                <div class="bg-white border border-[#e7e5df] hover:border-[#047857]/40 rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col justify-between transition-all">
+                <div class="bg-white border border-[#e7e5df] hover:border-[#047857]/40 rounded-xl p-5 sm:p-6 shadow-xs flex flex-col justify-between transition-all">
                   <div>
                     <div class="flex items-center justify-between text-xs text-[#64748b] mb-2 font-mono">
                       <span class="inline-flex items-center gap-1">
@@ -1657,7 +1657,7 @@ class extends Component
 
           <!-- 3 Revenue Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 shadow-xs">
+            <div class="bg-white border border-[#e7e5df] rounded-xl p-5 shadow-xs">
               <span class="text-xs font-bold uppercase tracking-wider text-[#64748b] block mb-1">Total Creator Accrual</span>
               <div class="font-serif text-3xl font-bold text-[#047857]">
                 ${{ number_format($paid + $pending, 2) }}
@@ -1665,7 +1665,7 @@ class extends Component
               <span class="text-[11px] text-[#64748b] mt-1 block">From {{ $totalLetters }} letters sealed</span>
             </div>
 
-            <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 shadow-xs">
+            <div class="bg-white border border-[#e7e5df] rounded-xl p-5 shadow-xs">
               <span class="text-xs font-bold uppercase tracking-wider text-[#64748b] block mb-1">Paid Out</span>
               <div class="font-serif text-3xl font-bold text-[#0f172a]">
                 ${{ number_format($paid, 2) }}
@@ -1673,7 +1673,7 @@ class extends Component
               <span class="text-[11px] text-[#047857] mt-1 block">{{ $paidN }} completed transfers</span>
             </div>
 
-            <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 shadow-xs">
+            <div class="bg-white border border-[#e7e5df] rounded-xl p-5 shadow-xs">
               <span class="text-xs font-bold uppercase tracking-wider text-[#64748b] block mb-1">Pending at Next Stream</span>
               <div class="font-serif text-3xl font-bold text-[#b45309]">
                 ${{ number_format($pending, 2) }}
@@ -1683,7 +1683,7 @@ class extends Component
           </div>
 
           <!-- Ledger Table -->
-          <div class="bg-white border border-[#e7e5df] rounded-3xl overflow-hidden shadow-xs">
+          <div class="bg-white border border-[#e7e5df] rounded-xl overflow-hidden shadow-xs">
             <div class="p-4 border-b border-[#e7e5df] flex items-center justify-between">
               <h3 class="font-serif font-bold text-base text-[#0f172a]">Fan Contribution Ledger</h3>
               <span class="text-xs font-mono text-[#64748b]">Showing {{ $ledger->count() }} fan transactions</span>
@@ -1749,7 +1749,7 @@ class extends Component
             </div>
           </div>
 
-          <div class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-8 shadow-xs max-w-2xl">
+          <div class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-8 shadow-xs max-w-2xl">
             <div class="space-y-5">
               <div>
                 <label class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">

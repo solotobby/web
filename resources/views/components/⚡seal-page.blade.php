@@ -369,52 +369,52 @@ class extends Component
 };
 ?>
 
-<section class="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
-  <div class="bg-white border border-[#e7e5df] rounded-3xl p-6 sm:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.03)] relative overflow-hidden">
+<section class="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+  <div class="bg-white border border-[#e7e5df] rounded-xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
     @if($error)
-      <div class="mb-6 p-4 rounded-2xl bg-red-50 text-red-600 border border-red-200 text-xs sm:text-sm font-semibold flex items-center gap-2">
+      <div class="mb-6 p-4 rounded-lg bg-red-50 text-red-600 border border-red-200 text-xs sm:text-sm font-medium flex items-center gap-2">
         ⚠️ {{ $error }}
       </div>
     @endif
 
     <!-- Stepper Header -->
     <div class="grid grid-cols-3 gap-2 pb-6 mb-6 sm:mb-8 border-b border-[#e7e5df]">
-      <div class="flex items-center gap-2 {{ $step >= 1 ? 'text-[#064e3b] font-bold' : 'text-[#94a3b8] font-medium' }}">
-        <span class="w-6 h-6 rounded-full flex items-center justify-center font-mono text-xs {{ $step >= 1 ? 'bg-[#064e3b] text-white font-bold shadow-2xs' : 'bg-[#f5f4ee] text-[#64748b]' }} shrink-0">1</span>
-        <span class="text-xs sm:text-sm truncate">Letter</span>
+      <div class="flex items-center gap-2 {{ $step >= 1 ? 'text-[#064e3b] font-semibold' : 'text-[#94a3b8] font-medium' }}">
+        <span class="w-6 h-6 rounded-md flex items-center justify-center font-mono text-xs {{ $step >= 1 ? 'bg-[#064e3b] text-white font-bold shadow-2xs' : 'bg-[#fbfaf6] text-[#64748b] border border-[#e7e5df]' }} shrink-0">1</span>
+        <span class="text-xs sm:text-sm font-mono truncate">01 / Letter</span>
       </div>
-      <div class="flex items-center gap-2 {{ $step >= 2 ? 'text-[#064e3b] font-bold' : 'text-[#94a3b8] font-medium' }}">
-        <span class="w-6 h-6 rounded-full flex items-center justify-center font-mono text-xs {{ $step >= 2 ? 'bg-[#064e3b] text-white font-bold shadow-2xs' : 'bg-[#f5f4ee] text-[#64748b]' }} shrink-0">2</span>
-        <span class="text-xs sm:text-sm truncate">Details</span>
+      <div class="flex items-center gap-2 {{ $step >= 2 ? 'text-[#064e3b] font-semibold' : 'text-[#94a3b8] font-medium' }}">
+        <span class="w-6 h-6 rounded-md flex items-center justify-center font-mono text-xs {{ $step >= 2 ? 'bg-[#064e3b] text-white font-bold shadow-2xs' : 'bg-[#fbfaf6] text-[#64748b] border border-[#e7e5df]' }} shrink-0">2</span>
+        <span class="text-xs sm:text-sm font-mono truncate">02 / Details</span>
       </div>
-      <div class="flex items-center gap-2 {{ $step === 3 ? 'text-[#064e3b] font-bold' : 'text-[#94a3b8] font-medium' }}">
-        <span class="w-6 h-6 rounded-full flex items-center justify-center font-mono text-xs {{ $step === 3 ? 'bg-[#064e3b] text-white font-bold shadow-2xs' : 'bg-[#f5f4ee] text-[#64748b]' }} shrink-0">3</span>
-        <span class="text-xs sm:text-sm truncate">Archive Seal</span>
+      <div class="flex items-center gap-2 {{ $step === 3 ? 'text-[#064e3b] font-semibold' : 'text-[#94a3b8] font-medium' }}">
+        <span class="w-6 h-6 rounded-md flex items-center justify-center font-mono text-xs {{ $step === 3 ? 'bg-[#064e3b] text-white font-bold shadow-2xs' : 'bg-[#fbfaf6] text-[#64748b] border border-[#e7e5df]' }} shrink-0">3</span>
+        <span class="text-xs sm:text-sm font-mono truncate">03 / Seal</span>
       </div>
     </div>
 
     @if($step === 1)
       @if($creator)
-        <div class="mb-6 p-4 rounded-2xl bg-[#ecfdf5] border border-[#a7f3d0]">
+        <div class="mb-6 p-4 rounded-xl bg-[#ecfdf5] border border-[#a7f3d0]">
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3">
-              <span class="w-10 h-10 rounded-xl bg-white border border-[#a7f3d0] flex items-center justify-center text-xs font-mono font-bold text-[#064e3b] shrink-0 shadow-2xs">FV</span>
+              <span class="w-10 h-10 rounded-lg bg-white border border-[#a7f3d0] flex items-center justify-center text-xs font-mono font-bold text-[#064e3b] shrink-0 shadow-2xs">FV</span>
               <div>
-                <span class="block text-xs font-bold text-[#064e3b] uppercase tracking-wider">Writing to Creator Vault</span>
+                <span class="block text-xs font-mono font-medium text-[#064e3b] uppercase tracking-wider">Writing to Creator Vault</span>
                 <strong class="text-sm sm:text-base font-bold text-[#0f172a]">{{ $creator->name }} · {{ $selectedMilestone?->title ?? ($creator->milestone_title ?? 'Community Milestone') }}</strong>
               </div>
             </div>
-            <span class="hidden sm:inline-block text-xs font-mono font-bold text-[#047857] bg-white px-2.5 py-1 rounded-full border border-[#a7f3d0]">
+            <span class="hidden sm:inline-block text-xs font-mono font-medium text-[#047857] bg-white px-2.5 py-1 rounded-md border border-[#a7f3d0]">
               Unlocks {{ $selectedMilestone?->formattedUnlockDate() ?? $creator->formattedUnlockDate() }}
             </span>
           </div>
 
           @if($creator->milestones && $creator->milestones->count() > 1)
             <div class="mt-3 pt-3 border-t border-[#a7f3d0]/60">
-              <span class="block text-[11px] font-bold text-[#064e3b] uppercase tracking-wider mb-2">🎯 Select Topic or Milestone:</span>
+              <span class="block text-[11px] font-mono font-medium text-[#064e3b] uppercase tracking-wider mb-2">🎯 Select Topic or Milestone:</span>
               <div class="flex flex-wrap gap-2">
                 @foreach($creator->milestones as $m)
-                  <button type="button" wire:click="selectMilestone('{{ $m->id }}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 {{ $milestoneId === $m->id ? 'bg-[#064e3b] text-white shadow-sm ring-2 ring-[#047857]/40' : 'bg-white hover:bg-[#d1fae5] text-[#064e3b] border border-[#a7f3d0]' }}">
+                  <button type="button" wire:click="selectMilestone('{{ $m->id }}')" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 {{ $milestoneId === $m->id ? 'bg-[#064e3b] text-white shadow-xs ring-2 ring-[#047857]/40' : 'bg-white hover:bg-[#d1fae5] text-[#064e3b] border border-[#a7f3d0]' }}">
                     <span>{{ $milestoneId === $m->id ? '✓' : '🎯' }}</span>
                     <span>{{ $m->title }}</span>
                     <span class="text-[10px] opacity-75 font-mono">({{ $m->formattedUnlockDate() }})</span>
@@ -427,7 +427,7 @@ class extends Component
       @endif
 
       <div class="mb-6">
-        <span class="inline-flex items-center px-3 py-1 bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] rounded-full text-xs font-bold mb-2">
+        <span class="inline-flex items-center px-2.5 py-1 bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] rounded-md text-xs font-mono font-medium mb-3">
           Step 1 of 3 · Drafting Contribution
         </span>
         <h1 class="font-serif text-2xl sm:text-3xl font-bold text-[#0f172a] leading-tight">
@@ -454,7 +454,7 @@ class extends Component
       </div>
 
       <!-- Step 1 Contribution Level Selector -->
-      <div class="mb-6 p-4 sm:p-5 rounded-2xl bg-[#faf9f5] border border-[#e7e5df] shadow-2xs">
+      <div class="mb-6 p-4 sm:p-5 rounded-xl bg-[#faf9f5] border border-[#e7e5df] shadow-2xs">
         <div class="flex items-center justify-between gap-2 mb-2">
           <div>
             <span class="block text-xs font-bold uppercase tracking-wider text-[#047857] font-mono">
@@ -464,7 +464,7 @@ class extends Component
               {{ $creator ? "Base minimum \${$minDollars}.00 · Superfans add optional booster tips" : "Permanent archival preservation" }}
             </span>
           </div>
-          <span class="font-mono font-bold text-sm sm:text-base text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0] px-3 py-1 rounded-full shrink-0">
+          <span class="font-mono font-bold text-sm sm:text-base text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0] px-2.5 py-1 rounded-md shrink-0">
             ${{ number_format($sealAmount, 2) }}
           </span>
         </div>
@@ -473,7 +473,7 @@ class extends Component
           <button 
             type="button" 
             wire:click="setAmount({{ $minDollars }})" 
-            class="p-2 sm:p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+            class="p-2 sm:p-2.5 rounded-lg border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
           >
             <span class="block text-[10px] uppercase font-mono opacity-80">Standard</span>
             <strong class="text-xs sm:text-sm font-mono font-bold">${{ $minDollars }}</strong>
@@ -483,7 +483,7 @@ class extends Component
             <button 
               type="button" 
               wire:click="setAmount(10)" 
-              class="p-2 sm:p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
+              class="p-2 sm:p-2.5 rounded-lg border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df]' }}"
             >
               <span class="block text-[10px] uppercase font-mono opacity-80">Supporter</span>
               <strong class="text-xs sm:text-sm font-mono font-bold">$10</strong>
@@ -493,7 +493,7 @@ class extends Component
           <button 
             type="button" 
             wire:click="setAmount(25)" 
-            class="p-2 sm:p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df]' }}"
+            class="p-2 sm:p-2.5 rounded-lg border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df]' }}"
           >
             <span class="block text-[10px] uppercase font-mono opacity-80 text-amber-500 {{ $sealAmount === 25 && ! $customAmount ? 'text-amber-200' : '' }}">Superfan</span>
             <strong class="text-xs sm:text-sm font-mono font-bold">$25</strong>
@@ -502,7 +502,7 @@ class extends Component
           <button 
             type="button" 
             wire:click="setAmount(50)" 
-            class="p-2 sm:p-2.5 rounded-xl border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df]' }}"
+            class="p-2 sm:p-2.5 rounded-lg border text-center transition-all duration-200 transform active:scale-95 {{ $sealAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/20 font-bold' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df]' }}"
           >
             <span class="block text-[10px] uppercase font-mono opacity-80 text-purple-500 {{ $sealAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">VIP Patron</span>
             <strong class="text-xs sm:text-sm font-mono font-bold">$50</strong>
@@ -523,7 +523,7 @@ class extends Component
                 max="1000" 
                 placeholder="{{ $minDollars }}+" 
                 wire:model.live.debounce.300ms="customAmount"
-                class="w-full pl-6 pr-2 py-1 bg-white border border-[#e7e5df] focus:border-[#047857] rounded-xl text-xs font-mono outline-none shadow-2xs"
+                class="w-full pl-6 pr-2 py-1 bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg text-xs font-mono outline-none shadow-2xs"
               >
             </div>
           </div>
@@ -533,46 +533,46 @@ class extends Component
       <!-- Choose Contribution Type Tabs -->
       <div class="mb-5">
         <label class="block text-xs font-mono uppercase tracking-wider font-semibold text-[#475569] mb-2">
-          What are you leaving for the future?
+          Contribution Type: What are you leaving for the future?
         </label>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <button 
             type="button" 
             wire:click="setContributionType('message')"
-            class="py-2.5 px-3 rounded-xl border text-center transition-all {{ $contributionType === 'message' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
+            class="py-2.5 px-3 rounded-lg border text-center transition-all {{ $contributionType === 'message' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
           >
             <span class="block text-base mb-0.5">💌</span>
-            <span class="text-xs">Letter</span>
+            <span class="text-xs font-medium">Letter</span>
           </button>
           <button 
             type="button" 
             wire:click="setContributionType('prediction')"
-            class="py-2.5 px-3 rounded-xl border text-center transition-all {{ $contributionType === 'prediction' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
+            class="py-2.5 px-3 rounded-lg border text-center transition-all {{ $contributionType === 'prediction' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
           >
             <span class="block text-base mb-0.5">🔮</span>
-            <span class="text-xs">Prediction</span>
+            <span class="text-xs font-medium">Prediction</span>
           </button>
           <button 
             type="button" 
             wire:click="setContributionType('memory')"
-            class="py-2.5 px-3 rounded-xl border text-center transition-all {{ $contributionType === 'memory' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
+            class="py-2.5 px-3 rounded-lg border text-center transition-all {{ $contributionType === 'memory' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
           >
             <span class="block text-base mb-0.5">❤️</span>
-            <span class="text-xs">Memory</span>
+            <span class="text-xs font-medium">Memory</span>
           </button>
           <button 
             type="button" 
             wire:click="setContributionType('photo')"
-            class="py-2.5 px-3 rounded-xl border text-center transition-all {{ $contributionType === 'photo' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
+            class="py-2.5 px-3 rounded-lg border text-center transition-all {{ $contributionType === 'photo' ? 'bg-[#064e3b] text-white border-[#064e3b] font-bold shadow-2xs' : 'bg-[#faf9f5] hover:bg-white text-[#475569] border-[#e7e5df]' }}"
           >
             <span class="block text-base mb-0.5">📸</span>
-            <span class="text-xs">Photo / Note</span>
+            <span class="text-xs font-medium">Photo / Note</span>
           </button>
         </div>
       </div>
 
       <!-- Thought Starter Prompt Banner -->
-      <div class="mb-4 p-3 rounded-xl bg-[#ecfdf5] border border-[#a7f3d0] text-xs text-[#064e3b]">
+      <div class="mb-4 p-3 rounded-lg bg-[#ecfdf5] border border-[#a7f3d0] text-xs text-[#064e3b]">
         @switch($contributionType)
           @case('prediction')
             <strong>🔮 Prediction Prompt:</strong> Where do you predict {{ $creator ? $creator->name : 'the community' }} will be when this capsule is unsealed?
@@ -595,7 +595,7 @@ class extends Component
               Your Milestone Prediction (Locked until reveal date)
               @break
             @case('memory')
-              Your Community Memory (Sealed in archive)
+              Your Community Memory (Sealed in archive until reveal date)
               @break
             @case('photo')
               Your Keepsake Note (Sealed with your photo)
@@ -604,8 +604,8 @@ class extends Component
               Your Secret Letter (Sealed in archive until reveal date)
           @endswitch
         </label>
-        <textarea id="message" wire:model="message" maxlength="600" rows="5" placeholder="@if($contributionType === 'prediction')I predict that when {{ $creator ? $creator->name : 'you' }} open this capsule, the channel will reach... @elseif($contributionType === 'memory')My favorite memory was when... @elseif($contributionType === 'photo')This photo captures the time we... @else{{ $creator ? 'Dear ' . $creator->name . ', I’ve been watching your content since 2024 and...' : 'Dear future, today I am 28 years old...' }}@endif" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none resize-none leading-relaxed"></textarea>
-        <div class="flex justify-between items-center text-xs text-[#64748b] mt-1 px-1">
+        <textarea id="message" wire:model="message" maxlength="600" rows="5" placeholder="@if($contributionType === 'prediction')I predict that when {{ $creator ? $creator->name : 'you' }} open this capsule, the channel will reach... @elseif($contributionType === 'memory')My favorite memory was when... @elseif($contributionType === 'photo')This photo captures the time we... @else{{ $creator ? 'Dear ' . $creator->name . ', I’ve been watching your content since 2024 and...' : 'Dear future, today I am 28 years old...' }}@endif" class="w-full bg-[#fbfaf6] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none resize-none leading-relaxed"></textarea>
+        <div class="flex justify-between items-center text-xs text-[#64748b] mt-1 px-1 font-mono">
           <span>🔒 Stays strictly inside the sealed keepsake</span>
           <span><strong>{{ 600 - mb_strlen($message) }}</strong> chars left</span>
         </div>
@@ -616,7 +616,7 @@ class extends Component
           <span>The Public Teaser Line (Archive Preview)</span>
           <span class="text-[11px] font-mono text-[#047857]">🔒 Teaser snippet only</span>
         </label>
-        <input id="teaser" wire:model="teaser" maxlength="72" placeholder="{{ $creator ? 'e.g. Can’t wait to see where the channel is by ' . $creator->formattedUnlockDate() . '!' : 'e.g. If you can still hear the morning birds, we did something right.' }}" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
+        <input id="teaser" wire:model="teaser" maxlength="72" placeholder="{{ $creator ? 'e.g. Can’t wait to see where the channel is by ' . $creator->formattedUnlockDate() . '!' : 'e.g. If you can still hear the morning birds, we did something right.' }}" class="w-full bg-[#fbfaf6] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 sm:p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
         <div class="flex flex-col sm:flex-row sm:justify-between text-xs text-[#64748b] mt-1 px-1 gap-1">
           <span>🔒 <strong>You can see the teaser. You can't see the message.</strong> Full letter remains strictly encrypted until the reveal stream.</span>
           <span class="sm:text-right font-mono"><strong>{{ 72 - mb_strlen($teaser) }}</strong> chars</span>
@@ -624,20 +624,20 @@ class extends Component
       </div>
 
       <div class="pt-4 border-t border-[#e7e5df]">
-        <button class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-base shadow-[0_4px_16px_rgba(6,78,59,0.3)] hover:shadow-[0_6px_20px_rgba(6,78,59,0.4)] hover:-translate-y-0.5 active:translate-y-0 transition-all" wire:click="next" type="button">
+        <button class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-xs hover:shadow-md transition-all cursor-pointer" wire:click="next" type="button">
           Continue with ${{ $sealAmount }} →
         </button>
       </div>
 
     @elseif($step === 2)
       <div class="mb-6">
-        <span class="inline-flex items-center px-3 py-1 bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] rounded-full text-xs font-bold mb-2">
+        <span class="inline-flex items-center px-2.5 py-1 bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] rounded-md text-xs font-mono font-medium mb-3">
           Step 2 of 3 · Author & Predictions
         </span>
         <h1 class="font-serif text-2xl sm:text-3xl font-bold text-[#0f172a] leading-tight">
           Who is sending this keepsake? 📬
         </h1>
-        <p class="text-xs sm:text-sm text-[#334155] mt-1">
+        <p class="text-xs sm:text-sm text-[#475569] mt-1">
           Give your future self a signature, pick a destination morning, and record your predictions.
         </p>
       </div>
@@ -646,21 +646,21 @@ class extends Component
         <label for="name" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Your Name or Pen Name
         </label>
-        <input id="name" wire:model="name" placeholder="e.g. Sarah Jenkins" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
+        <input id="name" wire:model="name" placeholder="e.g. Sarah Jenkins" class="w-full bg-[#fbfaf6] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 sm:p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
       </div>
 
       <div class="mb-5">
         <label for="location" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Where are you writing from? (City, Country)
         </label>
-        <input id="location" wire:model="location" placeholder="e.g. Kyoto, Japan or London, UK" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
+        <input id="location" wire:model="location" placeholder="e.g. Kyoto, Japan or London, UK" class="w-full bg-[#fbfaf6] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 sm:p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
       </div>
 
       <div class="mb-5">
         <label for="email" class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Delivery Email Address for 2050
         </label>
-        <input id="email" type="email" wire:model="email" placeholder="you@example.com" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
+        <input id="email" type="email" wire:model="email" placeholder="you@example.com" class="w-full bg-[#fbfaf6] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 sm:p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
         <div class="text-xs text-[#64748b] mt-1 px-1">
           💌 We strictly protect your privacy. Used only to email your sealed keepsake on Jan 1, 2050.
         </div>
@@ -674,7 +674,7 @@ class extends Component
             Addressed to Which Morning?
           @endif
         </label>
-        <input id="addressedTo" type="date" wire:model="addressedTo" min="{{ now()->toDateString() }}" max="2050-01-01" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3.5 sm:p-4 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
+        <input id="addressedTo" type="date" wire:model="addressedTo" min="{{ now()->toDateString() }}" max="2050-01-01" class="w-full bg-[#fbfaf6] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 sm:p-3.5 text-base text-[#0f172a] placeholder-[#94a3b8] focus:ring-2 focus:ring-[#047857]/20 transition-all outline-none">
         <div class="text-xs text-[#64748b] mt-1 px-1">
           @if($creator && $selectedMilestone)
             🎯 Auto-locked to {{ $creator->name }}’s milestone date. You can also customize this if needed.
@@ -688,51 +688,51 @@ class extends Component
         <label class="block text-xs sm:text-sm font-bold text-[#0f172a] mb-1.5">
           Optional Portrait Photo (Sealed in keepsake)
         </label>
-        <input type="file" wire:model="photo" accept="image/*" class="w-full bg-[#f5f4ee] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-2xl p-3 text-sm text-[#0f172a] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#ecfdf5] file:text-[#064e3b] hover:file:bg-[#d1fae5] transition-all outline-none">
+        <input type="file" wire:model="photo" accept="image/*" class="w-full bg-[#fbfaf6] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg p-3 text-sm text-[#0f172a] file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-mono file:font-semibold file:bg-[#ecfdf5] file:text-[#064e3b] hover:file:bg-[#d1fae5] transition-all outline-none">
         <div class="text-xs text-[#64748b] mt-1 px-1">
           📷 Upload a snapshot of you today. Kept safe in the archive until 2050.
         </div>
       </div>
 
       <!-- Fun Prediction Chips -->
-      <div class="bg-[#f5f4ee] border border-[#e7e5df] rounded-2xl p-4 sm:p-5 mb-6 space-y-4">
+      <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-xl p-4 sm:p-5 mb-6 space-y-4">
         <h4 class="font-serif font-bold text-sm text-[#0f172a] flex items-center gap-2">
           <span>🔮</span> 2050 Predictions (Sealed inside your keepsake)
         </h4>
         
         <div>
-          <label class="block font-semibold text-xs text-[#334155] mb-1.5">🚀 Will humans live on Mars by 2050?</label>
+          <label class="block font-medium text-xs text-[#334155] mb-1.5">🚀 Will humans live on Mars by 2050?</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all {{ $this->mars === 'yes' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-sm' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('mars', 'yes')">👍 Definitely!</button>
-            <button type="button" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all {{ $this->mars === 'no' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-sm' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('mars', 'no')">👎 No way</button>
+            <button type="button" class="py-2 px-3 rounded-lg font-medium text-xs sm:text-sm transition-all {{ $this->mars === 'yes' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('mars', 'yes')">👍 Definitely!</button>
+            <button type="button" class="py-2 px-3 rounded-lg font-medium text-xs sm:text-sm transition-all {{ $this->mars === 'no' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('mars', 'no')">👎 No way</button>
           </div>
         </div>
 
         <div>
-          <label class="block font-semibold text-xs text-[#334155] mb-1.5">🤖 Will AI do most human jobs?</label>
+          <label class="block font-medium text-xs text-[#334155] mb-1.5">🤖 Will AI do most human jobs?</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all {{ $this->jobs === 'yes' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-sm' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('jobs', 'yes')">🤖 AI runs it</button>
-            <button type="button" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all {{ $this->jobs === 'no' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-sm' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('jobs', 'no')">👨‍💻 Humans win</button>
+            <button type="button" class="py-2 px-3 rounded-lg font-medium text-xs sm:text-sm transition-all {{ $this->jobs === 'yes' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('jobs', 'yes')">🤖 AI runs it</button>
+            <button type="button" class="py-2 px-3 rounded-lg font-medium text-xs sm:text-sm transition-all {{ $this->jobs === 'no' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('jobs', 'no')">👨‍💻 Humans win</button>
           </div>
         </div>
 
         <div>
-          <label class="block font-semibold text-xs text-[#334155] mb-1.5">🎂 Will most people live past 100?</label>
+          <label class="block font-medium text-xs text-[#334155] mb-1.5">🎂 Will most people live past 100?</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all {{ $this->hundred === 'yes' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-sm' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('hundred', 'yes')">🎂 Easily</button>
-            <button type="button" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all {{ $this->hundred === 'no' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-sm' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('hundred', 'no')">⏳ Regular age</button>
+            <button type="button" class="py-2 px-3 rounded-lg font-medium text-xs sm:text-sm transition-all {{ $this->hundred === 'yes' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('hundred', 'yes')">🎂 Easily</button>
+            <button type="button" class="py-2 px-3 rounded-lg font-medium text-xs sm:text-sm transition-all {{ $this->hundred === 'no' ? 'border-2 border-[#047857] bg-[#ecfdf5] text-[#064e3b] shadow-xs' : 'border border-[#e7e5df] bg-white text-[#334155] hover:border-[#047857]/40' }}" wire:click="setPrediction('hundred', 'no')">⏳ Regular age</button>
           </div>
         </div>
       </div>
 
       <div class="flex items-center justify-between gap-3 pt-4 border-t border-[#e7e5df]">
-        <button class="px-5 py-3 rounded-full bg-white hover:bg-[#f5f4ee] border border-[#e7e5df] text-[#334155] font-bold text-sm transition-all" wire:click="back" type="button">← Back</button>
-        <button class="px-7 py-3.5 rounded-full bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#059669] hover:from-[#022c22] hover:to-[#047857] text-white font-bold text-base shadow-[0_4px_16px_rgba(6,78,59,0.3)] hover:shadow-[0_6px_20px_rgba(6,78,59,0.4)] hover:-translate-y-0.5 active:translate-y-0 transition-all" wire:click="next" type="button">Review Your Keepsake (${{ $sealAmount }}) →</button>
+        <button class="px-5 py-2.5 rounded-lg bg-white hover:bg-[#fbfaf6] border border-[#e7e5df] text-[#334155] font-medium text-xs sm:text-sm transition-all" wire:click="back" type="button">← Back</button>
+        <button class="px-6 py-3 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-xs hover:shadow-md transition-all cursor-pointer" wire:click="next" type="button">Review Your Keepsake (${{ $sealAmount }}) →</button>
       </div>
 
     @else
       <div class="mb-6">
-        <span class="inline-flex items-center px-3 py-1 bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] rounded-full text-xs font-bold mb-2">
+        <span class="inline-flex items-center px-2.5 py-1 bg-[#ecfdf5] text-[#064e3b] border border-[#a7f3d0] rounded-md text-xs font-mono font-medium mb-3">
           Step 3 of 3 · Final Verification
         </span>
         <h1 class="font-serif text-2xl sm:text-3xl font-bold text-[#0f172a] leading-tight">
@@ -744,8 +744,8 @@ class extends Component
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-4 sm:p-5">
-          <h4 class="text-xs font-mono font-semibold uppercase tracking-wider text-[#047857] mb-2">
+        <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-xl p-4 sm:p-5">
+          <h4 class="text-xs font-mono font-medium uppercase tracking-wider text-[#047857] mb-2">
             Visible on Public Wall
           </h4>
           <blockquote class="font-serif italic text-base text-[#0f172a] mb-3 leading-snug">
@@ -760,8 +760,8 @@ class extends Component
           </p>
         </div>
 
-        <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-4 sm:p-5">
-          <h4 class="text-xs font-mono font-semibold uppercase tracking-wider text-[#064e3b] mb-2">
+        <div class="bg-[#faf9f5] border border-[#e7e5df] rounded-xl p-4 sm:p-5">
+          <h4 class="text-xs font-mono font-medium uppercase tracking-wider text-[#064e3b] mb-2">
             Sealed in {{ $creator ? $creator->name . '’s Vault' : 'Archive' }}
           </h4>
           <blockquote class="text-xs sm:text-sm text-[#475569] italic mb-3 leading-relaxed line-clamp-3">
@@ -775,7 +775,7 @@ class extends Component
       </div>
 
       <!-- Contribution Amount Selection (PWYW with creator min) -->
-      <div class="bg-white border border-[#e7e5df] rounded-3xl p-5 sm:p-6 mb-4 shadow-xs">
+      <div class="bg-white border border-[#e7e5df] rounded-xl p-5 sm:p-6 mb-4 shadow-xs">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 pb-3 border-b border-[#e7e5df]">
           <div>
             <h4 class="font-serif font-bold text-base sm:text-lg text-[#0f172a]">
@@ -785,18 +785,18 @@ class extends Component
               {{ $creator ? "Set by {$creator->name} (minimum \${$minDollars}.00) · Direct creator patronage · Permanent archival ledger" : "Permanent archival ledger" }}
             </p>
           </div>
-          <span class="inline-flex items-center gap-1 font-mono font-bold text-lg sm:text-xl text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0]/80 px-3.5 py-1 rounded-2xl shrink-0 self-start sm:self-auto shadow-2xs">
+          <span class="inline-flex items-center gap-1 font-mono font-bold text-lg sm:text-xl text-[#064e3b] bg-[#ecfdf5] border border-[#a7f3d0]/80 px-3.5 py-1 rounded-lg shrink-0 self-start sm:self-auto shadow-2xs">
             ${{ number_format($sealAmount, 2) }}
           </span>
         </div>
 
         <!-- Dynamic Tier Badge & Live Recognition Preview -->
-        <div class="mb-5 p-4 rounded-2xl transition-all duration-300 {{ $sealAmount >= 50 ? 'bg-gradient-to-r from-purple-50 via-fuchsia-50 to-pink-50 border border-purple-200 text-purple-900 shadow-2xs' : ($sealAmount >= 25 ? 'bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border border-amber-200 text-amber-900 shadow-2xs' : ($sealAmount >= 10 ? 'bg-gradient-to-r from-blue-50 via-sky-50 to-indigo-50 border border-blue-200 text-blue-900 shadow-2xs' : 'bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 text-emerald-900 shadow-2xs')) }}">
+        <div class="mb-5 p-4 rounded-xl transition-all duration-300 {{ $sealAmount >= 50 ? 'bg-purple-50/60 border border-purple-200 text-purple-900 shadow-2xs' : ($sealAmount >= 25 ? 'bg-amber-50/60 border border-amber-200 text-amber-900 shadow-2xs' : ($sealAmount >= 10 ? 'bg-blue-50/60 border border-blue-200 text-blue-900 shadow-2xs' : 'bg-emerald-50/60 border border-emerald-200 text-emerald-900 shadow-2xs')) }}">
           <div class="flex items-center justify-between gap-2 mb-1.5">
             <span class="font-bold text-xs sm:text-sm flex items-center gap-1.5 tracking-tight">
               <span>{{ $tierName }}</span>
             </span>
-            <span class="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-white/90 border border-current/20 shadow-2xs">
+            <span class="text-[11px] font-mono font-medium px-2 py-0.5 rounded-md bg-white border border-current/20 shadow-2xs">
               ${{ number_format($sealAmount, 2) }} Contribution
             </span>
           </div>
@@ -807,85 +807,85 @@ class extends Component
 
         @if($creator)
           <!-- Direct Creator Patronage Indicator -->
-          <div class="mb-5 bg-[#faf9f5] border border-[#e7e5df] rounded-2xl p-3.5 sm:p-4 flex items-center justify-between gap-3">
+          <div class="mb-5 bg-[#faf9f5] border border-[#e7e5df] rounded-lg p-3.5 sm:p-4 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2.5">
               <span class="w-2 h-2 rounded-full bg-[#047857]"></span>
               <span class="text-xs text-[#334155] font-medium">
                 Direct patronage for <strong>{{ $creator->name }}</strong>
               </span>
             </div>
-            <span class="text-xs font-mono font-bold text-[#047857] bg-[#ecfdf5] border border-[#a7f3d0] px-2.5 py-0.5 rounded-full">
+            <span class="text-xs font-mono font-medium text-[#047857] bg-[#ecfdf5] border border-[#a7f3d0] px-2.5 py-0.5 rounded-md">
               ${{ number_format($sealAmount, 2) }}
             </span>
           </div>
         @endif
 
-        <!-- Quick Selector Chips with Micro-Animations -->
+        <!-- Quick Selector Chips -->
         <div class="space-y-3">
-          <label class="block text-xs font-mono font-semibold text-[#475569] uppercase tracking-wider">
+          <label class="block text-xs font-mono font-medium text-[#475569] uppercase tracking-wider">
             Quick Select or Add Booster:
           </label>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <button 
               type="button" 
               wire:click="setAmount({{ $minDollars }})" 
-              class="p-3 rounded-2xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $sealAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-md ring-2 ring-[#047857]/30' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df] hover:border-[#a7f3d0]' }}"
+              class="p-3 rounded-lg border text-center transition-all duration-150 {{ $sealAmount === $minDollars && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/30' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df] hover:border-[#a7f3d0]' }}"
             >
               <span class="block text-[10px] uppercase tracking-wider opacity-75 font-mono">Standard</span>
               <strong class="text-base sm:text-lg block font-mono font-bold">${{ $minDollars }}</strong>
-              <span class="text-[10px] block opacity-80 mt-0.5">Floor</span>
+              <span class="text-[10px] block opacity-80 mt-0.5 font-mono">Floor</span>
             </button>
 
             @if($minDollars < 10)
               <button 
                 type="button" 
                 wire:click="setAmount(10)" 
-                class="p-3 rounded-2xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 {{ $sealAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-md ring-2 ring-[#047857]/30' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df] hover:border-[#a7f3d0]' }}"
+                class="p-3 rounded-lg border text-center transition-all duration-150 {{ $sealAmount === 10 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/30' : 'bg-white hover:bg-[#ecfdf5] text-[#0f172a] border-[#e7e5df] hover:border-[#a7f3d0]' }}"
               >
                 <span class="block text-[10px] uppercase tracking-wider opacity-75 font-mono">Supporter</span>
                 <strong class="text-base sm:text-lg block font-mono font-bold">$10</strong>
-                <span class="text-[10px] block opacity-80 mt-0.5">Bronze Foil</span>
+                <span class="text-[10px] block opacity-80 mt-0.5 font-mono">Bronze Foil</span>
               </button>
             @endif
 
             <button 
               type="button" 
               wire:click="setAmount(25)" 
-              class="p-3 rounded-2xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 relative overflow-hidden {{ $sealAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-md ring-2 ring-[#047857]/30' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df] hover:border-[#fde047]' }}"
+              class="p-3 rounded-lg border text-center transition-all duration-150 {{ $sealAmount === 25 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/30' : 'bg-white hover:bg-[#fefce8] text-[#0f172a] border-[#e7e5df] hover:border-[#fde047]' }}"
             >
               <span class="block text-[10px] uppercase tracking-wider opacity-75 font-mono">Superfan</span>
               <strong class="text-base sm:text-lg block font-mono font-bold">$25</strong>
-              <span class="text-[10px] block opacity-80 mt-0.5 text-amber-600 font-semibold {{ $sealAmount === 25 && ! $customAmount ? 'text-amber-200' : '' }}">★ Gold Foil</span>
+              <span class="text-[10px] block opacity-80 mt-0.5 text-amber-600 font-medium {{ $sealAmount === 25 && ! $customAmount ? 'text-amber-200' : '' }}">★ Gold Foil</span>
             </button>
 
             <button 
               type="button" 
               wire:click="setAmount(50)" 
-              class="p-3 rounded-2xl border text-center transition-all duration-200 transform active:scale-95 hover:-translate-y-0.5 relative overflow-hidden {{ $sealAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-md ring-2 ring-[#047857]/30' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df] hover:border-[#d8b4fe]' }}"
+              class="p-3 rounded-lg border text-center transition-all duration-150 {{ $sealAmount === 50 && ! $customAmount ? 'bg-[#064e3b] text-white border-[#064e3b] shadow-xs ring-2 ring-[#047857]/30' : 'bg-white hover:bg-[#faf5ff] text-[#0f172a] border-[#e7e5df] hover:border-[#d8b4fe]' }}"
             >
               <span class="block text-[10px] uppercase tracking-wider opacity-75 font-mono">Patron</span>
               <strong class="text-base sm:text-lg block font-mono font-bold">$50</strong>
-              <span class="text-[10px] block opacity-80 mt-0.5 text-purple-600 font-semibold {{ $sealAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">👑 VIP Foil</span>
+              <span class="text-[10px] block opacity-80 mt-0.5 text-purple-600 font-medium {{ $sealAmount === 50 && ! $customAmount ? 'text-purple-200' : '' }}">👑 VIP Foil</span>
             </button>
           </div>
 
           <!-- Quick Booster Addons -->
           <div class="pt-2 flex items-center gap-2 flex-wrap">
-            <span class="text-xs font-semibold text-[#64748b]">Quick booster tip:</span>
-            <button type="button" wire:click="addBooster(5)" class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-[#f1f5f9] hover:bg-[#ecfdf5] text-[#0f172a] hover:text-[#064e3b] border border-[#e2e8f0] hover:border-[#a7f3d0] transition-all">
+            <span class="text-xs font-mono font-medium text-[#64748b]">Quick booster tip:</span>
+            <button type="button" wire:click="addBooster(5)" class="px-2.5 py-1 rounded-md text-xs font-mono font-medium bg-[#f1f5f9] hover:bg-[#ecfdf5] text-[#0f172a] hover:text-[#064e3b] border border-[#e2e8f0] hover:border-[#a7f3d0] transition-all">
               +$5
             </button>
-            <button type="button" wire:click="addBooster(10)" class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-[#f1f5f9] hover:bg-[#ecfdf5] text-[#0f172a] hover:text-[#064e3b] border border-[#e2e8f0] hover:border-[#a7f3d0] transition-all">
+            <button type="button" wire:click="addBooster(10)" class="px-2.5 py-1 rounded-md text-xs font-mono font-medium bg-[#f1f5f9] hover:bg-[#ecfdf5] text-[#0f172a] hover:text-[#064e3b] border border-[#e2e8f0] hover:border-[#a7f3d0] transition-all">
               +$10
             </button>
-            <button type="button" wire:click="addBooster(25)" class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-[#f1f5f9] hover:bg-[#fefce8] text-[#0f172a] hover:text-[#854d0e] border border-[#e2e8f0] hover:border-[#fde047] transition-all">
+            <button type="button" wire:click="addBooster(25)" class="px-2.5 py-1 rounded-md text-xs font-mono font-medium bg-[#f1f5f9] hover:bg-[#fefce8] text-[#0f172a] hover:text-[#854d0e] border border-[#e2e8f0] hover:border-[#fde047] transition-all">
               +$25 ★
             </button>
           </div>
 
           <!-- Custom Amount input -->
           <div class="pt-2">
-            <label class="block text-xs font-semibold text-[#64748b] mb-1.5 flex items-center justify-between">
+            <label class="block text-xs font-mono font-medium text-[#64748b] mb-1.5 flex items-center justify-between">
               <span>Or enter custom booster amount:</span>
               <span class="text-[11px] text-[#047857] font-mono">Direct creator support</span>
             </label>
@@ -895,10 +895,10 @@ class extends Component
                 type="number" 
                 min="{{ $minDollars }}" 
                 max="1000" 
-                step="1"
+                step="1" 
                 placeholder="e.g. 75 (min ${{ $minDollars }})" 
-                wire:model.live.debounce.300ms="customAmount"
-                class="w-full pl-8 pr-4 py-2.5 bg-[#f8fafc] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-xl text-base text-[#0f172a] font-mono outline-none transition-all shadow-2xs focus:ring-2 focus:ring-[#047857]/20"
+                wire:model.live.debounce.300ms="customAmount" 
+                class="w-full pl-8 pr-4 py-2.5 bg-[#fbfaf6] hover:bg-white focus:bg-white border border-[#e7e5df] focus:border-[#047857] rounded-lg text-sm text-[#0f172a] font-mono outline-none transition-all shadow-2xs focus:ring-2 focus:ring-[#047857]/20"
               >
             </div>
             @error('sealAmount') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
@@ -906,18 +906,19 @@ class extends Component
         </div>
       </div>
 
-      <p class="text-xs text-[#64748b] text-center mb-6">
+      <p class="text-xs text-[#64748b] text-center mb-6 font-mono">
         🔒 PCI-DSS Level 1 compliant card tokenization via Stripe · AES-256 encrypted storage · Direct creator payouts
       </p>
 
       <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#e7e5df]">
-        <button class="w-full sm:w-auto px-5 py-3 rounded-full bg-white hover:bg-[#f5f4ee] border border-[#e7e5df] text-[#475569] font-medium text-sm transition-all" wire:click="back" type="button" @disabled($sealing)>← Back</button>
-        <button class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-full bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-sm sm:text-base shadow-[0_2px_12px_rgba(6,78,59,0.25)] hover:-translate-y-0.5 active:translate-y-0 transition-all" wire:click="seal" type="button" wire:loading.attr="disabled">
-          <span wire:loading.remove wire:target="seal">Pay ${{ $sealAmount }} & Seal in Time Capsule</span>
+        <button class="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-white hover:bg-[#fbfaf6] border border-[#e7e5df] text-[#475569] font-medium text-xs sm:text-sm transition-all" wire:click="back" type="button" @disabled($sealing)>← Back</button>
+        <button class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white font-medium text-xs sm:text-sm shadow-xs hover:shadow-md transition-all cursor-pointer" wire:click="seal" type="button" wire:loading.attr="disabled">
+          <span wire:loading.remove wire:target="seal">Pay ${{ $sealAmount }} & Seal in Time Capsule →</span>
           <span wire:loading wire:target="seal">Connecting to Secure Stripe Checkout… ⏳</span>
         </button>
       </div>
     @endif
   </div>
 </section>
+
 
