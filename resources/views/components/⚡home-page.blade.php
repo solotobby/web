@@ -17,13 +17,8 @@ class extends Component
 {
     public function rendering($view): void
     {
-        $faqs = [
-            'What is FanVault?' => 'FanVault is the time capsule for creators and their communities. Fans leave messages, memories, and predictions for the future, sealed until a creator milestone or celebration arrives.',
-            'When are the sealed messages unlocked?' => 'Capsules stay encrypted and private until the creator reaches their milestone target date and unlocks the vault during their live broadcast stream.',
-            'What can fans leave inside a time capsule?' => 'Fans can leave heartfelt letters, wild milestone predictions, community memories, and keepsake photos — sealed until the unsealing ceremony.',
-            'How does pricing work for creators?' => 'Creators set their own seal amount instead of being locked into a rigid fee. Fans contribute at the creator’s chosen level with optional booster tips, and creators receive direct payouts via Stripe.',
-            'Does FanVault replace a physical PO Box?' => 'Yes. FanVault delivers all the warmth and emotion of fan mail with zero physical mail sorting, zero storage clutter, and full global access for international fans.',
-        ];
+        $faqItems = $this->faqItems();
+        $faqs = array_combine(array_column($faqItems, 'q'), array_column($faqItems, 'a'));
 
         $schema = [
             '@context' => 'https://schema.org',
@@ -42,8 +37,55 @@ class extends Component
         ]);
     }
 
+    public function faqItems(): array
+    {
+        return [
+            [
+                'category' => 'fans',
+                'q' => 'What is FanVault?',
+                'a' => 'FanVault is the time capsule for creators and their communities. Fans leave messages, memories, and predictions for the future, sealed until a creator milestone or celebration arrives.',
+            ],
+            [
+                'category' => 'fans',
+                'q' => 'How does sealing a message work?',
+                'a' => 'You write your message, pick an optional photo or prediction, and set a 1-line public teaser. Only your teaser is visible on the public community wall today. Your full message, predictions, and photos stay strictly encrypted until the stream reveal.',
+            ],
+            [
+                'category' => 'fans',
+                'q' => 'When are the sealed messages unlocked?',
+                'a' => 'Capsules stay encrypted and private until the creator reaches their milestone target date and unlocks the vault during their live broadcast stream.',
+            ],
+            [
+                'category' => 'fans',
+                'q' => 'What can fans leave inside a time capsule?',
+                'a' => 'Fans can leave heartfelt letters, wild milestone predictions, community memories, and keepsake photos — sealed until the unsealing ceremony.',
+            ],
+            [
+                'category' => 'creators',
+                'q' => 'How does pricing work for creators?',
+                'a' => 'Creators set their own seal amount instead of being locked into a rigid fee. Fans contribute at the creator’s chosen level with optional booster tips, and creators receive direct payouts via Stripe.',
+            ],
+            [
+                'category' => 'creators',
+                'q' => 'Does FanVault replace a physical PO Box?',
+                'a' => 'Yes. FanVault delivers all the warmth and emotion of fan mail with zero physical mail sorting, zero storage clutter, and full global access for international fans.',
+            ],
+            [
+                'category' => 'creators',
+                'q' => 'Can creators run multiple time capsules?',
+                'a' => 'Yes. Creators can launch dedicated vaults for upcoming subscriber milestones (e.g. 100K or 1M subs), podcast season finales, gaming marathons, annual anniversaries, or special community events.',
+            ],
+            [
+                'category' => 'security',
+                'q' => 'Is fan data and payment information secure?',
+                'a' => 'All card transactions are tokenized through Stripe (PCI-DSS Level 1 compliant). Sealed letters are encrypted at rest with AES-256 and transmitted exclusively over secure TLS 1.3.',
+            ],
+        ];
+    }
+
     public function with(): array
     {
+        $faqItems = $this->faqItems();
         $count = (int) (Stat::query()->value('sealed_count') ?? Postcard::query()->count());
         $latest = Postcard::query()->with('creator')->orderByDesc('number')->limit(6)->get();
         $creators = Creator::query()
@@ -64,7 +106,7 @@ class extends Component
 
         return compact(
             'count', 'uniquePeople', 'latest', 'creators', 'creatorsCount',
-            'creatorLettersCount', 'totalPaidCents', 'foundingLeft', 'fill'
+            'creatorLettersCount', 'totalPaidCents', 'foundingLeft', 'fill', 'faqItems'
         );
     }
 };
@@ -466,7 +508,118 @@ class extends Component
     </div>
   </section>
 
-  <!-- 6. FLAT BOTTOM CALL TO ACTION -->
+  <!-- 6. FREQUENTLY ASKED QUESTIONS -->
+  <section id="faq" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8" x-data="{ active: null, tab: 'all' }">
+    <div class="text-center max-w-2xl mx-auto space-y-3">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#ecfdf5] border border-[#a7f3d0] text-[#064e3b] font-mono text-xs font-medium">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#047857]"></span>
+        <span>FREQUENTLY ASKED QUESTIONS</span>
+      </div>
+      <h2 class="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#0f172a]">
+        Everything you need to know.
+      </h2>
+      <p class="text-sm sm:text-base text-[#64748b] leading-relaxed">
+        Got questions about how Creator Time Capsules work, stream reveals, or payouts? Here are the answers.
+      </p>
+
+      <!-- Category Filter Pills -->
+      <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+        <button 
+          type="button" 
+          @click="tab = 'all'" 
+          :class="tab === 'all' ? 'bg-[#064e3b] text-white shadow-xs font-semibold' : 'bg-white hover:bg-[#faf9f5] text-[#475569] border border-[#e7e5df]'"
+          class="px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer"
+        >
+          All ({{ count($faqItems) }})
+        </button>
+        <button 
+          type="button" 
+          @click="tab = 'fans'" 
+          :class="tab === 'fans' ? 'bg-[#064e3b] text-white shadow-xs font-semibold' : 'bg-white hover:bg-[#faf9f5] text-[#475569] border border-[#e7e5df]'"
+          class="px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer"
+        >
+          For Fans
+        </button>
+        <button 
+          type="button" 
+          @click="tab = 'creators'" 
+          :class="tab === 'creators' ? 'bg-[#064e3b] text-white shadow-xs font-semibold' : 'bg-white hover:bg-[#faf9f5] text-[#475569] border border-[#e7e5df]'"
+          class="px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer"
+        >
+          For Creators
+        </button>
+        <button 
+          type="button" 
+          @click="tab = 'security'" 
+          :class="tab === 'security' ? 'bg-[#064e3b] text-white shadow-xs font-semibold' : 'bg-white hover:bg-[#faf9f5] text-[#475569] border border-[#e7e5df]'"
+          class="px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer"
+        >
+          Security & Payments
+        </button>
+      </div>
+    </div>
+
+    <!-- Accordion Items -->
+    <div class="space-y-3">
+      @foreach($faqItems as $i => $item)
+        <div 
+          x-show="tab === 'all' || tab === '{{ $item['category'] }}'" 
+          x-transition
+          class="bg-white border border-[#e7e5df] hover:border-[#a7f3d0] rounded-xl overflow-hidden transition-all shadow-xs"
+        >
+          <button 
+            type="button" 
+            @click="active = (active === {{ $i }} ? null : {{ $i }})" 
+            class="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
+            :aria-expanded="active === {{ $i }}"
+          >
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-md bg-[#faf9f5] border border-[#e7e5df] text-[#064e3b] font-mono text-xs flex items-center justify-center shrink-0">
+                {{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}
+              </span>
+              <span class="font-serif font-bold text-base sm:text-lg text-[#0f172a] leading-snug">
+                {{ $item['q'] }}
+              </span>
+            </div>
+            <span 
+              class="w-7 h-7 rounded-lg bg-[#faf9f5] border border-[#e7e5df] text-[#047857] flex items-center justify-center shrink-0 transition-transform duration-200"
+              :class="active === {{ $i }} ? 'rotate-180 bg-[#ecfdf5] border-[#a7f3d0]' : ''"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </button>
+          
+          <div 
+            x-show="active === {{ $i }}" 
+            x-cloak 
+            class="px-5 sm:px-6 pb-5 pt-1 text-sm text-[#475569] leading-relaxed border-t border-[#f1f0eb]"
+          >
+            <p>{{ $item['a'] }}</p>
+          </div>
+        </div>
+      @endforeach
+    </div>
+
+    <!-- Still have questions footer box -->
+    <div class="p-6 rounded-xl bg-[#faf9f5] border border-[#e7e5df] flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="text-center sm:text-left">
+        <h4 class="font-serif text-base font-bold text-[#0f172a]">Still have a question?</h4>
+        <p class="text-xs sm:text-sm text-[#64748b] mt-0.5">We're happy to walk you through setting up your community time capsule.</p>
+      </div>
+      <div class="flex items-center gap-2.5 shrink-0">
+        <a href="{{ route('creators.join') }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[#064e3b] hover:bg-[#047857] text-white text-xs font-medium transition-all shadow-xs">
+          Open a Vault →
+        </a>
+        <a href="mailto:support@getfanvault.com" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white hover:bg-[#f5f4ee] border border-[#e7e5df] text-[#0f172a] text-xs font-medium transition-all shadow-xs">
+          Contact Team
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FLAT BOTTOM CALL TO ACTION -->
   <section class="w-full bg-[#03261d] text-white border-t border-b border-emerald-900/60 py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
     <div class="max-w-3xl mx-auto text-center space-y-5">
       <h2 class="font-serif text-2xl sm:text-4xl font-bold leading-tight">

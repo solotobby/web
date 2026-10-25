@@ -48,6 +48,12 @@ class SitemapController extends Controller
                 'priority' => 0.8,
             ],
             [
+                'loc' => route('faq'),
+                'lastmod' => now()->startOfWeek()->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => 0.7,
+            ],
+            [
                 'loc' => route('privacy'),
                 'lastmod' => now()->startOfMonth()->toAtomString(),
                 'changefreq' => 'monthly',

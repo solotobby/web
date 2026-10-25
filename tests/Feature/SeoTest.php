@@ -149,4 +149,24 @@ class SeoTest extends TestCase
         $this->assertEquals('FanVault', $json['name']);
         $this->assertEquals('#047857', $json['theme_color']);
     }
+
+    public function test_homepage_renders_faq_section_and_schema(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('FREQUENTLY ASKED QUESTIONS');
+        $response->assertSee('What is FanVault?');
+        $response->assertSee('FAQPage');
+    }
+
+    public function test_faq_page_loads_with_status_200_and_faq_schema(): void
+    {
+        $response = $this->get('/faq');
+
+        $response->assertStatus(200);
+        $response->assertSee('Frequently Asked Questions');
+        $response->assertSee('What is FanVault?');
+        $response->assertSee('FAQPage');
+    }
 }

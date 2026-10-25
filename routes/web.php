@@ -30,6 +30,7 @@ Route::livewire('/creators/onboard', 'creator-onboard')->name('creators.onboard'
 Route::livewire('/creators/studio', 'creator-studio')->name('creators.studio');
 Route::livewire('/with/{slug}', 'creator-door')->name('with');
 Route::livewire('/nominate', 'nominate-page')->name('nominate');
+Route::livewire('/faq', 'faq-page')->name('faq');
 
 Route::get('/checkout/return', CheckoutReturnController::class)->name('checkout.return');
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');

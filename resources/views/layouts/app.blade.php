@@ -90,6 +90,13 @@
                 ])>
                     Nominate
                 </a>
+                <a href="{{ route('faq') }}" @class([
+                    'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors',
+                    'text-[#064e3b] bg-[#ecfdf5] font-semibold' => request()->routeIs('faq'),
+                    'text-[#475569] hover:text-[#0f172a] hover:bg-[#f7f6f0]' => !request()->routeIs('faq'),
+                ])>
+                    FAQ
+                </a>
             </nav>
 
             <!-- Actions: Creator CTA + Mobile Menu Button -->
@@ -158,6 +165,13 @@
                     <div>
                         <div class="font-semibold text-sm">Nominate a Creator</div>
                         <div class="text-xs text-[#64748b]">Suggest a creator who deserves a time capsule</div>
+                    </div>
+                </a>
+
+                <a href="{{ route('faq') }}" @click="open = false" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[#f5f4ee] transition-colors {{ request()->routeIs('faq') ? 'bg-[#ecfdf5] text-[#064e3b]' : 'text-[#0f172a]' }}">
+                    <div>
+                        <div class="font-semibold text-sm">FAQ</div>
+                        <div class="text-xs text-[#64748b]">Frequently asked questions & creator guides</div>
                     </div>
                 </a>
 
@@ -235,6 +249,7 @@
                         <li><a href="{{ route('creators') }}" class="hover:text-[#047857] transition-colors">Time Capsules</a></li>
                         <li><a href="{{ route('explore') }}" class="hover:text-[#047857] transition-colors">Community Archive</a></li>
                         <li><a href="{{ route('nominate') }}" class="hover:text-[#047857] transition-colors">Nominate a Creator</a></li>
+                        <li><a href="{{ route('faq') }}" class="hover:text-[#047857] transition-colors">FAQ</a></li>
                         <li><a href="{{ route('timeline') }}" class="hover:text-[#047857] transition-colors">Milestone Timeline</a></li>
                         <li><a href="{{ route('seal') }}" class="hover:text-[#047857] transition-colors">Leave Something</a></li>
                     </ul>
