@@ -260,6 +260,7 @@
                     <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94a3b8]">For Creators</h4>
                     <ul class="space-y-2.5 text-sm text-[#475569]">
                         <li><a href="{{ route('creators.join') }}" class="hover:text-[#047857] transition-colors">Create Your Capsule</a></li>
+                        <li><a href="{{ route('home') }}#who-its-for" class="hover:text-[#047857] transition-colors">Who Uses FanVault</a></li>
                         <li><a href="{{ route('creators.access') }}" class="hover:text-[#047857] transition-colors">Creator Studio & Login</a></li>
                         <li><a href="{{ route('creators') }}" class="hover:text-[#047857] transition-colors">Replaces Your PO Box</a></li>
                         <li><a href="{{ route('creators.studio') }}" class="hover:text-[#047857] transition-colors">OBS Stream Mode</a></li>

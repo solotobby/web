@@ -353,6 +353,9 @@ class extends Component
     </div>
   </section>
 
+  <!-- 2.5 BUILT FOR EVERY KIND OF CREATOR: Interactive Personas Showcase -->
+  <x-creator-personas />
+
   <!-- 3. HOW THE TIME CAPSULE WORKS: Clean Flat 3-Step Ceremony -->
   <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-[#f7f6f0] border border-[#e7e5df] rounded-xl p-6 sm:p-10 lg:p-12">

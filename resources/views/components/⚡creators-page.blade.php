@@ -238,4 +238,9 @@ class extends Component
       </div>
     </div>
   </section>
+
+  <!-- WHO USES FANVAULT -->
+  <div class="pb-16 sm:pb-24">
+    <x-creator-personas />
+  </div>
 </div>
