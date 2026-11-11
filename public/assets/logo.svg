@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="180" fill="#022C22"/>
+  <!-- Letter F -->
+  <path d="M272 336 h206 v56 h-144 v80 h133 v56 h-133 v136 h-62 Z" fill="#FFFFFF"/>
+  <!-- Letter V -->
+  <path d="M501 336 h62 l74 290 74 -290 h62 l-89 328 h-94 Z" fill="#FFFFFF"/>
+  <!-- Accent Dot -->
+  <circle cx="777.5" cy="275.5" r="61" fill="#FFD27A"/>
+</svg>

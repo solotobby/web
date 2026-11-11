@@ -442,7 +442,7 @@ class extends Component
           <!-- Mobile Brand & Close -->
           <div class="flex items-center justify-between pb-4 border-b border-[#e7e5df]">
             <a href="{{ route('home') }}" class="flex items-center gap-2.5 font-bold text-[#0f172a]">
-              <span class="w-8 h-8 rounded-lg bg-[#064e3b] text-white flex items-center justify-center font-mono font-bold text-xs tracking-tight shadow-2xs">FV</span>
+              <img src="{{ asset('assets/logo.svg') }}" alt="FanVault" class="w-8 h-8 rounded-lg shadow-2xs shrink-0" width="32" height="32">
               <div class="leading-none">
                 <span class="tracking-tight font-serif text-base font-bold">FanVault</span>
                 <span class="text-[10px] text-[#64748b] font-medium block mt-0.5">Studio</span>
@@ -563,9 +563,7 @@ class extends Component
       <!-- Sidebar Brand Header -->
       <div class="p-4 sm:p-5 border-b border-[#e7e5df] flex items-center justify-between">
         <a href="{{ route('home') }}" class="flex items-center gap-2.5 group">
-          <span class="w-8 h-8 rounded-lg bg-[#064e3b] text-white flex items-center justify-center font-mono font-bold text-xs tracking-tight shadow-xs transition-transform group-hover:scale-105">
-            FV
-          </span>
+          <img src="{{ asset('assets/logo.svg') }}" alt="FanVault" class="w-8 h-8 rounded-lg shadow-xs transition-transform group-hover:scale-105 shrink-0" width="32" height="32">
           <div class="leading-none">
             <span class="font-serif font-bold text-base text-[#0f172a] block tracking-tight">FanVault</span>
             <span class="text-[10px] text-[#64748b] font-medium block mt-1">Creator Studio</span>
@@ -1862,7 +1860,7 @@ class extends Component
         <!-- Elegant Minimalist Studio Footer -->
         <footer class="pt-8 pb-4 border-t border-[#e7e5df] mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#64748b]">
           <div class="flex items-center gap-2.5">
-            <span class="w-6 h-6 rounded-md bg-[#064e3b] text-white flex items-center justify-center font-mono font-bold text-[10px] tracking-tight">FV</span>
+            <img src="{{ asset('assets/logo.svg') }}" alt="FanVault" class="w-6 h-6 rounded-md shadow-2xs shrink-0" width="24" height="24">
             <span class="font-semibold text-[#0f172a]">FanVault Studio</span>
             <span>·</span>
             <span>Creator Protocol v2.4</span>

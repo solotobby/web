@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" fill="none">
+  <!-- Monogram Tile -->
+  <rect x="4" y="4" width="72" height="72" rx="18" fill="#047857"/>
+  <!-- Monogram Letters FV -->
+  <text x="21" y="51" font-family="'Instrument Sans', 'Inter', -apple-system, sans-serif" font-size="34" font-weight="800" fill="#FFFFFF" letter-spacing="-1.5">FV</text>
+  <!-- Accent Dot -->
+  <circle cx="63" cy="21" r="5.5" fill="#FFD27A"/>
+  <!-- Wordmark -->
+  <text x="96" y="53" font-family="'Instrument Sans', 'Inter', -apple-system, sans-serif" font-size="42" font-weight="800" letter-spacing="-0.5">
+    <tspan fill="#022C22">Fan</tspan><tspan fill="#047857">Vault</tspan>
+  </text>
+</svg>

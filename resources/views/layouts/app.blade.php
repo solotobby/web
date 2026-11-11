@@ -33,7 +33,7 @@
     <meta name="theme-color" content="#047857">
 
     <link rel="icon" href="{{ asset('assets/favicon.svg') }}" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="{{ asset('assets/favicon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/apple-touch-icon.png') }}">
     <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,9 +58,7 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
             <!-- Brand Logo -->
             <a class="flex items-center gap-2.5 font-bold text-base sm:text-lg text-[#0f172a] shrink-0 group" href="{{ route('home') }}">
-                <span class="inline-flex items-center justify-center w-8.5 h-8.5 bg-[#064e3b] text-white rounded-lg text-xs font-mono font-bold tracking-tight transition-transform group-hover:scale-105 shadow-xs" aria-hidden="true">
-                    FV
-                </span>
+                <img src="{{ asset('assets/logo.svg') }}" alt="FanVault" class="w-8.5 h-8.5 rounded-lg shadow-xs transition-transform group-hover:scale-105 shrink-0" width="34" height="34">
                 <span class="tracking-tight font-serif text-lg sm:text-xl font-bold flex items-center">
                     FanVault
                     <span class="font-sans font-medium text-[10px] uppercase tracking-wider text-[#047857] hidden xs:inline ml-2.5 bg-[#ecfdf5] px-2 py-0.5 rounded border border-[#a7f3d0]">Creator Edition</span>
@@ -201,9 +199,7 @@
             <!-- Masthead Protocol Status Header -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-8 border-b border-[#e7e5df]">
                 <div class="flex items-center gap-3">
-                    <span class="w-9 h-9 rounded-xl bg-[#064e3b] text-white flex items-center justify-center text-xs font-mono font-bold tracking-tight shadow-2xs">
-                        FV
-                    </span>
+                    <img src="{{ asset('assets/logo.svg') }}" alt="FanVault" class="w-9 h-9 rounded-xl shadow-2xs shrink-0" width="36" height="36">
                     <div>
                         <span class="tracking-tight font-serif text-xl font-bold text-[#0f172a] block leading-none">FanVault</span>
                         <span class="text-[11px] text-[#64748b] font-medium block mt-1">The Creator Time Capsule · Milestones, Memories & Predictions</span>
